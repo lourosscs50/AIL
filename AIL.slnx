@@ -1,0 +1,115 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/AIL.Api/AIL.Api.csproj" />
+    <Project Path="src/AIL.Modules.Abstractions/AIL.Modules.Abstractions.csproj" />
+    <Project Path="src/AIL.Shared/AIL.Shared.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.Audit/" />
+  <Folder Name="/src/AIL.Modules.Audit/Application/">
+    <Project Path="src/AIL.Modules.Audit/Application/AIL.Modules.Audit.Application.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.Audit/Domain/">
+    <Project Path="src/AIL.Modules.Audit/Domain/AIL.Modules.Audit.Domain.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.Audit/Infrastructure/">
+    <Project Path="src/AIL.Modules.Audit/Infrastructure/AIL.Modules.Audit.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.ContextEngine/" />
+  <Folder Name="/src/AIL.Modules.ContextEngine/Application/">
+    <Project Path="src/AIL.Modules.ContextEngine/Application/AIL.Modules.ContextEngine.Application.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.ContextEngine/Domain/">
+    <Project Path="src/AIL.Modules.ContextEngine/Domain/AIL.Modules.ContextEngine.Domain.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.ContextEngine/Infrastructure/">
+    <Project Path="src/AIL.Modules.ContextEngine/Infrastructure/AIL.Modules.ContextEngine.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.Evaluation/" />
+  <Folder Name="/src/AIL.Modules.Evaluation/Application/">
+    <Project Path="src/AIL.Modules.Evaluation/Application/AIL.Modules.Evaluation.Application.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.Evaluation/Domain/">
+    <Project Path="src/AIL.Modules.Evaluation/Domain/AIL.Modules.Evaluation.Domain.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.Evaluation/Infrastructure/">
+    <Project Path="src/AIL.Modules.Evaluation/Infrastructure/AIL.Modules.Evaluation.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.Execution/" />
+  <Folder Name="/src/AIL.Modules.Execution/Application/">
+    <Project Path="src/AIL.Modules.Execution/Application/AIL.Modules.Execution.Application.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.Execution/Domain/">
+    <Project Path="src/AIL.Modules.Execution/Domain/AIL.Modules.Execution.Domain.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.Execution/Infrastructure/">
+    <Project Path="src/AIL.Modules.Execution/Infrastructure/AIL.Modules.Execution.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.Observability/" />
+  <Folder Name="/src/AIL.Modules.Observability/Application/">
+    <Project Path="src/AIL.Modules.Observability/Application/AIL.Modules.Observability.Application.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.Observability/Domain/">
+    <Project Path="src/AIL.Modules.Observability/Domain/AIL.Modules.Observability.Domain.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.Observability/Infrastructure/">
+    <Project Path="src/AIL.Modules.Observability/Infrastructure/AIL.Modules.Observability.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.PolicyRegistry/" />
+  <Folder Name="/src/AIL.Modules.PolicyRegistry/Application/">
+    <Project Path="src/AIL.Modules.PolicyRegistry/Application/AIL.Modules.PolicyRegistry.Application.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.PolicyRegistry/Domain/">
+    <Project Path="src/AIL.Modules.PolicyRegistry/Domain/AIL.Modules.PolicyRegistry.Domain.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.PolicyRegistry/Infrastructure/">
+    <Project Path="src/AIL.Modules.PolicyRegistry/Infrastructure/AIL.Modules.PolicyRegistry.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.PromptRegistry/" />
+  <Folder Name="/src/AIL.Modules.PromptRegistry/Application/">
+    <Project Path="src/AIL.Modules.PromptRegistry/Application/AIL.Modules.PromptRegistry.Application.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.PromptRegistry/Domain/">
+    <Project Path="src/AIL.Modules.PromptRegistry/Domain/AIL.Modules.PromptRegistry.Domain.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.PromptRegistry/Infrastructure/">
+    <Project Path="src/AIL.Modules.PromptRegistry/Infrastructure/AIL.Modules.PromptRegistry.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.ProviderRegistry/" />
+  <Folder Name="/src/AIL.Modules.ProviderRegistry/Application/">
+    <Project Path="src/AIL.Modules.ProviderRegistry/Application/AIL.Modules.ProviderRegistry.Application.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.ProviderRegistry/Domain/">
+    <Project Path="src/AIL.Modules.ProviderRegistry/Domain/AIL.Modules.ProviderRegistry.Domain.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.ProviderRegistry/Infrastructure/">
+    <Project Path="src/AIL.Modules.ProviderRegistry/Infrastructure/AIL.Modules.ProviderRegistry.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.Reliability/" />
+  <Folder Name="/src/AIL.Modules.Reliability/Application/">
+    <Project Path="src/AIL.Modules.Reliability/Application/AIL.Modules.Reliability.Application.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.Reliability/Domain/">
+    <Project Path="src/AIL.Modules.Reliability/Domain/AIL.Modules.Reliability.Domain.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.Reliability/Infrastructure/">
+    <Project Path="src/AIL.Modules.Reliability/Infrastructure/AIL.Modules.Reliability.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.Security/" />
+  <Folder Name="/src/AIL.Modules.Security/Application/">
+    <Project Path="src/AIL.Modules.Security/Application/AIL.Modules.Security.Application.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.Security/Domain/">
+    <Project Path="src/AIL.Modules.Security/Domain/AIL.Modules.Security.Domain.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.Security/Infrastructure/">
+    <Project Path="src/AIL.Modules.Security/Infrastructure/AIL.Modules.Security.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/AIL.Api.Tests/AIL.Api.Tests.csproj" />
+    <Project Path="tests/AIL.Architecture.Tests/AIL.Architecture.Tests.csproj" />
+    <Project Path="tests/AIL.Modules.ContextEngine.Tests/AIL.Modules.ContextEngine.Tests.csproj" />
+    <Project Path="tests/AIL.Modules.Evaluation.Tests/AIL.Modules.Evaluation.Tests.csproj" />
+    <Project Path="tests/AIL.Modules.Execution.Tests/AIL.Modules.Execution.Tests.csproj" />
+    <Project Path="tests/AIL.Modules.Reliability.Tests/AIL.Modules.Reliability.Tests.csproj" />
+  </Folder>
+</Solution>

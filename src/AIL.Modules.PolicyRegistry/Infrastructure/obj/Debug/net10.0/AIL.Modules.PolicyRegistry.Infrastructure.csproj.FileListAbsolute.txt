@@ -1,0 +1,17 @@
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.PolicyRegistry/Infrastructure/bin/Debug/net10.0/AIL.Modules.PolicyRegistry.Infrastructure.deps.json
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.PolicyRegistry/Infrastructure/bin/Debug/net10.0/AIL.Modules.PolicyRegistry.Infrastructure.dll
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.PolicyRegistry/Infrastructure/bin/Debug/net10.0/AIL.Modules.PolicyRegistry.Infrastructure.pdb
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.PolicyRegistry/Infrastructure/bin/Debug/net10.0/AIL.Modules.PolicyRegistry.Application.dll
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.PolicyRegistry/Infrastructure/bin/Debug/net10.0/AIL.Modules.PolicyRegistry.Domain.dll
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.PolicyRegistry/Infrastructure/bin/Debug/net10.0/AIL.Modules.PolicyRegistry.Application.pdb
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.PolicyRegistry/Infrastructure/bin/Debug/net10.0/AIL.Modules.PolicyRegistry.Domain.pdb
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.PolicyRegistry/Infrastructure/obj/Debug/net10.0/AIL.Modules.PolicyRegistry.Infrastructure.csproj.AssemblyReference.cache
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.PolicyRegistry/Infrastructure/obj/Debug/net10.0/AIL.Modules.PolicyRegistry.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.PolicyRegistry/Infrastructure/obj/Debug/net10.0/AIL.Modules.PolicyRegistry.Infrastructure.AssemblyInfoInputs.cache
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.PolicyRegistry/Infrastructure/obj/Debug/net10.0/AIL.Modules.PolicyRegistry.Infrastructure.AssemblyInfo.cs
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.PolicyRegistry/Infrastructure/obj/Debug/net10.0/AIL.Modules.PolicyRegistry.Infrastructure.csproj.CoreCompileInputs.cache
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.PolicyRegistry/Infrastructure/obj/Debug/net10.0/AIL.Modu.8E985786.Up2Date
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.PolicyRegistry/Infrastructure/obj/Debug/net10.0/AIL.Modules.PolicyRegistry.Infrastructure.dll
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.PolicyRegistry/Infrastructure/obj/Debug/net10.0/refint/AIL.Modules.PolicyRegistry.Infrastructure.dll
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.PolicyRegistry/Infrastructure/obj/Debug/net10.0/AIL.Modules.PolicyRegistry.Infrastructure.pdb
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.PolicyRegistry/Infrastructure/obj/Debug/net10.0/ref/AIL.Modules.PolicyRegistry.Infrastructure.dll

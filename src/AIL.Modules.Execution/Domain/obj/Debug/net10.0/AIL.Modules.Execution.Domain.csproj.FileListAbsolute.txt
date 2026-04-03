@@ -1,0 +1,11 @@
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Execution/Domain/bin/Debug/net10.0/AIL.Modules.Execution.Domain.deps.json
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Execution/Domain/bin/Debug/net10.0/AIL.Modules.Execution.Domain.dll
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Execution/Domain/bin/Debug/net10.0/AIL.Modules.Execution.Domain.pdb
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Execution/Domain/obj/Debug/net10.0/AIL.Modules.Execution.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Execution/Domain/obj/Debug/net10.0/AIL.Modules.Execution.Domain.AssemblyInfoInputs.cache
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Execution/Domain/obj/Debug/net10.0/AIL.Modules.Execution.Domain.AssemblyInfo.cs
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Execution/Domain/obj/Debug/net10.0/AIL.Modules.Execution.Domain.csproj.CoreCompileInputs.cache
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Execution/Domain/obj/Debug/net10.0/AIL.Modules.Execution.Domain.dll
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Execution/Domain/obj/Debug/net10.0/refint/AIL.Modules.Execution.Domain.dll
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Execution/Domain/obj/Debug/net10.0/AIL.Modules.Execution.Domain.pdb
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Execution/Domain/obj/Debug/net10.0/ref/AIL.Modules.Execution.Domain.dll

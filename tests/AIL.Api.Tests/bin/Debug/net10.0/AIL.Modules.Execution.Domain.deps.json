@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "AIL.Modules.Execution.Domain/1.0.0": {
+        "runtime": {
+          "AIL.Modules.Execution.Domain.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "AIL.Modules.Execution.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

@@ -1,0 +1,60 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="Moq" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\AIL.Modules.Execution\Application\AIL.Modules.Execution.Application.csproj" />
+    <ProjectReference Include="..\..\src\AIL.Modules.Execution\Domain\AIL.Modules.Execution.Domain.csproj" />
+    <ProjectReference Include="..\..\src\AIL.Modules.Execution\Infrastructure\AIL.Modules.Execution.Infrastructure.csproj" />
+
+    <ProjectReference Include="..\..\src\AIL.Modules.Reliability\Application\AIL.Modules.Reliability.Application.csproj" />
+    <ProjectReference Include="..\..\src\AIL.Modules.Reliability\Infrastructure\AIL.Modules.Reliability.Infrastructure.csproj" />
+
+    <ProjectReference Include="..\..\src\AIL.Modules.Security\Application\AIL.Modules.Security.Application.csproj" />
+    <ProjectReference Include="..\..\src\AIL.Modules.Security\Domain\AIL.Modules.Security.Domain.csproj" />
+    <ProjectReference Include="..\..\src\AIL.Modules.Security\Infrastructure\AIL.Modules.Security.Infrastructure.csproj" />
+
+    <ProjectReference Include="..\..\src\AIL.Modules.Observability\Application\AIL.Modules.Observability.Application.csproj" />
+
+    <ProjectReference Include="..\..\src\AIL.Modules.ProviderRegistry\Application\AIL.Modules.ProviderRegistry.Application.csproj" />
+    <ProjectReference Include="..\..\src\AIL.Modules.ProviderRegistry\Domain\AIL.Modules.ProviderRegistry.Domain.csproj" />
+    <ProjectReference Include="..\..\src\AIL.Modules.ProviderRegistry\Infrastructure\AIL.Modules.ProviderRegistry.Infrastructure.csproj" />
+
+    <ProjectReference Include="..\..\src\AIL.Modules.PolicyRegistry\Application\AIL.Modules.PolicyRegistry.Application.csproj" />
+    <ProjectReference Include="..\..\src\AIL.Modules.PolicyRegistry\Domain\AIL.Modules.PolicyRegistry.Domain.csproj" />
+    <ProjectReference Include="..\..\src\AIL.Modules.PolicyRegistry\Infrastructure\AIL.Modules.PolicyRegistry.Infrastructure.csproj" />
+
+    <ProjectReference Include="..\..\src\AIL.Modules.PromptRegistry\Application\AIL.Modules.PromptRegistry.Application.csproj" />
+    <ProjectReference Include="..\..\src\AIL.Modules.PromptRegistry\Domain\AIL.Modules.PromptRegistry.Domain.csproj" />
+    <ProjectReference Include="..\..\src\AIL.Modules.PromptRegistry\Infrastructure\AIL.Modules.PromptRegistry.Infrastructure.csproj" />
+
+    <ProjectReference Include="..\..\src\AIL.Modules.ContextEngine\Application\AIL.Modules.ContextEngine.Application.csproj" />
+    <ProjectReference Include="..\..\src\AIL.Modules.ContextEngine\Domain\AIL.Modules.ContextEngine.Domain.csproj" />
+    <ProjectReference Include="..\..\src\AIL.Modules.ContextEngine\Infrastructure\AIL.Modules.ContextEngine.Infrastructure.csproj" />
+
+    <ProjectReference Include="..\..\src\AIL.Modules.Audit\Application\AIL.Modules.Audit.Application.csproj" />
+    <ProjectReference Include="..\..\src\AIL.Modules.Audit\Infrastructure\AIL.Modules.Audit.Infrastructure.csproj" />
+
+    <ProjectReference Include="..\..\src\AIL.Modules.Observability\Application\AIL.Modules.Observability.Application.csproj" />
+    <ProjectReference Include="..\..\src\AIL.Modules.Observability\Infrastructure\AIL.Modules.Observability.Infrastructure.csproj" />
+
+    <ProjectReference Include="..\..\src\AIL.Shared\AIL.Shared.csproj" />
+    <ProjectReference Include="..\..\src\AIL.Modules.Abstractions\AIL.Modules.Abstractions.csproj" />
+  </ItemGroup>
+</Project>

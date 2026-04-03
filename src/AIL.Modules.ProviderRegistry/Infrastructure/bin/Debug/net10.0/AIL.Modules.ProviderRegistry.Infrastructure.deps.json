@@ -1,0 +1,178 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "AIL.Modules.ProviderRegistry.Infrastructure/1.0.0": {
+        "dependencies": {
+          "AIL.Modules.Abstractions": "1.0.0",
+          "AIL.Modules.ProviderRegistry.Application": "1.0.0",
+          "AIL.Modules.ProviderRegistry.Domain": "1.0.0",
+          "AIL.Shared": "1.0.0",
+          "Microsoft.Extensions.Configuration.Abstractions": "10.0.0-preview.7.25380.108",
+          "Microsoft.Extensions.Configuration.Binder": "10.0.0-preview.7.25380.108",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.0-preview.7.25380.108"
+        },
+        "runtime": {
+          "AIL.Modules.ProviderRegistry.Infrastructure.dll": {}
+        }
+      },
+      "Microsoft.Extensions.Configuration/10.0.0-preview.7.25380.108": {
+        "dependencies": {
+          "Microsoft.Extensions.Configuration.Abstractions": "10.0.0-preview.7.25380.108",
+          "Microsoft.Extensions.Primitives": "10.0.0-preview.7.25380.108"
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.Extensions.Configuration.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.38108"
+          }
+        }
+      },
+      "Microsoft.Extensions.Configuration.Abstractions/10.0.0-preview.7.25380.108": {
+        "dependencies": {
+          "Microsoft.Extensions.Primitives": "10.0.0-preview.7.25380.108"
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.Extensions.Configuration.Abstractions.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.38108"
+          }
+        }
+      },
+      "Microsoft.Extensions.Configuration.Binder/10.0.0-preview.7.25380.108": {
+        "dependencies": {
+          "Microsoft.Extensions.Configuration": "10.0.0-preview.7.25380.108",
+          "Microsoft.Extensions.Configuration.Abstractions": "10.0.0-preview.7.25380.108"
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.Extensions.Configuration.Binder.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.38108"
+          }
+        }
+      },
+      "Microsoft.Extensions.DependencyInjection.Abstractions/10.0.0-preview.7.25380.108": {
+        "runtime": {
+          "lib/net10.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.38108"
+          }
+        }
+      },
+      "Microsoft.Extensions.Primitives/10.0.0-preview.7.25380.108": {
+        "runtime": {
+          "lib/net10.0/Microsoft.Extensions.Primitives.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.38108"
+          }
+        }
+      },
+      "AIL.Modules.Abstractions/1.0.0": {
+        "runtime": {
+          "AIL.Modules.Abstractions.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "AIL.Modules.ProviderRegistry.Application/1.0.0": {
+        "dependencies": {
+          "AIL.Modules.Abstractions": "1.0.0",
+          "AIL.Modules.ProviderRegistry.Domain": "1.0.0",
+          "AIL.Shared": "1.0.0"
+        },
+        "runtime": {
+          "AIL.Modules.ProviderRegistry.Application.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "AIL.Modules.ProviderRegistry.Domain/1.0.0": {
+        "dependencies": {
+          "AIL.Shared": "1.0.0"
+        },
+        "runtime": {
+          "AIL.Modules.ProviderRegistry.Domain.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "AIL.Shared/1.0.0": {
+        "runtime": {
+          "AIL.Shared.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "AIL.Modules.ProviderRegistry.Infrastructure/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Microsoft.Extensions.Configuration/10.0.0-preview.7.25380.108": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-bqeb/og5BMVpJ0cAfVgHhyNPfQa/uF/t6MhoQ9Z0kAUuOvk+hCfnSKlx2CZUzrkrWN6zK/jRXZW8RsbIxtzexw==",
+      "path": "microsoft.extensions.configuration/10.0.0-preview.7.25380.108",
+      "hashPath": "microsoft.extensions.configuration.10.0.0-preview.7.25380.108.nupkg.sha512"
+    },
+    "Microsoft.Extensions.Configuration.Abstractions/10.0.0-preview.7.25380.108": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Tos2R09p02UbSg97w7QNr+dNTKuBtmsWKy4+awTnn2d34CXDpsKkAdDis6gLmhuCjz4c0HyB5S0l2ahaqu+u7A==",
+      "path": "microsoft.extensions.configuration.abstractions/10.0.0-preview.7.25380.108",
+      "hashPath": "microsoft.extensions.configuration.abstractions.10.0.0-preview.7.25380.108.nupkg.sha512"
+    },
+    "Microsoft.Extensions.Configuration.Binder/10.0.0-preview.7.25380.108": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-BAcZtIevY+MgiTX9t9iuz8CoYmGPoL1QeAlhNav8EVJmNlhKR/H7nESjxJifejcCRuwQ+dcXlFtHo1xrCMaZWA==",
+      "path": "microsoft.extensions.configuration.binder/10.0.0-preview.7.25380.108",
+      "hashPath": "microsoft.extensions.configuration.binder.10.0.0-preview.7.25380.108.nupkg.sha512"
+    },
+    "Microsoft.Extensions.DependencyInjection.Abstractions/10.0.0-preview.7.25380.108": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-0oSQ8o2O8eMxaInqR1GykEzzlerBTN3xQMsEtaWA4zbf1LmrqV7H9ctTTjK4oMeWMCTb9mfYoN9fsVWbAhkTXA==",
+      "path": "microsoft.extensions.dependencyinjection.abstractions/10.0.0-preview.7.25380.108",
+      "hashPath": "microsoft.extensions.dependencyinjection.abstractions.10.0.0-preview.7.25380.108.nupkg.sha512"
+    },
+    "Microsoft.Extensions.Primitives/10.0.0-preview.7.25380.108": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-0oC37fX0irgi29vN8JQdvXn1jZI6upCIs8Q8J+loetDrWrB3fwYBqbUdz/mMS41G+kkjCSaGRfZM8dBiZqqMpw==",
+      "path": "microsoft.extensions.primitives/10.0.0-preview.7.25380.108",
+      "hashPath": "microsoft.extensions.primitives.10.0.0-preview.7.25380.108.nupkg.sha512"
+    },
+    "AIL.Modules.Abstractions/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "AIL.Modules.ProviderRegistry.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "AIL.Modules.ProviderRegistry.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "AIL.Shared/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

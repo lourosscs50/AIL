@@ -1,0 +1,15 @@
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Application/bin/Debug/net10.0/AIL.Modules.ContextEngine.Application.deps.json
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Application/bin/Debug/net10.0/AIL.Modules.ContextEngine.Application.dll
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Application/bin/Debug/net10.0/AIL.Modules.ContextEngine.Application.pdb
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Application/bin/Debug/net10.0/AIL.Modules.ContextEngine.Domain.dll
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Application/bin/Debug/net10.0/AIL.Modules.ContextEngine.Domain.pdb
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Application/obj/Debug/net10.0/AIL.Modules.ContextEngine.Application.csproj.AssemblyReference.cache
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Application/obj/Debug/net10.0/AIL.Modules.ContextEngine.Application.GeneratedMSBuildEditorConfig.editorconfig
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Application/obj/Debug/net10.0/AIL.Modules.ContextEngine.Application.AssemblyInfoInputs.cache
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Application/obj/Debug/net10.0/AIL.Modules.ContextEngine.Application.AssemblyInfo.cs
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Application/obj/Debug/net10.0/AIL.Modules.ContextEngine.Application.csproj.CoreCompileInputs.cache
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Application/obj/Debug/net10.0/AIL.Modu.899F1A1D.Up2Date
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Application/obj/Debug/net10.0/AIL.Modules.ContextEngine.Application.dll
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Application/obj/Debug/net10.0/refint/AIL.Modules.ContextEngine.Application.dll
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Application/obj/Debug/net10.0/AIL.Modules.ContextEngine.Application.pdb
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Application/obj/Debug/net10.0/ref/AIL.Modules.ContextEngine.Application.dll

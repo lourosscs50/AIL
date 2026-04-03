@@ -1,0 +1,15 @@
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Observability/Infrastructure/bin/Debug/net10.0/AIL.Modules.Observability.Infrastructure.deps.json
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Observability/Infrastructure/bin/Debug/net10.0/AIL.Modules.Observability.Infrastructure.dll
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Observability/Infrastructure/bin/Debug/net10.0/AIL.Modules.Observability.Infrastructure.pdb
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Observability/Infrastructure/bin/Debug/net10.0/AIL.Modules.Observability.Application.dll
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Observability/Infrastructure/bin/Debug/net10.0/AIL.Modules.Observability.Application.pdb
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Observability/Infrastructure/obj/Debug/net10.0/AIL.Modules.Observability.Infrastructure.csproj.AssemblyReference.cache
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Observability/Infrastructure/obj/Debug/net10.0/AIL.Modules.Observability.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Observability/Infrastructure/obj/Debug/net10.0/AIL.Modules.Observability.Infrastructure.AssemblyInfoInputs.cache
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Observability/Infrastructure/obj/Debug/net10.0/AIL.Modules.Observability.Infrastructure.AssemblyInfo.cs
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Observability/Infrastructure/obj/Debug/net10.0/AIL.Modules.Observability.Infrastructure.csproj.CoreCompileInputs.cache
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Observability/Infrastructure/obj/Debug/net10.0/AIL.Modu.5AA719C4.Up2Date
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Observability/Infrastructure/obj/Debug/net10.0/AIL.Modules.Observability.Infrastructure.dll
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Observability/Infrastructure/obj/Debug/net10.0/refint/AIL.Modules.Observability.Infrastructure.dll
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Observability/Infrastructure/obj/Debug/net10.0/AIL.Modules.Observability.Infrastructure.pdb
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Observability/Infrastructure/obj/Debug/net10.0/ref/AIL.Modules.Observability.Infrastructure.dll

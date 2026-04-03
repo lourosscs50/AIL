@@ -1,0 +1,17 @@
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Infrastructure/bin/Debug/net10.0/AIL.Modules.ContextEngine.Infrastructure.deps.json
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Infrastructure/bin/Debug/net10.0/AIL.Modules.ContextEngine.Infrastructure.dll
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Infrastructure/bin/Debug/net10.0/AIL.Modules.ContextEngine.Infrastructure.pdb
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Infrastructure/bin/Debug/net10.0/AIL.Modules.ContextEngine.Application.dll
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Infrastructure/bin/Debug/net10.0/AIL.Modules.ContextEngine.Domain.dll
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Infrastructure/bin/Debug/net10.0/AIL.Modules.ContextEngine.Application.pdb
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Infrastructure/bin/Debug/net10.0/AIL.Modules.ContextEngine.Domain.pdb
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Infrastructure/obj/Debug/net10.0/AIL.Modules.ContextEngine.Infrastructure.csproj.AssemblyReference.cache
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Infrastructure/obj/Debug/net10.0/AIL.Modules.ContextEngine.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Infrastructure/obj/Debug/net10.0/AIL.Modules.ContextEngine.Infrastructure.AssemblyInfoInputs.cache
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Infrastructure/obj/Debug/net10.0/AIL.Modules.ContextEngine.Infrastructure.AssemblyInfo.cs
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Infrastructure/obj/Debug/net10.0/AIL.Modules.ContextEngine.Infrastructure.csproj.CoreCompileInputs.cache
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Infrastructure/obj/Debug/net10.0/AIL.Modu.1D8C6138.Up2Date
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Infrastructure/obj/Debug/net10.0/AIL.Modules.ContextEngine.Infrastructure.dll
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Infrastructure/obj/Debug/net10.0/refint/AIL.Modules.ContextEngine.Infrastructure.dll
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Infrastructure/obj/Debug/net10.0/AIL.Modules.ContextEngine.Infrastructure.pdb
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ContextEngine/Infrastructure/obj/Debug/net10.0/ref/AIL.Modules.ContextEngine.Infrastructure.dll

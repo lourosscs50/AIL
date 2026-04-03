@@ -1,0 +1,12 @@
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Evaluation/Infrastructure/bin/Debug/net10.0/AIL.Modules.Evaluation.Infrastructure.deps.json
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Evaluation/Infrastructure/bin/Debug/net10.0/AIL.Modules.Evaluation.Infrastructure.dll
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Evaluation/Infrastructure/bin/Debug/net10.0/AIL.Modules.Evaluation.Infrastructure.pdb
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Evaluation/Infrastructure/obj/Debug/net10.0/AIL.Modules.Evaluation.Infrastructure.csproj.AssemblyReference.cache
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Evaluation/Infrastructure/obj/Debug/net10.0/AIL.Modules.Evaluation.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Evaluation/Infrastructure/obj/Debug/net10.0/AIL.Modules.Evaluation.Infrastructure.AssemblyInfoInputs.cache
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Evaluation/Infrastructure/obj/Debug/net10.0/AIL.Modules.Evaluation.Infrastructure.AssemblyInfo.cs
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Evaluation/Infrastructure/obj/Debug/net10.0/AIL.Modules.Evaluation.Infrastructure.csproj.CoreCompileInputs.cache
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Evaluation/Infrastructure/obj/Debug/net10.0/AIL.Modules.Evaluation.Infrastructure.dll
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Evaluation/Infrastructure/obj/Debug/net10.0/refint/AIL.Modules.Evaluation.Infrastructure.dll
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Evaluation/Infrastructure/obj/Debug/net10.0/AIL.Modules.Evaluation.Infrastructure.pdb
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Evaluation/Infrastructure/obj/Debug/net10.0/ref/AIL.Modules.Evaluation.Infrastructure.dll

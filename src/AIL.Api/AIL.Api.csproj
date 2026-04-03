@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Swashbuckle.AspNetCore" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AIL.Modules.Security\Infrastructure\AIL.Modules.Security.Infrastructure.csproj" />
+    <ProjectReference Include="..\AIL.Modules.Execution\Infrastructure\AIL.Modules.Execution.Infrastructure.csproj" />
+    <ProjectReference Include="..\AIL.Modules.PromptRegistry\Infrastructure\AIL.Modules.PromptRegistry.Infrastructure.csproj" />
+    <ProjectReference Include="..\AIL.Modules.PolicyRegistry\Infrastructure\AIL.Modules.PolicyRegistry.Infrastructure.csproj" />
+    <ProjectReference Include="..\AIL.Modules.ContextEngine\Infrastructure\AIL.Modules.ContextEngine.Infrastructure.csproj" />
+    <ProjectReference Include="..\AIL.Modules.Audit\Infrastructure\AIL.Modules.Audit.Infrastructure.csproj" />
+    <ProjectReference Include="..\AIL.Modules.Observability\Infrastructure\AIL.Modules.Observability.Infrastructure.csproj" />
+    <ProjectReference Include="..\AIL.Modules.ProviderRegistry\Infrastructure\AIL.Modules.ProviderRegistry.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

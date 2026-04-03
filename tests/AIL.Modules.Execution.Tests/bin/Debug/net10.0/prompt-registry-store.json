@@ -1,0 +1,31 @@
+[
+  {
+    "PromptKey": "prompt",
+    "Version": "v1",
+    "Template": "\u003Cprompt template\u003E",
+    "IsActive": true,
+    "Description": "Default prompt for testing",
+    "VariableDefinitions": {
+      "k": {
+        "Name": "k",
+        "Required": true
+      }
+    }
+  },
+  {
+    "PromptKey": "prompt",
+    "Version": "v0",
+    "Template": "\u003Cold template\u003E",
+    "IsActive": false,
+    "Description": "Inactive old version",
+    "VariableDefinitions": {}
+  },
+  {
+    "PromptKey": "inactive-prompt",
+    "Version": "v1",
+    "Template": "\u003Cinactive template\u003E",
+    "IsActive": false,
+    "Description": "Example inactive prompt",
+    "VariableDefinitions": {}
+  }
+]

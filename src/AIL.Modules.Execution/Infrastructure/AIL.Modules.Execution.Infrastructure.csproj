@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Application\AIL.Modules.Execution.Application.csproj" />
+    <ProjectReference Include="..\Domain\AIL.Modules.Execution.Domain.csproj" />
+    <ProjectReference Include="..\..\AIL.Shared\AIL.Shared.csproj" />
+    <ProjectReference Include="..\..\AIL.Modules.Abstractions\AIL.Modules.Abstractions.csproj" />
+
+    <ProjectReference Include="..\..\AIL.Modules.Security\Application\AIL.Modules.Security.Application.csproj" />
+    <ProjectReference Include="..\..\AIL.Modules.PromptRegistry\Application\AIL.Modules.PromptRegistry.Application.csproj" />
+    <ProjectReference Include="..\..\AIL.Modules.PolicyRegistry\Application\AIL.Modules.PolicyRegistry.Application.csproj" />
+    <ProjectReference Include="..\..\AIL.Modules.ContextEngine\Application\AIL.Modules.ContextEngine.Application.csproj" />
+    <ProjectReference Include="..\..\AIL.Modules.Audit\Application\AIL.Modules.Audit.Application.csproj" />
+    <ProjectReference Include="..\..\AIL.Modules.Observability\Application\AIL.Modules.Observability.Application.csproj" />
+    <ProjectReference Include="..\..\AIL.Modules.ProviderRegistry\Application\AIL.Modules.ProviderRegistry.Application.csproj" />
+    <ProjectReference Include="..\..\AIL.Modules.Reliability\Application\AIL.Modules.Reliability.Application.csproj" />
+    <ProjectReference Include="..\..\AIL.Modules.Reliability\Infrastructure\AIL.Modules.Reliability.Infrastructure.csproj" />
+
+    <ProjectReference Include="..\..\AIL.Modules.PolicyRegistry\Domain\AIL.Modules.PolicyRegistry.Domain.csproj" />
+    <ProjectReference Include="..\..\AIL.Modules.ProviderRegistry\Domain\AIL.Modules.ProviderRegistry.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Options" />
+    <PackageReference Include="Microsoft.Extensions.Http" />
+  </ItemGroup>
+</Project>
