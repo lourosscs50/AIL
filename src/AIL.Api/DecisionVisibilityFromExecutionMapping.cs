@@ -35,7 +35,7 @@ internal static class DecisionVisibilityFromExecutionMapping
             RelatedEntityIds: m.Trace.RelatedEntityIds,
             SignalEntityId: null,
             AlertEntityId: null,
-            ChronoFlowExecutionInstanceId: null,
+            ChronoFlowExecutionInstanceId: m.Trace.ChronoFlowExecutionInstanceId,
             ExecutionInstanceId: m.Trace.ExecutionInstanceId);
 
         var extension = new ExecutionVisibilityExtension(

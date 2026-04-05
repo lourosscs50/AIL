@@ -45,7 +45,8 @@ public static class ExecutionVisibilityReadModelBuilder
             TraceThreadId: request.TraceThreadId,
             CorrelationGroupId: request.CorrelationGroupId,
             ExecutionInstanceId: executionInstanceId,
-            RelatedEntityIds: ParseRelatedEntityIds(request.ContextReferenceIds));
+            RelatedEntityIds: ParseRelatedEntityIds(request.ContextReferenceIds),
+            ChronoFlowExecutionInstanceId: request.ChronoFlowExecutionInstanceId);
 
     public static ExecutionReliabilityVisibility ReliabilityUnavailable() =>
         new(

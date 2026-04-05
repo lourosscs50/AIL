@@ -17,4 +17,6 @@ public sealed record ExecutionRequest(
     int? MemoryMaxResults = null,
     Guid? ExecutionInstanceId = null,
     string? TraceThreadId = null,
-    Guid? CorrelationGroupId = null);
+    Guid? CorrelationGroupId = null,
+    /// <summary>Optional ChronoFlow control execution row id when the caller links this invocation to a concrete execution record (read-only observability).</summary>
+    Guid? ChronoFlowExecutionInstanceId = null);

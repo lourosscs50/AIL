@@ -55,7 +55,8 @@ app.MapPost("/execute-intelligence", async (ExecuteIntelligenceRequest request, 
         MemoryQuery: memoryQuery,
         ExecutionInstanceId: request.ExecutionInstanceId,
         TraceThreadId: request.TraceThreadId,
-        CorrelationGroupId: request.CorrelationGroupId));
+        CorrelationGroupId: request.CorrelationGroupId,
+        ChronoFlowExecutionInstanceId: request.ChronoFlowExecutionInstanceId));
 
     if (!result.IsAllowed)
     {

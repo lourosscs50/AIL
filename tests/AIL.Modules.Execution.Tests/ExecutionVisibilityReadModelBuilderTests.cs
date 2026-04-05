@@ -31,6 +31,7 @@ public sealed class ExecutionVisibilityReadModelBuilderTests
         var execId = Guid.NewGuid();
         var correlation = Guid.NewGuid();
         var entityId = Guid.NewGuid();
+        var chronoFlowExec = Guid.NewGuid();
         var request = new ExecutionRequest(
             TenantId: Guid.NewGuid(),
             CapabilityKey: "cap",
@@ -39,7 +40,8 @@ public sealed class ExecutionVisibilityReadModelBuilderTests
             ContextReferenceIds: new List<string> { entityId.ToString() },
             ExecutionInstanceId: execId,
             TraceThreadId: "trace-hub-1",
-            CorrelationGroupId: correlation);
+            CorrelationGroupId: correlation,
+            ChronoFlowExecutionInstanceId: chronoFlowExec);
 
         var selection = new ProviderSelectionResult("primary", "m1", "fb", "m2", true, 100, 5000);
         var result = new ProviderExecutionResult("fb", "m2", "hello", true, 1, 2);
@@ -61,6 +63,7 @@ public sealed class ExecutionVisibilityReadModelBuilderTests
         Assert.Equal("trace-hub-1", model.Trace.TraceThreadId);
         Assert.Equal(correlation, model.Trace.CorrelationGroupId);
         Assert.Equal(execId, model.Trace.ExecutionInstanceId);
+        Assert.Equal(chronoFlowExec, model.Trace.ChronoFlowExecutionInstanceId);
         Assert.Equal(entityId, Assert.Single(model.Trace.RelatedEntityIds));
 
         Assert.Equal("p1", model.Prompt.PromptKey);

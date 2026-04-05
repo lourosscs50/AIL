@@ -77,6 +77,7 @@ public class ExecuteIntelligenceEndpointTests : IClassFixture<WebApplicationFact
         var execId = Guid.NewGuid();
         var correlation = Guid.NewGuid();
         var entity = Guid.NewGuid();
+        var chronoFlowExec = Guid.NewGuid();
 
         var request = new ExecuteIntelligenceRequest(
             TenantId: Guid.NewGuid(),
@@ -88,7 +89,8 @@ public class ExecuteIntelligenceEndpointTests : IClassFixture<WebApplicationFact
             MemoryQuery: null,
             ExecutionInstanceId: execId,
             TraceThreadId: "w3c-trace-abc",
-            CorrelationGroupId: correlation);
+            CorrelationGroupId: correlation,
+            ChronoFlowExecutionInstanceId: chronoFlowExec);
 
         var post = await client.PostAsJsonAsync("/execute-intelligence", request);
         Assert.Equal(HttpStatusCode.OK, post.StatusCode);
@@ -102,6 +104,7 @@ public class ExecuteIntelligenceEndpointTests : IClassFixture<WebApplicationFact
         Assert.Equal("w3c-trace-abc", vis.Trace.TraceId);
         Assert.Equal(correlation, vis.Trace.CorrelationId);
         Assert.Equal(entity, Assert.Single(vis.Trace.RelatedEntityIds));
+        Assert.Equal(chronoFlowExec, vis.Trace.ChronoFlowExecutionInstanceId);
         Assert.Equal("prompt", vis.ExecutionExtension!.Prompt.PromptKey);
     }
 

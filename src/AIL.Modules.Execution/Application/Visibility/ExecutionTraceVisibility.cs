@@ -16,4 +16,5 @@ public sealed record ExecutionTraceVisibility(
     string? TraceThreadId,
     Guid? CorrelationGroupId,
     Guid ExecutionInstanceId,
-    IReadOnlyList<Guid> RelatedEntityIds);
+    IReadOnlyList<Guid> RelatedEntityIds,
+    Guid? ChronoFlowExecutionInstanceId = null);

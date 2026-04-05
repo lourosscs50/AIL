@@ -13,4 +13,5 @@ public sealed record ExecuteIntelligenceRequest(
     ExecuteIntelligenceMemoryRequest? MemoryQuery = null,
     Guid? ExecutionInstanceId = null,
     string? TraceThreadId = null,
-    Guid? CorrelationGroupId = null);
+    Guid? CorrelationGroupId = null,
+    Guid? ChronoFlowExecutionInstanceId = null);
