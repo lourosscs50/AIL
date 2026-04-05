@@ -141,19 +141,29 @@ file static class DecisionEndpointMapping
             Metadata: req.Metadata);
     }
 
-    public static DecideResponse MapToDecideResponse(DecisionResult result) =>
-        new(
+    public static DecideResponse MapToDecideResponse(DecisionResult result)
+    {
+        // Preserve DecisionResult.Options order from the pipeline; do not reorder here.
+        var options = result.Options.Select(o => new DecideOptionResponse(
+            OptionId: o.OptionId,
+            Confidence: o.Confidence.ToString(),
+            Strength: o.Strength,
+            RationaleSummary: o.RationaleSummary)).ToList();
+
+        var selectedOptionId = options.Exists(o => o.OptionId == result.SelectedStrategyKey)
+            ? result.SelectedStrategyKey
+            : null;
+
+        return new DecideResponse(
             DecisionType: result.DecisionType,
             SelectedStrategyKey: result.SelectedStrategyKey,
             Confidence: result.Confidence.ToString(),
             ReasonSummary: result.ReasonSummary,
-            Options: result.Options.Select(o => new DecideOptionResponse(
-                OptionId: o.OptionId,
-                Confidence: o.Confidence.ToString(),
-                Strength: o.Strength,
-                RationaleSummary: o.RationaleSummary)).ToList(),
+            Options: options,
             ConsideredStrategies: result.ConsideredStrategies,
             UsedMemory: result.UsedMemory,
             MemoryItemCount: result.MemoryItemCount,
-            Metadata: result.Metadata);
+            Metadata: result.Metadata,
+            SelectedOptionId: selectedOptionId);
+    }
 }

@@ -1,4 +1,6 @@
+using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Net.Http.Json;
 using AIL.Api.Contracts;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -44,6 +46,8 @@ public sealed class DecisionsEndpointTests : IClassFixture<WebApplicationFactory
         Assert.Equal("default_safe", body.SelectedStrategyKey);
         Assert.False(body.UsedMemory);
         Assert.NotEmpty(body.Options);
+        AssertSelectedOptionIsExplicitAndInCanonicalOptions(body, "default_safe");
+        AssertNoParallelSelectedOptionPayload(body);
     }
 
     [Fact]
@@ -67,6 +71,64 @@ public sealed class DecisionsEndpointTests : IClassFixture<WebApplicationFactory
         var body = await response.Content.ReadFromJsonAsync<DecideResponse>();
         Assert.NotNull(body);
         Assert.Equal("context_escalated", body!.SelectedStrategyKey);
+        AssertSelectedOptionIsExplicitAndInCanonicalOptions(body, "context_escalated");
+        AssertNoParallelSelectedOptionPayload(body);
+    }
+
+    [Fact]
+    public async Task Post_Decisions_Winner_Resolvable_By_SelectedOptionId_Not_List_Position_Alone()
+    {
+        var client = _factory.CreateClient();
+        var request = new DecideRequest(
+            TenantId: Guid.NewGuid(),
+            DecisionType: "control_trigger_routing",
+            SubjectType: "control_trigger",
+            SubjectId: "subj",
+            ContextText: null,
+            StructuredContext: new Dictionary<string, string> { ["escalation"] = "true" },
+            IncludeMemory: false,
+            MemoryQuery: null,
+            CandidateStrategies: null,
+            Metadata: null);
+
+        var body = await PostDecisionsAsync(client, request);
+
+        Assert.NotNull(body.SelectedOptionId);
+        // Deliberately resolve by SelectedOptionId (not Options[0]) so consumers are not tied to index semantics.
+        var resolved = Assert.Single(body.Options, o => o.OptionId == body.SelectedOptionId);
+        Assert.Equal(body.SelectedStrategyKey, resolved.OptionId);
+    }
+
+    [Fact]
+    public async Task Post_Decisions_Option_Order_And_SelectedOptionId_Are_Deterministic_Across_Calls()
+    {
+        var client = _factory.CreateClient();
+        var request = new DecideRequest(
+            TenantId: Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
+            DecisionType: "control_trigger_routing",
+            SubjectType: "control_trigger",
+            SubjectId: Guid.NewGuid().ToString("D"),
+            ContextText: null,
+            StructuredContext: new Dictionary<string, string>
+            {
+                ["lifecycle_event_type"] = "AlertCreated",
+                ["trigger_type"] = "AlertCreated"
+            },
+            IncludeMemory: false,
+            MemoryQuery: null,
+            CandidateStrategies: null,
+            Metadata: null);
+
+        var first = await PostDecisionsAsync(client, request);
+        var second = await PostDecisionsAsync(client, request);
+
+        Assert.Equal(
+            first.Options.Select(o => o.OptionId),
+            second.Options.Select(o => o.OptionId));
+        Assert.Equal(first.SelectedOptionId, second.SelectedOptionId);
+        Assert.Equal(first.SelectedStrategyKey, second.SelectedStrategyKey);
+        Assert.Equal(first.Confidence, second.Confidence);
+        Assert.Equal(first.ReasonSummary, second.ReasonSummary);
     }
 
     [Fact]
@@ -88,5 +150,40 @@ public sealed class DecisionsEndpointTests : IClassFixture<WebApplicationFactory
         var response = await client.PostAsJsonAsync("/decisions", request);
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    private static async Task<DecideResponse> PostDecisionsAsync(HttpClient client, DecideRequest request)
+    {
+        var response = await client.PostAsJsonAsync("/decisions", request);
+        response.EnsureSuccessStatusCode();
+        var body = await response.Content.ReadFromJsonAsync<DecideResponse>();
+        Assert.NotNull(body);
+        return body!;
+    }
+
+    /// <summary>
+    /// SelectedOptionId must match an entry in the canonical Options list; SelectedStrategyKey stays the advisory winner key.
+    /// </summary>
+    private static void AssertSelectedOptionIsExplicitAndInCanonicalOptions(DecideResponse body, string expectedStrategyKey)
+    {
+        Assert.Equal(expectedStrategyKey, body.SelectedStrategyKey);
+        Assert.NotNull(body.SelectedOptionId);
+        Assert.Equal(expectedStrategyKey, body.SelectedOptionId);
+        _ = Assert.Single(body.Options, o => o.OptionId == body.SelectedOptionId);
+    }
+
+    /// <summary>
+    /// Only <see cref="DecideResponse.Options"/> carries option rows; no parallel list property exists on the contract.
+    /// </summary>
+    private static void AssertNoParallelSelectedOptionPayload(DecideResponse body)
+    {
+        Assert.NotNull(body.Options);
+        var optionListProps = typeof(DecideResponse)
+            .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+            .Where(p => p.PropertyType == typeof(IReadOnlyList<DecideOptionResponse>))
+            .Select(p => p.Name)
+            .ToList();
+        Assert.Single(optionListProps);
+        Assert.Equal(nameof(DecideResponse.Options), optionListProps[0]);
     }
 }
