@@ -22,7 +22,8 @@ internal sealed class ExecutionTelemetryService : IExecutionTelemetryService
         _logger.Log(
             level,
             "Execution telemetry | TenantId={TenantId} Capability={Capability} Provider={Provider} Model={Model} " +
-            "Tokens=({InputTokens}/{OutputTokens}) Duration={DurationMs}ms Succeeded={Succeeded} Fallback={Fallback}",
+            "Tokens=({InputTokens}/{OutputTokens}) Duration={DurationMs}ms Succeeded={Succeeded} Fallback={Fallback} " +
+            "MemoryRequested={MemoryRequested} MemoryItemCount={MemoryItemCount}",
             telemetry.TenantId,
             telemetry.CapabilityKey,
             telemetry.ProviderKey,
@@ -31,7 +32,9 @@ internal sealed class ExecutionTelemetryService : IExecutionTelemetryService
             telemetry.OutputTokenCount,
             telemetry.DurationMs,
             telemetry.Succeeded,
-            telemetry.UsedFallback);
+            telemetry.UsedFallback,
+            telemetry.MemoryRequested,
+            telemetry.MemoryItemCount);
 
         return Task.CompletedTask;
     }

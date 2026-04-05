@@ -1,3 +1,3 @@
 namespace AIL.Modules.Execution.Infrastructure;
 
-internal static class AssemblyMarker { }
+public static class AssemblyMarker { }

@@ -87,6 +87,7 @@
 /Volumes/DevDrive/Dev/platform/AIL/tests/AIL.Modules.Reliability.Tests/obj/Debug/net10.0/AIL.Modules.Reliability.Tests.AssemblyInfoInputs.cache
 /Volumes/DevDrive/Dev/platform/AIL/tests/AIL.Modules.Reliability.Tests/obj/Debug/net10.0/AIL.Modules.Reliability.Tests.AssemblyInfo.cs
 /Volumes/DevDrive/Dev/platform/AIL/tests/AIL.Modules.Reliability.Tests/obj/Debug/net10.0/AIL.Modules.Reliability.Tests.csproj.CoreCompileInputs.cache
+/Volumes/DevDrive/Dev/platform/AIL/tests/AIL.Modules.Reliability.Tests/obj/Debug/net10.0/AIL.Modules.Reliability.Tests.sourcelink.json
 /Volumes/DevDrive/Dev/platform/AIL/tests/AIL.Modules.Reliability.Tests/obj/Debug/net10.0/AIL.Modu.C3A3E7FD.Up2Date
 /Volumes/DevDrive/Dev/platform/AIL/tests/AIL.Modules.Reliability.Tests/obj/Debug/net10.0/AIL.Modules.Reliability.Tests.dll
 /Volumes/DevDrive/Dev/platform/AIL/tests/AIL.Modules.Reliability.Tests/obj/Debug/net10.0/refint/AIL.Modules.Reliability.Tests.dll

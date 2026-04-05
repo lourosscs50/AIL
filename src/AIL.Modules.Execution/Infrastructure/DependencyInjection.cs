@@ -15,7 +15,13 @@ public static class DependencyInjection
         services.AddSingleton<IProviderExecutionGatewayProvider, ProviderExecutionGatewayResolver>();
         services.AddSingleton<IProviderSelectionService, ProviderSelectionService>();
         services.AddSingleton<IExecutionReliabilityService, ExecutionReliabilityService>();
+        services.AddSingleton<IMemoryContextAssembler, MemoryContextAssembler>();
         services.AddSingleton<IExecutionService, ExecutionService>();
+        services.AddSingleton<IExecutionVisibilityReadStore, InMemoryExecutionVisibilityReadStore>();
+
+        // Register memory strategy
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<IExecutionMemoryStrategy, DefaultExecutionMemoryStrategy>());
+
         return services;
     }
 
@@ -49,7 +55,13 @@ public static class DependencyInjection
         services.AddSingleton<IProviderExecutionGatewayProvider, ProviderExecutionGatewayResolver>();
         services.AddSingleton<IProviderSelectionService, ProviderSelectionService>();
         services.AddSingleton<IExecutionReliabilityService, ExecutionReliabilityService>();
+        services.AddSingleton<IMemoryContextAssembler, MemoryContextAssembler>();
         services.AddSingleton<IExecutionService, ExecutionService>();
+        services.AddSingleton<IExecutionVisibilityReadStore, InMemoryExecutionVisibilityReadStore>();
+
+        // Register memory strategy
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<IExecutionMemoryStrategy, DefaultExecutionMemoryStrategy>());
+
         return services;
     }
 }

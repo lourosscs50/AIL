@@ -7,4 +7,6 @@ public sealed record ExecuteIntelligenceResponse(
     string ProviderKey,
     string ModelKey,
     string PromptVersion,
-    Guid AuditRecordId);
+    Guid AuditRecordId,
+    Guid ExecutionInstanceId,
+    DecisionVisibilityResponse? DecisionVisibility);

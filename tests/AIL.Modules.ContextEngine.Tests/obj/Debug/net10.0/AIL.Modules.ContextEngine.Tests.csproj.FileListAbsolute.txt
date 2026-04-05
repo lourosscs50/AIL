@@ -87,6 +87,7 @@
 /Volumes/DevDrive/Dev/platform/AIL/tests/AIL.Modules.ContextEngine.Tests/obj/Debug/net10.0/AIL.Modules.ContextEngine.Tests.AssemblyInfoInputs.cache
 /Volumes/DevDrive/Dev/platform/AIL/tests/AIL.Modules.ContextEngine.Tests/obj/Debug/net10.0/AIL.Modules.ContextEngine.Tests.AssemblyInfo.cs
 /Volumes/DevDrive/Dev/platform/AIL/tests/AIL.Modules.ContextEngine.Tests/obj/Debug/net10.0/AIL.Modules.ContextEngine.Tests.csproj.CoreCompileInputs.cache
+/Volumes/DevDrive/Dev/platform/AIL/tests/AIL.Modules.ContextEngine.Tests/obj/Debug/net10.0/AIL.Modules.ContextEngine.Tests.sourcelink.json
 /Volumes/DevDrive/Dev/platform/AIL/tests/AIL.Modules.ContextEngine.Tests/obj/Debug/net10.0/AIL.Modu.7F7A5176.Up2Date
 /Volumes/DevDrive/Dev/platform/AIL/tests/AIL.Modules.ContextEngine.Tests/obj/Debug/net10.0/AIL.Modules.ContextEngine.Tests.dll
 /Volumes/DevDrive/Dev/platform/AIL/tests/AIL.Modules.ContextEngine.Tests/obj/Debug/net10.0/refint/AIL.Modules.ContextEngine.Tests.dll

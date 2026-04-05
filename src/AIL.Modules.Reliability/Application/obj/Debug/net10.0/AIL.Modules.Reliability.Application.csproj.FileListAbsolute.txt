@@ -5,6 +5,7 @@
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Reliability/Application/obj/Debug/net10.0/AIL.Modules.Reliability.Application.AssemblyInfoInputs.cache
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Reliability/Application/obj/Debug/net10.0/AIL.Modules.Reliability.Application.AssemblyInfo.cs
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Reliability/Application/obj/Debug/net10.0/AIL.Modules.Reliability.Application.csproj.CoreCompileInputs.cache
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Reliability/Application/obj/Debug/net10.0/AIL.Modules.Reliability.Application.sourcelink.json
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Reliability/Application/obj/Debug/net10.0/AIL.Modules.Reliability.Application.dll
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Reliability/Application/obj/Debug/net10.0/refint/AIL.Modules.Reliability.Application.dll
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Reliability/Application/obj/Debug/net10.0/AIL.Modules.Reliability.Application.pdb

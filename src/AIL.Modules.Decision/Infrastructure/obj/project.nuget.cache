@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "X8kZwYsIIFY=",
+  "success": true,
+  "projectFilePath": "/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Decision/Infrastructure/AIL.Modules.Decision.Infrastructure.csproj",
+  "expectedPackageFiles": [
+    "/var/folders/y9/78wwjznd1d1g8hwb44kwh_d00000gn/T/cursor-sandbox-cache/297644f97004b217d2f5c27742fbaa7c/nuget/microsoft.extensions.dependencyinjection.abstractions/10.0.5/microsoft.extensions.dependencyinjection.abstractions.10.0.5.nupkg.sha512",
+    "/var/folders/y9/78wwjznd1d1g8hwb44kwh_d00000gn/T/cursor-sandbox-cache/297644f97004b217d2f5c27742fbaa7c/nuget/microsoft.extensions.logging.abstractions/10.0.5/microsoft.extensions.logging.abstractions.10.0.5.nupkg.sha512"
+  ],
+  "logs": []
+}

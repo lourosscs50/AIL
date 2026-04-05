@@ -5,6 +5,7 @@
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Audit/Domain/obj/Debug/net10.0/AIL.Modules.Audit.Domain.AssemblyInfoInputs.cache
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Audit/Domain/obj/Debug/net10.0/AIL.Modules.Audit.Domain.AssemblyInfo.cs
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Audit/Domain/obj/Debug/net10.0/AIL.Modules.Audit.Domain.csproj.CoreCompileInputs.cache
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Audit/Domain/obj/Debug/net10.0/AIL.Modules.Audit.Domain.sourcelink.json
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Audit/Domain/obj/Debug/net10.0/AIL.Modules.Audit.Domain.dll
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Audit/Domain/obj/Debug/net10.0/refint/AIL.Modules.Audit.Domain.dll
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Audit/Domain/obj/Debug/net10.0/AIL.Modules.Audit.Domain.pdb

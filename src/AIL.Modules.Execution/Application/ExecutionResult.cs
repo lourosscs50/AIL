@@ -1,4 +1,5 @@
 using System;
+using AIL.Modules.Execution.Application.Visibility;
 
 namespace AIL.Modules.Execution.Application;
 
@@ -9,4 +10,6 @@ public sealed record ExecutionResult(
     string ProviderKey,
     string ModelKey,
     string PromptVersion,
-    Guid AuditRecordId);
+    Guid AuditRecordId,
+    Guid ExecutionInstanceId,
+    ExecutionVisibilityReadModel Visibility);

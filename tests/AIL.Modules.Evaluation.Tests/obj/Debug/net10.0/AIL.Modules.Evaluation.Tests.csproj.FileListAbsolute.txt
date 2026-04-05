@@ -87,6 +87,7 @@
 /Volumes/DevDrive/Dev/platform/AIL/tests/AIL.Modules.Evaluation.Tests/obj/Debug/net10.0/AIL.Modules.Evaluation.Tests.AssemblyInfoInputs.cache
 /Volumes/DevDrive/Dev/platform/AIL/tests/AIL.Modules.Evaluation.Tests/obj/Debug/net10.0/AIL.Modules.Evaluation.Tests.AssemblyInfo.cs
 /Volumes/DevDrive/Dev/platform/AIL/tests/AIL.Modules.Evaluation.Tests/obj/Debug/net10.0/AIL.Modules.Evaluation.Tests.csproj.CoreCompileInputs.cache
+/Volumes/DevDrive/Dev/platform/AIL/tests/AIL.Modules.Evaluation.Tests/obj/Debug/net10.0/AIL.Modules.Evaluation.Tests.sourcelink.json
 /Volumes/DevDrive/Dev/platform/AIL/tests/AIL.Modules.Evaluation.Tests/obj/Debug/net10.0/AIL.Modu.1101E390.Up2Date
 /Volumes/DevDrive/Dev/platform/AIL/tests/AIL.Modules.Evaluation.Tests/obj/Debug/net10.0/AIL.Modules.Evaluation.Tests.dll
 /Volumes/DevDrive/Dev/platform/AIL/tests/AIL.Modules.Evaluation.Tests/obj/Debug/net10.0/refint/AIL.Modules.Evaluation.Tests.dll

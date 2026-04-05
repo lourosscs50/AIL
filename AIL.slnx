@@ -101,8 +101,17 @@
   <Folder Name="/src/AIL.Modules.Security/Domain/">
     <Project Path="src/AIL.Modules.Security/Domain/AIL.Modules.Security.Domain.csproj" />
   </Folder>
-  <Folder Name="/src/AIL.Modules.Security/Infrastructure/">
-    <Project Path="src/AIL.Modules.Security/Infrastructure/AIL.Modules.Security.Infrastructure.csproj" />
+  <Folder Name="/src/AIL.Modules.MemoryCore.Domain/">
+    <Project Path="src/AIL.Modules.MemoryCore.Domain/AIL.Modules.MemoryCore.Domain.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.MemoryCore.Application/">
+    <Project Path="src/AIL.Modules.MemoryCore.Application/AIL.Modules.MemoryCore.Application.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.MemoryCore.Infrastructure/">
+    <Project Path="src/AIL.Modules.MemoryCore.Infrastructure/AIL.Modules.MemoryCore.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.MemoryCore.Contracts/">
+    <Project Path="src/AIL.Modules.MemoryCore.Contracts/AIL.Modules.MemoryCore.Contracts.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/AIL.Api.Tests/AIL.Api.Tests.csproj" />
@@ -111,5 +120,9 @@
     <Project Path="tests/AIL.Modules.Evaluation.Tests/AIL.Modules.Evaluation.Tests.csproj" />
     <Project Path="tests/AIL.Modules.Execution.Tests/AIL.Modules.Execution.Tests.csproj" />
     <Project Path="tests/AIL.Modules.Reliability.Tests/AIL.Modules.Reliability.Tests.csproj" />
+    <Project Path="tests/AIL.Modules.MemoryCore.Domain.Tests/AIL.Modules.MemoryCore.Domain.Tests.csproj" />
+    <Project Path="tests/AIL.Modules.MemoryCore.Application.Tests/AIL.Modules.MemoryCore.Application.Tests.csproj" />
+    <Project Path="tests/AIL.Modules.MemoryCore.Architecture.Tests/AIL.Modules.MemoryCore.Architecture.Tests.csproj" />
+    <Project Path="tests/AIL.Modules.MemoryCore.Infrastructure.Tests/AIL.Modules.MemoryCore.Infrastructure.Tests.csproj" />
   </Folder>
 </Solution>

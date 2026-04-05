@@ -5,6 +5,7 @@
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Shared/obj/Debug/net10.0/AIL.Shared.AssemblyInfoInputs.cache
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Shared/obj/Debug/net10.0/AIL.Shared.AssemblyInfo.cs
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Shared/obj/Debug/net10.0/AIL.Shared.csproj.CoreCompileInputs.cache
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Shared/obj/Debug/net10.0/AIL.Shared.sourcelink.json
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Shared/obj/Debug/net10.0/AIL.Shared.dll
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Shared/obj/Debug/net10.0/refint/AIL.Shared.dll
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Shared/obj/Debug/net10.0/AIL.Shared.pdb

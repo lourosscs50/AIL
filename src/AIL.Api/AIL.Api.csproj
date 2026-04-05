@@ -12,8 +12,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AIL.Modules.Execution\Application\AIL.Modules.Execution.Application.csproj" />
     <ProjectReference Include="..\AIL.Modules.Security\Infrastructure\AIL.Modules.Security.Infrastructure.csproj" />
+    <ProjectReference Include="..\AIL.Modules.Decision\Infrastructure\AIL.Modules.Decision.Infrastructure.csproj" />
     <ProjectReference Include="..\AIL.Modules.Execution\Infrastructure\AIL.Modules.Execution.Infrastructure.csproj" />
+    <ProjectReference Include="..\AIL.Modules.MemoryCore.Infrastructure\AIL.Modules.MemoryCore.Infrastructure.csproj" />
     <ProjectReference Include="..\AIL.Modules.PromptRegistry\Infrastructure\AIL.Modules.PromptRegistry.Infrastructure.csproj" />
     <ProjectReference Include="..\AIL.Modules.PolicyRegistry\Infrastructure\AIL.Modules.PolicyRegistry.Infrastructure.csproj" />
     <ProjectReference Include="..\AIL.Modules.ContextEngine\Infrastructure\AIL.Modules.ContextEngine.Infrastructure.csproj" />

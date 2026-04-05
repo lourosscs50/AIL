@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "dgSpecHash": "IPexW7oTl9s=",
+  "success": true,
+  "projectFilePath": "/Volumes/DevDrive/Dev/platform/AIL/tests/AIL.Modules.Security.Tests/AIL.Modules.Security.Tests.csproj",
+  "expectedPackageFiles": [
+    "/var/folders/y9/78wwjznd1d1g8hwb44kwh_d00000gn/T/cursor-sandbox-cache/c4cdd4fc4315cf13afa829d25838535a/nuget/coverlet.collector/6.0.2/coverlet.collector.6.0.2.nupkg.sha512",
+    "/var/folders/y9/78wwjznd1d1g8hwb44kwh_d00000gn/T/cursor-sandbox-cache/c4cdd4fc4315cf13afa829d25838535a/nuget/microsoft.codecoverage/17.13.0/microsoft.codecoverage.17.13.0.nupkg.sha512",
+    "/var/folders/y9/78wwjznd1d1g8hwb44kwh_d00000gn/T/cursor-sandbox-cache/c4cdd4fc4315cf13afa829d25838535a/nuget/microsoft.extensions.dependencyinjection.abstractions/10.0.0-preview.7.25380.108/microsoft.extensions.dependencyinjection.abstractions.10.0.0-preview.7.25380.108.nupkg.sha512",
+    "/var/folders/y9/78wwjznd1d1g8hwb44kwh_d00000gn/T/cursor-sandbox-cache/c4cdd4fc4315cf13afa829d25838535a/nuget/microsoft.net.test.sdk/17.13.0/microsoft.net.test.sdk.17.13.0.nupkg.sha512",
+    "/var/folders/y9/78wwjznd1d1g8hwb44kwh_d00000gn/T/cursor-sandbox-cache/c4cdd4fc4315cf13afa829d25838535a/nuget/microsoft.testplatform.objectmodel/17.13.0/microsoft.testplatform.objectmodel.17.13.0.nupkg.sha512",
+    "/var/folders/y9/78wwjznd1d1g8hwb44kwh_d00000gn/T/cursor-sandbox-cache/c4cdd4fc4315cf13afa829d25838535a/nuget/microsoft.testplatform.testhost/17.13.0/microsoft.testplatform.testhost.17.13.0.nupkg.sha512",
+    "/var/folders/y9/78wwjznd1d1g8hwb44kwh_d00000gn/T/cursor-sandbox-cache/c4cdd4fc4315cf13afa829d25838535a/nuget/newtonsoft.json/13.0.1/newtonsoft.json.13.0.1.nupkg.sha512",
+    "/var/folders/y9/78wwjznd1d1g8hwb44kwh_d00000gn/T/cursor-sandbox-cache/c4cdd4fc4315cf13afa829d25838535a/nuget/xunit/2.9.3/xunit.2.9.3.nupkg.sha512",
+    "/var/folders/y9/78wwjznd1d1g8hwb44kwh_d00000gn/T/cursor-sandbox-cache/c4cdd4fc4315cf13afa829d25838535a/nuget/xunit.abstractions/2.0.3/xunit.abstractions.2.0.3.nupkg.sha512",
+    "/var/folders/y9/78wwjznd1d1g8hwb44kwh_d00000gn/T/cursor-sandbox-cache/c4cdd4fc4315cf13afa829d25838535a/nuget/xunit.analyzers/1.18.0/xunit.analyzers.1.18.0.nupkg.sha512",
+    "/var/folders/y9/78wwjznd1d1g8hwb44kwh_d00000gn/T/cursor-sandbox-cache/c4cdd4fc4315cf13afa829d25838535a/nuget/xunit.assert/2.9.3/xunit.assert.2.9.3.nupkg.sha512",
+    "/var/folders/y9/78wwjznd1d1g8hwb44kwh_d00000gn/T/cursor-sandbox-cache/c4cdd4fc4315cf13afa829d25838535a/nuget/xunit.core/2.9.3/xunit.core.2.9.3.nupkg.sha512",
+    "/var/folders/y9/78wwjznd1d1g8hwb44kwh_d00000gn/T/cursor-sandbox-cache/c4cdd4fc4315cf13afa829d25838535a/nuget/xunit.extensibility.core/2.9.3/xunit.extensibility.core.2.9.3.nupkg.sha512",
+    "/var/folders/y9/78wwjznd1d1g8hwb44kwh_d00000gn/T/cursor-sandbox-cache/c4cdd4fc4315cf13afa829d25838535a/nuget/xunit.extensibility.execution/2.9.3/xunit.extensibility.execution.2.9.3.nupkg.sha512",
+    "/var/folders/y9/78wwjznd1d1g8hwb44kwh_d00000gn/T/cursor-sandbox-cache/c4cdd4fc4315cf13afa829d25838535a/nuget/xunit.runner.visualstudio/3.1.1/xunit.runner.visualstudio.3.1.1.nupkg.sha512"
+  ],
+  "logs": []
+}

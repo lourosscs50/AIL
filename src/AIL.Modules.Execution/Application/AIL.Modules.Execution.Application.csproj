@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\AIL.Modules.MemoryCore.Contracts\AIL.Modules.MemoryCore.Contracts.csproj" />
+  </ItemGroup>
+
 </Project>

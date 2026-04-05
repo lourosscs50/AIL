@@ -12,4 +12,6 @@ public sealed record ExecutionPolicy(
     string? FallbackProviderKey,
     string? FallbackModelKey,
     int MaxTokens,
-    int TimeoutMs);
+    int TimeoutMs,
+    bool? DefaultIncludeMemory = null,
+    int? DefaultMemoryMaxResults = null);

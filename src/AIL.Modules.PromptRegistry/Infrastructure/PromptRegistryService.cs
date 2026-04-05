@@ -189,6 +189,7 @@ public sealed class PromptRegistryService : IPromptRegistryService
             throw new PromptValidationException($"Missing required variables: {string.Join(", ", missing)}");
 
         var unknown = variables.Keys
+            .Where(k => !string.Equals(k, PromptReservedVariableNames.MemoryContext, StringComparison.OrdinalIgnoreCase))
             .Except(prompt.VariableDefinitions.Keys, StringComparer.OrdinalIgnoreCase)
             .ToList();
 

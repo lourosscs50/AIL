@@ -1,0 +1,53 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "AIL.Modules.MemoryCore.Application/1.0.0": {
+        "dependencies": {
+          "AIL.Modules.MemoryCore.Contracts": "1.0.0",
+          "AIL.Modules.MemoryCore.Domain": "1.0.0"
+        },
+        "runtime": {
+          "AIL.Modules.MemoryCore.Application.dll": {}
+        }
+      },
+      "AIL.Modules.MemoryCore.Contracts/1.0.0": {
+        "runtime": {
+          "AIL.Modules.MemoryCore.Contracts.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "AIL.Modules.MemoryCore.Domain/1.0.0": {
+        "runtime": {
+          "AIL.Modules.MemoryCore.Domain.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "AIL.Modules.MemoryCore.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "AIL.Modules.MemoryCore.Contracts/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "AIL.Modules.MemoryCore.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

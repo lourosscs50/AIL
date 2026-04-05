@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\AIL.Modules.Security\Domain\AIL.Modules.Security.Domain.csproj" />
     <ProjectReference Include="..\..\src\AIL.Modules.Execution\Application\AIL.Modules.Execution.Application.csproj" />
+    <ProjectReference Include="..\..\src\AIL.Modules.Decision\Application\AIL.Modules.Decision.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>

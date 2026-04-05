@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "nftjmLo4Clg=",
+  "dgSpecHash": "ADabiWvv9eU=",
   "success": true,
   "projectFilePath": "/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Security/Infrastructure/AIL.Modules.Security.Infrastructure.csproj",
   "expectedPackageFiles": [
-    "/Users/lou/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/10.0.0-preview.7.25380.108/microsoft.extensions.dependencyinjection.abstractions.10.0.0-preview.7.25380.108.nupkg.sha512"
+    "/var/folders/y9/78wwjznd1d1g8hwb44kwh_d00000gn/T/cursor-sandbox-cache/297644f97004b217d2f5c27742fbaa7c/nuget/microsoft.extensions.dependencyinjection.abstractions/10.0.5/microsoft.extensions.dependencyinjection.abstractions.10.0.5.nupkg.sha512"
   ],
   "logs": []
 }

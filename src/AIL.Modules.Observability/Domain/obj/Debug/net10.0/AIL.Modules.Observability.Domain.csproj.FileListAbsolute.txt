@@ -5,6 +5,7 @@
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Observability/Domain/obj/Debug/net10.0/AIL.Modules.Observability.Domain.AssemblyInfoInputs.cache
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Observability/Domain/obj/Debug/net10.0/AIL.Modules.Observability.Domain.AssemblyInfo.cs
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Observability/Domain/obj/Debug/net10.0/AIL.Modules.Observability.Domain.csproj.CoreCompileInputs.cache
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Observability/Domain/obj/Debug/net10.0/AIL.Modules.Observability.Domain.sourcelink.json
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Observability/Domain/obj/Debug/net10.0/AIL.Modules.Observability.Domain.dll
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Observability/Domain/obj/Debug/net10.0/refint/AIL.Modules.Observability.Domain.dll
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Observability/Domain/obj/Debug/net10.0/AIL.Modules.Observability.Domain.pdb

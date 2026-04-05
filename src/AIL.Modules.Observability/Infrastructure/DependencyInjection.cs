@@ -8,6 +8,7 @@ public static class DependencyInjection
     public static IServiceCollection AddObservabilityModule(this IServiceCollection services)
     {
         services.AddSingleton<IExecutionTelemetryService, ExecutionTelemetryService>();
+        services.AddSingleton<IDecisionTelemetryService, DecisionTelemetryService>();
         return services;
     }
 }

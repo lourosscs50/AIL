@@ -14,6 +14,7 @@
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ProviderRegistry/Infrastructure/obj/Debug/net10.0/AIL.Modules.ProviderRegistry.Infrastructure.AssemblyInfoInputs.cache
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ProviderRegistry/Infrastructure/obj/Debug/net10.0/AIL.Modules.ProviderRegistry.Infrastructure.AssemblyInfo.cs
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ProviderRegistry/Infrastructure/obj/Debug/net10.0/AIL.Modules.ProviderRegistry.Infrastructure.csproj.CoreCompileInputs.cache
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ProviderRegistry/Infrastructure/obj/Debug/net10.0/AIL.Modules.ProviderRegistry.Infrastructure.sourcelink.json
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ProviderRegistry/Infrastructure/obj/Debug/net10.0/AIL.Modu.D29D81E5.Up2Date
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ProviderRegistry/Infrastructure/obj/Debug/net10.0/AIL.Modules.ProviderRegistry.Infrastructure.dll
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ProviderRegistry/Infrastructure/obj/Debug/net10.0/refint/AIL.Modules.ProviderRegistry.Infrastructure.dll

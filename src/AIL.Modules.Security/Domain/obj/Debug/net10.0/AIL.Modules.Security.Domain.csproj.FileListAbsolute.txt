@@ -5,6 +5,7 @@
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Security/Domain/obj/Debug/net10.0/AIL.Modules.Security.Domain.AssemblyInfoInputs.cache
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Security/Domain/obj/Debug/net10.0/AIL.Modules.Security.Domain.AssemblyInfo.cs
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Security/Domain/obj/Debug/net10.0/AIL.Modules.Security.Domain.csproj.CoreCompileInputs.cache
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Security/Domain/obj/Debug/net10.0/AIL.Modules.Security.Domain.sourcelink.json
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Security/Domain/obj/Debug/net10.0/AIL.Modules.Security.Domain.dll
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Security/Domain/obj/Debug/net10.0/refint/AIL.Modules.Security.Domain.dll
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Security/Domain/obj/Debug/net10.0/AIL.Modules.Security.Domain.pdb

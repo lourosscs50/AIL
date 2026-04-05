@@ -1,5 +1,6 @@
 ﻿using AIL.Modules.Execution.Application;
 using AIL.Modules.Execution.Infrastructure;
+using AIL.Modules.MemoryCore.Infrastructure;
 using AIL.Modules.Security.Infrastructure;
 using AIL.Modules.PromptRegistry.Infrastructure;
 using AIL.Modules.PolicyRegistry.Infrastructure;
@@ -39,6 +40,7 @@ public sealed class ExecutionServiceTests
         services.AddAuditModule();
         services.AddObservabilityModule();
         services.AddProviderRegistryModule();
+        services.AddMemoryCoreModule();
         services.AddExecutionModule(configuration);
 
         using var provider = services.BuildServiceProvider();
@@ -252,6 +254,7 @@ public sealed class ExecutionServiceTests
         services.AddAuditModule();
         services.AddObservabilityModule();
         services.AddProviderRegistryModule();
+        services.AddMemoryCoreModule();
         services.AddExecutionModule(config);
 
         using var provider = services.BuildServiceProvider();
@@ -305,6 +308,8 @@ public sealed class ExecutionServiceTests
         var constructor = typeof(AIL.Modules.Execution.Infrastructure.ExecutionService).GetConstructors().Single();
 
         Assert.Contains(constructor.GetParameters(), p => p.ParameterType == typeof(AIL.Modules.PromptRegistry.Application.IPromptRegistryService));
+        Assert.Contains(constructor.GetParameters(), p => p.ParameterType == typeof(AIL.Modules.MemoryCore.Application.IMemoryService));
+        Assert.Contains(constructor.GetParameters(), p => p.ParameterType == typeof(AIL.Modules.Execution.Application.IMemoryContextAssembler));
         Assert.DoesNotContain(constructor.GetParameters(), p => p.ParameterType == typeof(AIL.Modules.PromptRegistry.Infrastructure.PromptRegistryService));
     }
 

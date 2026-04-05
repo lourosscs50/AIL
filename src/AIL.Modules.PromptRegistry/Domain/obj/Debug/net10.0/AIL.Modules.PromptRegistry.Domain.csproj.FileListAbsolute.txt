@@ -5,6 +5,7 @@
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.PromptRegistry/Domain/obj/Debug/net10.0/AIL.Modules.PromptRegistry.Domain.AssemblyInfoInputs.cache
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.PromptRegistry/Domain/obj/Debug/net10.0/AIL.Modules.PromptRegistry.Domain.AssemblyInfo.cs
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.PromptRegistry/Domain/obj/Debug/net10.0/AIL.Modules.PromptRegistry.Domain.csproj.CoreCompileInputs.cache
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.PromptRegistry/Domain/obj/Debug/net10.0/AIL.Modules.PromptRegistry.Domain.sourcelink.json
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.PromptRegistry/Domain/obj/Debug/net10.0/AIL.Modules.PromptRegistry.Domain.dll
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.PromptRegistry/Domain/obj/Debug/net10.0/refint/AIL.Modules.PromptRegistry.Domain.dll
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.PromptRegistry/Domain/obj/Debug/net10.0/AIL.Modules.PromptRegistry.Domain.pdb

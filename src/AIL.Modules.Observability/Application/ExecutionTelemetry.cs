@@ -15,4 +15,9 @@ public sealed record ExecutionTelemetry(
     int? OutputTokenCount,
     long DurationMs,
     bool Succeeded,
-    string? ErrorMessage = null);
+    string? ErrorMessage = null,
+    bool MemoryRequested = false,
+    int? MemoryItemCount = null,
+    string? TraceThreadId = null,
+    Guid? CorrelationGroupId = null,
+    Guid? ExecutionInstanceId = null);

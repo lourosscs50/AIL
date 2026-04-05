@@ -1,0 +1,12 @@
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.MemoryCore.Domain/bin/Debug/net10.0/AIL.Modules.MemoryCore.Domain.deps.json
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.MemoryCore.Domain/bin/Debug/net10.0/AIL.Modules.MemoryCore.Domain.dll
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.MemoryCore.Domain/bin/Debug/net10.0/AIL.Modules.MemoryCore.Domain.pdb
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.MemoryCore.Domain/obj/Debug/net10.0/AIL.Modules.MemoryCore.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.MemoryCore.Domain/obj/Debug/net10.0/AIL.Modules.MemoryCore.Domain.AssemblyInfoInputs.cache
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.MemoryCore.Domain/obj/Debug/net10.0/AIL.Modules.MemoryCore.Domain.AssemblyInfo.cs
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.MemoryCore.Domain/obj/Debug/net10.0/AIL.Modules.MemoryCore.Domain.csproj.CoreCompileInputs.cache
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.MemoryCore.Domain/obj/Debug/net10.0/AIL.Modules.MemoryCore.Domain.sourcelink.json
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.MemoryCore.Domain/obj/Debug/net10.0/AIL.Modules.MemoryCore.Domain.dll
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.MemoryCore.Domain/obj/Debug/net10.0/refint/AIL.Modules.MemoryCore.Domain.dll
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.MemoryCore.Domain/obj/Debug/net10.0/AIL.Modules.MemoryCore.Domain.pdb
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.MemoryCore.Domain/obj/Debug/net10.0/ref/AIL.Modules.MemoryCore.Domain.dll

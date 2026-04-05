@@ -12,6 +12,7 @@
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ProviderRegistry/Application/obj/Debug/net10.0/AIL.Modules.ProviderRegistry.Application.AssemblyInfoInputs.cache
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ProviderRegistry/Application/obj/Debug/net10.0/AIL.Modules.ProviderRegistry.Application.AssemblyInfo.cs
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ProviderRegistry/Application/obj/Debug/net10.0/AIL.Modules.ProviderRegistry.Application.csproj.CoreCompileInputs.cache
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ProviderRegistry/Application/obj/Debug/net10.0/AIL.Modules.ProviderRegistry.Application.sourcelink.json
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ProviderRegistry/Application/obj/Debug/net10.0/AIL.Modu.C550F26E.Up2Date
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ProviderRegistry/Application/obj/Debug/net10.0/AIL.Modules.ProviderRegistry.Application.dll
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.ProviderRegistry/Application/obj/Debug/net10.0/refint/AIL.Modules.ProviderRegistry.Application.dll

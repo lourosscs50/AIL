@@ -8,6 +8,7 @@
     ".NETCoreApp,Version=v10.0": {
       "AIL.Architecture.Tests/1.0.0": {
         "dependencies": {
+          "AIL.Modules.Decision.Application": "1.0.0",
           "AIL.Modules.Execution.Application": "1.0.0",
           "AIL.Modules.Security.Domain": "1.0.0",
           "Microsoft.NET.Test.Sdk": "17.13.0",
@@ -364,9 +365,39 @@
           }
         }
       },
+      "AIL.Modules.Decision.Application/1.0.0": {
+        "dependencies": {
+          "AIL.Modules.Decision.Domain": "1.0.0"
+        },
+        "runtime": {
+          "AIL.Modules.Decision.Application.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "AIL.Modules.Decision.Domain/1.0.0": {
+        "runtime": {
+          "AIL.Modules.Decision.Domain.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
       "AIL.Modules.Execution.Application/1.0.0": {
+        "dependencies": {
+          "AIL.Modules.MemoryCore.Contracts": "1.0.0"
+        },
         "runtime": {
           "AIL.Modules.Execution.Application.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "AIL.Modules.MemoryCore.Contracts/1.0.0": {
+        "runtime": {
+          "AIL.Modules.MemoryCore.Contracts.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
@@ -479,7 +510,22 @@
       "path": "xunit.extensibility.execution/2.9.3",
       "hashPath": "xunit.extensibility.execution.2.9.3.nupkg.sha512"
     },
+    "AIL.Modules.Decision.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "AIL.Modules.Decision.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
     "AIL.Modules.Execution.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "AIL.Modules.MemoryCore.Contracts/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

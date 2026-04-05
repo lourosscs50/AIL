@@ -10,7 +10,10 @@
         "dependencies": {
           "AIL.Modules.Audit.Infrastructure": "1.0.0",
           "AIL.Modules.ContextEngine.Infrastructure": "1.0.0",
+          "AIL.Modules.Decision.Infrastructure": "1.0.0",
+          "AIL.Modules.Execution.Application": "1.0.0",
           "AIL.Modules.Execution.Infrastructure": "1.0.0",
+          "AIL.Modules.MemoryCore.Infrastructure": "1.0.0",
           "AIL.Modules.Observability.Infrastructure": "1.0.0",
           "AIL.Modules.PolicyRegistry.Infrastructure": "1.0.0",
           "AIL.Modules.PromptRegistry.Infrastructure": "1.0.0",
@@ -34,11 +37,62 @@
           }
         }
       },
+      "Microsoft.EntityFrameworkCore/10.0.5": {
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore.Abstractions": "10.0.5"
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.EntityFrameworkCore.dll": {
+            "assemblyVersion": "10.0.5.0",
+            "fileVersion": "10.0.526.15411"
+          }
+        }
+      },
+      "Microsoft.EntityFrameworkCore.Abstractions/10.0.5": {
+        "runtime": {
+          "lib/net10.0/Microsoft.EntityFrameworkCore.Abstractions.dll": {
+            "assemblyVersion": "10.0.5.0",
+            "fileVersion": "10.0.526.15411"
+          }
+        }
+      },
+      "Microsoft.EntityFrameworkCore.Relational/10.0.4": {
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore": "10.0.5"
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.EntityFrameworkCore.Relational.dll": {
+            "assemblyVersion": "10.0.4.0",
+            "fileVersion": "10.0.426.12010"
+          }
+        }
+      },
       "Microsoft.OpenApi/2.0.0": {
         "runtime": {
           "lib/net8.0/Microsoft.OpenApi.dll": {
             "assemblyVersion": "2.0.0.0",
             "fileVersion": "2.0.0.0"
+          }
+        }
+      },
+      "Npgsql/10.0.2": {
+        "runtime": {
+          "lib/net10.0/Npgsql.dll": {
+            "assemblyVersion": "10.0.2.0",
+            "fileVersion": "10.0.2.0"
+          }
+        }
+      },
+      "Npgsql.EntityFrameworkCore.PostgreSQL/10.0.1": {
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore": "10.0.5",
+          "Microsoft.EntityFrameworkCore.Relational": "10.0.4",
+          "Npgsql": "10.0.2"
+        },
+        "runtime": {
+          "lib/net10.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll": {
+            "assemblyVersion": "10.0.1.0",
+            "fileVersion": "10.0.1.0"
           }
         }
       },
@@ -149,7 +203,43 @@
           }
         }
       },
+      "AIL.Modules.Decision.Application/1.0.0": {
+        "dependencies": {
+          "AIL.Modules.Decision.Domain": "1.0.0"
+        },
+        "runtime": {
+          "AIL.Modules.Decision.Application.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "AIL.Modules.Decision.Domain/1.0.0": {
+        "runtime": {
+          "AIL.Modules.Decision.Domain.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "AIL.Modules.Decision.Infrastructure/1.0.0": {
+        "dependencies": {
+          "AIL.Modules.Decision.Application": "1.0.0",
+          "AIL.Modules.Decision.Domain": "1.0.0",
+          "AIL.Modules.MemoryCore.Application": "1.0.0",
+          "AIL.Modules.Observability.Application": "1.0.0"
+        },
+        "runtime": {
+          "AIL.Modules.Decision.Infrastructure.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
       "AIL.Modules.Execution.Application/1.0.0": {
+        "dependencies": {
+          "AIL.Modules.MemoryCore.Contracts": "1.0.0"
+        },
         "runtime": {
           "AIL.Modules.Execution.Application.dll": {
             "assemblyVersion": "1.0.0.0",
@@ -172,6 +262,7 @@
           "AIL.Modules.ContextEngine.Application": "1.0.0",
           "AIL.Modules.Execution.Application": "1.0.0",
           "AIL.Modules.Execution.Domain": "1.0.0",
+          "AIL.Modules.MemoryCore.Application": "1.0.0",
           "AIL.Modules.Observability.Application": "1.0.0",
           "AIL.Modules.PolicyRegistry.Application": "1.0.0",
           "AIL.Modules.PolicyRegistry.Domain": "1.0.0",
@@ -185,6 +276,48 @@
         },
         "runtime": {
           "AIL.Modules.Execution.Infrastructure.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "AIL.Modules.MemoryCore.Application/1.0.0": {
+        "dependencies": {
+          "AIL.Modules.MemoryCore.Contracts": "1.0.0",
+          "AIL.Modules.MemoryCore.Domain": "1.0.0"
+        },
+        "runtime": {
+          "AIL.Modules.MemoryCore.Application.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "AIL.Modules.MemoryCore.Contracts/1.0.0": {
+        "runtime": {
+          "AIL.Modules.MemoryCore.Contracts.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "AIL.Modules.MemoryCore.Domain/1.0.0": {
+        "runtime": {
+          "AIL.Modules.MemoryCore.Domain.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "AIL.Modules.MemoryCore.Infrastructure/1.0.0": {
+        "dependencies": {
+          "AIL.Modules.MemoryCore.Application": "1.0.0",
+          "AIL.Modules.MemoryCore.Domain": "1.0.0",
+          "Microsoft.EntityFrameworkCore": "10.0.5",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.1"
+        },
+        "runtime": {
+          "AIL.Modules.MemoryCore.Infrastructure.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
@@ -379,12 +512,47 @@
       "path": "microsoft.aspnetcore.openapi/10.0.0-preview.7.25380.108",
       "hashPath": "microsoft.aspnetcore.openapi.10.0.0-preview.7.25380.108.nupkg.sha512"
     },
+    "Microsoft.EntityFrameworkCore/10.0.5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-9tNBmK3EpYVGRQLiqP+bqK2m+TD0Gv//4vCzR7ZOgl4FWzCFyOpYdIVka13M4kcBdPdSJcs3wbHr3rmzOqbIMA==",
+      "path": "microsoft.entityframeworkcore/10.0.5",
+      "hashPath": "microsoft.entityframeworkcore.10.0.5.nupkg.sha512"
+    },
+    "Microsoft.EntityFrameworkCore.Abstractions/10.0.5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-32c58Rnm47Qvhimawf67KO9PytgPz3QoWye7Abapt0Yocw/JnzMiSNj/pRoIKyn8Jxypkv86zxKD4Q/zNTc0Ag==",
+      "path": "microsoft.entityframeworkcore.abstractions/10.0.5",
+      "hashPath": "microsoft.entityframeworkcore.abstractions.10.0.5.nupkg.sha512"
+    },
+    "Microsoft.EntityFrameworkCore.Relational/10.0.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-DOTjTHy93W3TwpMLM4SCm0n57Sc0Jj3+m2S6LSTstKyBB34eT1UouaMS19mpWwvtj42+sRiEjA3+rOTNoNzXFQ==",
+      "path": "microsoft.entityframeworkcore.relational/10.0.4",
+      "hashPath": "microsoft.entityframeworkcore.relational.10.0.4.nupkg.sha512"
+    },
     "Microsoft.OpenApi/2.0.0": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-GGYLfzV/G/ct80OZ45JxnWP7NvMX1BCugn/lX7TH5o0lcVaviavsLMTxmFV2AybXWjbi3h6FF1vgZiTK6PXndw==",
       "path": "microsoft.openapi/2.0.0",
       "hashPath": "microsoft.openapi.2.0.0.nupkg.sha512"
+    },
+    "Npgsql/10.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-q5RfBI+wywJSFUNDE1L4ZbHEHCFTblo8Uf6A6oe4feOUFYiUQXyAf9GBh5qEZpvJaHiEbpBPkQumjEhXCJxdrg==",
+      "path": "npgsql/10.0.2",
+      "hashPath": "npgsql.10.0.2.nupkg.sha512"
+    },
+    "Npgsql.EntityFrameworkCore.PostgreSQL/10.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-P6EwH0Q4xkaA264iNZDqCPhWt8pscfUGxXazDQg4noBfqjoOlk4hKWfvBjF9ZX3R/9JybRmmJfmxr2iBMj0EpA==",
+      "path": "npgsql.entityframeworkcore.postgresql/10.0.1",
+      "hashPath": "npgsql.entityframeworkcore.postgresql.10.0.1.nupkg.sha512"
     },
     "Swashbuckle.AspNetCore/7.3.1": {
       "type": "package",
@@ -449,6 +617,21 @@
       "serviceable": false,
       "sha512": ""
     },
+    "AIL.Modules.Decision.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "AIL.Modules.Decision.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "AIL.Modules.Decision.Infrastructure/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
     "AIL.Modules.Execution.Application/1.0.0": {
       "type": "project",
       "serviceable": false,
@@ -460,6 +643,26 @@
       "sha512": ""
     },
     "AIL.Modules.Execution.Infrastructure/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "AIL.Modules.MemoryCore.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "AIL.Modules.MemoryCore.Contracts/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "AIL.Modules.MemoryCore.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "AIL.Modules.MemoryCore.Infrastructure/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

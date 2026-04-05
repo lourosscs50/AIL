@@ -8,6 +8,7 @@
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Audit/Application/obj/Debug/net10.0/AIL.Modules.Audit.Application.AssemblyInfoInputs.cache
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Audit/Application/obj/Debug/net10.0/AIL.Modules.Audit.Application.AssemblyInfo.cs
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Audit/Application/obj/Debug/net10.0/AIL.Modules.Audit.Application.csproj.CoreCompileInputs.cache
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Audit/Application/obj/Debug/net10.0/AIL.Modules.Audit.Application.sourcelink.json
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Audit/Application/obj/Debug/net10.0/AIL.Modu.8B10CA50.Up2Date
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Audit/Application/obj/Debug/net10.0/AIL.Modules.Audit.Application.dll
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Audit/Application/obj/Debug/net10.0/refint/AIL.Modules.Audit.Application.dll

@@ -8,6 +8,7 @@
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Observability/Infrastructure/obj/Debug/net10.0/AIL.Modules.Observability.Infrastructure.AssemblyInfoInputs.cache
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Observability/Infrastructure/obj/Debug/net10.0/AIL.Modules.Observability.Infrastructure.AssemblyInfo.cs
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Observability/Infrastructure/obj/Debug/net10.0/AIL.Modules.Observability.Infrastructure.csproj.CoreCompileInputs.cache
+/Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Observability/Infrastructure/obj/Debug/net10.0/AIL.Modules.Observability.Infrastructure.sourcelink.json
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Observability/Infrastructure/obj/Debug/net10.0/AIL.Modu.5AA719C4.Up2Date
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Observability/Infrastructure/obj/Debug/net10.0/AIL.Modules.Observability.Infrastructure.dll
 /Volumes/DevDrive/Dev/platform/AIL/src/AIL.Modules.Observability/Infrastructure/obj/Debug/net10.0/refint/AIL.Modules.Observability.Infrastructure.dll

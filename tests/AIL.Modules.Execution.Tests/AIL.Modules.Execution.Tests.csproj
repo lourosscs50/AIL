@@ -23,6 +23,9 @@
     <ProjectReference Include="..\..\src\AIL.Modules.Execution\Domain\AIL.Modules.Execution.Domain.csproj" />
     <ProjectReference Include="..\..\src\AIL.Modules.Execution\Infrastructure\AIL.Modules.Execution.Infrastructure.csproj" />
 
+    <ProjectReference Include="..\..\src\AIL.Modules.MemoryCore.Application\AIL.Modules.MemoryCore.Application.csproj" />
+    <ProjectReference Include="..\..\src\AIL.Modules.MemoryCore.Infrastructure\AIL.Modules.MemoryCore.Infrastructure.csproj" />
+
     <ProjectReference Include="..\..\src\AIL.Modules.Reliability\Application\AIL.Modules.Reliability.Application.csproj" />
     <ProjectReference Include="..\..\src\AIL.Modules.Reliability\Infrastructure\AIL.Modules.Reliability.Infrastructure.csproj" />
 
