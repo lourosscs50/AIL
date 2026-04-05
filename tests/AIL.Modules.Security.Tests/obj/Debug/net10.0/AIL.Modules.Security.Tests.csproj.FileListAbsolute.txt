@@ -1,8 +1,0 @@
-/Volumes/DevDrive/Dev/platform/AIL/tests/AIL.Modules.Security.Tests/bin/Debug/net10.0/.msCoverageSourceRootsMapping_AIL.Modules.Security.Tests
-/Volumes/DevDrive/Dev/platform/AIL/tests/AIL.Modules.Security.Tests/bin/Debug/net10.0/CoverletSourceRootsMapping_AIL.Modules.Security.Tests
-/Volumes/DevDrive/Dev/platform/AIL/tests/AIL.Modules.Security.Tests/obj/Debug/net10.0/AIL.Modules.Security.Tests.csproj.AssemblyReference.cache
-/Volumes/DevDrive/Dev/platform/AIL/tests/AIL.Modules.Security.Tests/obj/Debug/net10.0/AIL.Modules.Security.Tests.GeneratedMSBuildEditorConfig.editorconfig
-/Volumes/DevDrive/Dev/platform/AIL/tests/AIL.Modules.Security.Tests/obj/Debug/net10.0/AIL.Modules.Security.Tests.AssemblyInfoInputs.cache
-/Volumes/DevDrive/Dev/platform/AIL/tests/AIL.Modules.Security.Tests/obj/Debug/net10.0/AIL.Modules.Security.Tests.AssemblyInfo.cs
-/Volumes/DevDrive/Dev/platform/AIL/tests/AIL.Modules.Security.Tests/obj/Debug/net10.0/AIL.Modules.Security.Tests.csproj.CoreCompileInputs.cache
-/Volumes/DevDrive/Dev/platform/AIL/tests/AIL.Modules.Security.Tests/obj/Debug/net10.0/AIL.Modules.Security.Tests.sourcelink.json
