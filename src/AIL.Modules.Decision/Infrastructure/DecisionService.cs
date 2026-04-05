@@ -11,6 +11,17 @@ using System.Threading.Tasks;
 
 namespace AIL.Modules.Decision.Infrastructure;
 
+/// <summary>
+/// Orchestrates the decision pipeline. Precedence is explicit and fixed:
+/// <list type="number">
+/// <item><description><b>Winner</b> — chosen only from strategy evaluations by deterministic score, then
+/// <see cref="DecisionStrategyEvaluation.SuggestedStrategyKey"/>, then registry key. <see cref="DecisionPolicy"/> is not used here.</description></item>
+/// <item><description><b>Options list</b> — every evaluation is projected to an option, then filtered by
+/// <see cref="DecisionPolicy.MinimumConfidence"/> and capped by <see cref="DecisionPolicy.MaxOptions"/> only.</description></item>
+/// <item><description><b>Winner fallback options</b> — if policy filtering removes every option, a single option is built
+/// from the winner (same id, confidence, strength, rationale as the winning evaluation). Deterministic and repeatable.</description></item>
+/// </list>
+/// </summary>
 internal sealed class DecisionService : IDecisionService
 {
     private readonly IMemoryService _memory;
@@ -77,11 +88,8 @@ internal sealed class DecisionService : IDecisionService
             if (evaluated.Count == 0)
                 throw new InvalidOperationException("No decision strategy applied.");
 
-            var winner = evaluated
-                .OrderByDescending(x => x.Eval.DeterministicScore)
-                .ThenBy(x => x.Eval.SuggestedStrategyKey, StringComparer.Ordinal)
-                .ThenBy(x => x.RegistryKey, StringComparer.Ordinal)
-                .First();
+            // Winner: score ordering and tie-breakers only — policy never vetoes or reshapes this selection.
+            var winner = SelectWinnerByScore(evaluated);
 
             var considered = evaluated
                 .Select(x => x.RegistryKey)
@@ -101,29 +109,9 @@ internal sealed class DecisionService : IDecisionService
                     .ToList();
             }
 
-            var options = evaluated
-                .Select(x => CreateDecisionOption(
-                    x.Eval.SuggestedStrategyKey,
-                    DecisionConfidenceMapper.FromScore(x.Eval.DeterministicScore),
-                    NormalizeStrength(x.Eval.DeterministicScore),
-                    DecisionExplanationBuilder.BuildExplanation(new[] { x.Signal })))
-                .Where(o => o.Confidence >= policy.MinimumConfidence)
-                .OrderByDescending(o => o.Strength)
-                .ThenBy(o => o.OptionId, StringComparer.Ordinal)
-                .Take(policy.MaxOptions)
-                .ToList();
-
+            var options = BuildPolicyFilteredOptions(evaluated, policy);
             if (options.Count == 0)
-            {
-                options = new List<DecisionOption>
-                {
-                    new DecisionOption(
-                        OptionId: winner.Eval.SuggestedStrategyKey,
-                        Confidence: DecisionConfidenceMapper.FromScore(winner.Eval.DeterministicScore),
-                        Strength: NormalizeStrength(winner.Eval.DeterministicScore),
-                        RationaleSummary: DecisionExplanationBuilder.BuildExplanation(new[] { winner.Signal }))
-                };
-            }
+                options = BuildWinnerFallbackOptionsList(winner);
 
             var result = new DecisionResult(
                 DecisionType: request.DecisionType,
@@ -174,6 +162,46 @@ internal sealed class DecisionService : IDecisionService
             throw;
         }
     }
+
+    private static (string RegistryKey, DecisionStrategyEvaluation Eval, DecisionSignal Signal) SelectWinnerByScore(
+        List<(string RegistryKey, DecisionStrategyEvaluation Eval, DecisionSignal Signal)> evaluated) =>
+        evaluated
+            .OrderByDescending(x => x.Eval.DeterministicScore)
+            .ThenBy(x => x.Eval.SuggestedStrategyKey, StringComparer.Ordinal)
+            .ThenBy(x => x.RegistryKey, StringComparer.Ordinal)
+            .First();
+
+    /// <summary>
+    /// Policy applies only here: confidence floor and max count. Does not change the winner.
+    /// </summary>
+    private static List<DecisionOption> BuildPolicyFilteredOptions(
+        IReadOnlyList<(string RegistryKey, DecisionStrategyEvaluation Eval, DecisionSignal Signal)> evaluated,
+        DecisionPolicy policy) =>
+        evaluated
+            .Select(x => CreateDecisionOption(
+                x.Eval.SuggestedStrategyKey,
+                DecisionConfidenceMapper.FromScore(x.Eval.DeterministicScore),
+                NormalizeStrength(x.Eval.DeterministicScore),
+                DecisionExplanationBuilder.BuildExplanation(new[] { x.Signal })))
+            .Where(o => o.Confidence >= policy.MinimumConfidence)
+            .OrderByDescending(o => o.Strength)
+            .ThenBy(o => o.OptionId, StringComparer.Ordinal)
+            .Take(policy.MaxOptions)
+            .ToList();
+
+    /// <summary>
+    /// First-class fallback when <see cref="BuildPolicyFilteredOptions"/> yields no rows: reintroduce exactly the winner as the sole option.
+    /// </summary>
+    private static List<DecisionOption> BuildWinnerFallbackOptionsList(
+        (string RegistryKey, DecisionStrategyEvaluation Eval, DecisionSignal Signal) winner) =>
+        new()
+        {
+            new DecisionOption(
+                OptionId: winner.Eval.SuggestedStrategyKey,
+                Confidence: DecisionConfidenceMapper.FromScore(winner.Eval.DeterministicScore),
+                Strength: NormalizeStrength(winner.Eval.DeterministicScore),
+                RationaleSummary: DecisionExplanationBuilder.BuildExplanation(new[] { winner.Signal })),
+        };
 
     private static double NormalizeStrength(int deterministicScore) =>
         Math.Clamp(deterministicScore / 1000.0, 0.0, 1.0);

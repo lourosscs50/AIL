@@ -285,6 +285,150 @@ public sealed class DecisionServiceTests
     }
 
     [Fact]
+    public async Task DecideAsync_Winner_Can_Be_Below_Policy_MinimumConfidence_With_WinnerFallbackOptions()
+    {
+        var policy = new Mock<IDecisionPolicyService>();
+        policy.Setup(p => p.ResolvePolicyAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(
+            new DecisionPolicy("test", MaxOptions: 3, MinimumConfidence: DecisionConfidence.Medium));
+
+        var svc = CreateService(policy: policy);
+        var result = await svc.DecideAsync(BaseRequest());
+
+        Assert.Equal(KnownDecisionStrategyKeys.DefaultSafe, result.SelectedStrategyKey);
+        Assert.Equal(DecisionConfidence.Low, result.Confidence);
+        var opt = Assert.Single(result.Options);
+        Assert.Equal(KnownDecisionStrategyKeys.DefaultSafe, opt.OptionId);
+        Assert.Equal(DecisionConfidence.Low, opt.Confidence);
+    }
+
+    [Fact]
+    public async Task DecideAsync_Policy_Does_Not_Veto_Winner_Only_Filters_Options_Before_Fallback()
+    {
+        var policy = new Mock<IDecisionPolicyService>();
+        policy.Setup(p => p.ResolvePolicyAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(
+            new DecisionPolicy("strict", MaxOptions: 3, MinimumConfidence: DecisionConfidence.High));
+
+        var svc = CreateService(policy: policy);
+        var result = await svc.DecideAsync(BaseRequest());
+
+        Assert.Equal(KnownDecisionStrategyKeys.DefaultSafe, result.SelectedStrategyKey);
+        Assert.Equal(DecisionConfidence.Low, result.Confidence);
+        var opt = Assert.Single(result.Options);
+        Assert.Equal(result.SelectedStrategyKey, opt.OptionId);
+    }
+
+    [Fact]
+    public async Task DecideAsync_WinnerFallbackOptions_Are_Deterministic_Across_Repeated_Calls()
+    {
+        var policy = new Mock<IDecisionPolicyService>();
+        policy.Setup(p => p.ResolvePolicyAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(
+            new DecisionPolicy("test", MaxOptions: 3, MinimumConfidence: DecisionConfidence.Medium));
+
+        var svc = CreateService(policy: policy);
+        var req = BaseRequest();
+        var r1 = await svc.DecideAsync(req);
+        var r2 = await svc.DecideAsync(req);
+
+        Assert.Equal(r1.SelectedStrategyKey, r2.SelectedStrategyKey);
+        Assert.Equal(r1.Confidence, r2.Confidence);
+        Assert.Equal(r1.ReasonSummary, r2.ReasonSummary);
+        Assert.Equal(r1.Options.Count, r2.Options.Count);
+        Assert.Equal(r1.Options[0].OptionId, r2.Options[0].OptionId);
+        Assert.Equal(r1.Options[0].Confidence, r2.Options[0].Confidence);
+        Assert.Equal(r1.Options[0].Strength, r2.Options[0].Strength);
+        Assert.Equal(r1.Options[0].RationaleSummary, r2.Options[0].RationaleSummary);
+    }
+
+    [Fact]
+    public async Task DecideAsync_MemoryInformed_Does_Not_Override_CandidateMatch_Score()
+    {
+        var tenant = Guid.NewGuid();
+        var memory = new Mock<IMemoryService>();
+        memory.Setup(m => m.ListMemoryAsync(It.IsAny<ListMemoryRequest>()))
+            .ReturnsAsync(new MemoryListResult(
+                new[] { CreateMemoryRecord(tenant) },
+                1,
+                20,
+                1));
+
+        var policy = new Mock<IDecisionPolicyService>();
+        policy.Setup(p => p.ResolvePolicyAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(
+            new DecisionPolicy("test", MaxOptions: 3, MinimumConfidence: DecisionConfidence.Low));
+
+        var svc = CreateService(memory, policy: policy);
+        var result = await svc.DecideAsync(BaseRequest(b =>
+        {
+            b.TenantId = tenant;
+            b.WithCandidates("route_from_candidate");
+            b.IncludeMemory = true;
+            b.MemoryQuery = new DecisionMemoryQuery("Tenant", null, "Fact");
+            b.WithInputs(new Dictionary<string, string> { ["context_sensitive"] = "true" });
+        }));
+
+        Assert.Equal("route_from_candidate", result.SelectedStrategyKey);
+        Assert.Equal(DecisionConfidence.High, result.Confidence);
+    }
+
+    [Fact]
+    public async Task DecideAsync_MemoryInformed_Does_Not_Override_ContextEscalated_Score()
+    {
+        var tenant = Guid.NewGuid();
+        var memory = new Mock<IMemoryService>();
+        memory.Setup(m => m.ListMemoryAsync(It.IsAny<ListMemoryRequest>()))
+            .ReturnsAsync(new MemoryListResult(
+                new[] { CreateMemoryRecord(tenant) },
+                1,
+                20,
+                1));
+
+        var svc = CreateService(memory);
+        var result = await svc.DecideAsync(BaseRequest(b =>
+        {
+            b.TenantId = tenant;
+            b.IncludeMemory = true;
+            b.MemoryQuery = new DecisionMemoryQuery("Tenant", null, "Fact");
+            b.WithInputs(new Dictionary<string, string>
+            {
+                ["escalation"] = "true",
+                ["context_sensitive"] = "true",
+            });
+        }));
+
+        Assert.Equal(KnownDecisionStrategyKeys.ContextEscalated, result.SelectedStrategyKey);
+        Assert.Equal(DecisionConfidence.High, result.Confidence);
+    }
+
+    [Fact]
+    public async Task DecideAsync_Continuity_Remains_Weak_Does_Not_Override_CandidateMatch()
+    {
+        var tenant = Guid.NewGuid();
+        var memory = new Mock<IMemoryService>();
+        memory.Setup(m => m.ListMemoryAsync(It.IsAny<ListMemoryRequest>()))
+            .ReturnsAsync(new MemoryListResult(
+                new[]
+                {
+                    CreateContinuityMemoryRecord(tenant, "generic.test", "sole_candidate"),
+                },
+                1,
+                20,
+                1));
+
+        var svc = CreateService(memory);
+        var result = await svc.DecideAsync(BaseRequest(b =>
+        {
+            b.TenantId = tenant;
+            b.DecisionType = "generic.test";
+            b.IncludeMemory = true;
+            b.MemoryQuery = new DecisionMemoryQuery("Tenant", null, "Fact");
+            b.WithCandidates("sole_candidate");
+        }));
+
+        Assert.Equal("sole_candidate", result.SelectedStrategyKey);
+        Assert.Equal(DecisionConfidence.High, result.Confidence);
+        Assert.Contains(KnownDecisionStrategyKeys.DecisionContinuity, result.ConsideredStrategies);
+    }
+
+    [Fact]
     public async Task DecideAsync_IncludeMemoryFalse_DoesNot_Call_Memory()
     {
         var memory = new Mock<IMemoryService>();

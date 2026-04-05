@@ -4,6 +4,10 @@ using System.Linq;
 
 namespace AIL.Modules.MemoryCore.Domain;
 
+/// <summary>
+/// Immutable memory row. Valid instances are produced only through <see cref="Create"/> (or <c>with</c> from an existing valid row).
+/// Construction is funneled through a private constructor so every instance has fully assigned invariants after validation in <see cref="Create"/>.
+/// </summary>
 public sealed record MemoryRecord
 {
     public Guid Id { get; init; }
@@ -19,7 +23,33 @@ public sealed record MemoryRecord
     public DateTime CreatedAtUtc { get; init; }
     public DateTime UpdatedAtUtc { get; init; }
 
-    private MemoryRecord() { }
+    private MemoryRecord(
+        Guid id,
+        Guid tenantId,
+        MemoryScopeType scopeType,
+        string? scopeId,
+        MemoryKind memoryKind,
+        string? key,
+        string content,
+        IReadOnlyDictionary<string, string> metadata,
+        MemoryImportance importance,
+        MemorySource source,
+        DateTime createdAtUtc,
+        DateTime updatedAtUtc)
+    {
+        Id = id;
+        TenantId = tenantId;
+        ScopeType = scopeType;
+        ScopeId = scopeId;
+        MemoryKind = memoryKind;
+        Key = key;
+        Content = content;
+        Metadata = metadata;
+        Importance = importance;
+        Source = source;
+        CreatedAtUtc = createdAtUtc;
+        UpdatedAtUtc = updatedAtUtc;
+    }
 
     public static MemoryRecord Create(
         Guid id,
@@ -72,21 +102,19 @@ public sealed record MemoryRecord
         if (updatedAtUtc < createdAtUtc)
             throw new InvalidMemoryRecordException("UpdatedAtUtc cannot be before CreatedAtUtc.");
 
-        return new MemoryRecord
-        {
-            Id = id,
-            TenantId = tenantId,
-            ScopeType = scopeType,
-            ScopeId = scopeId,
-            MemoryKind = memoryKind,
-            Key = normalizedKey,
-            Content = content.Trim(),
-            Metadata = validatedMetadata,
-            Importance = importance,
-            Source = source,
-            CreatedAtUtc = createdAtUtc,
-            UpdatedAtUtc = updatedAtUtc
-        };
+        return new MemoryRecord(
+            id,
+            tenantId,
+            scopeType,
+            scopeId,
+            memoryKind,
+            normalizedKey,
+            content.Trim(),
+            validatedMetadata,
+            importance,
+            source,
+            createdAtUtc,
+            updatedAtUtc);
     }
 
     public static string? NormalizeKey(string? key)

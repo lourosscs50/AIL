@@ -129,4 +129,94 @@ public class MemoryRecordLifecycleTests
 
         Assert.Throws<InvalidMemoryRecordException>(() => record.WithUpdatedState("new content", record.Metadata, MemoryImportance.High, now));
     }
+
+    [Fact]
+    public void Create_rejects_empty_id()
+    {
+        var now = DateTime.UtcNow;
+        Assert.Throws<InvalidMemoryRecordException>(() => MemoryRecord.Create(
+            Guid.Empty,
+            Guid.NewGuid(),
+            MemoryScopeType.Tenant,
+            null,
+            MemoryKind.Fact,
+            "k",
+            "body",
+            null,
+            MemoryImportance.Low,
+            MemorySource.UserInput,
+            now,
+            now));
+    }
+
+    [Fact]
+    public void Create_rejects_whitespace_content()
+    {
+        var now = DateTime.UtcNow;
+        Assert.Throws<InvalidMemoryRecordException>(() => MemoryRecord.Create(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            MemoryScopeType.Tenant,
+            null,
+            MemoryKind.Fact,
+            "k",
+            "   ",
+            null,
+            MemoryImportance.Low,
+            MemorySource.UserInput,
+            now,
+            now));
+    }
+
+    [Fact]
+    public void Create_rejects_non_utc_created_time()
+    {
+        var local = DateTime.SpecifyKind(new DateTime(2024, 6, 1, 12, 0, 0), DateTimeKind.Local);
+        Assert.Throws<InvalidMemoryRecordException>(() => MemoryRecord.Create(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            MemoryScopeType.Tenant,
+            null,
+            MemoryKind.Fact,
+            "k",
+            "body",
+            null,
+            MemoryImportance.Low,
+            MemorySource.UserInput,
+            local,
+            local));
+    }
+
+    [Fact]
+    public void Create_succeeds_and_populates_required_fields()
+    {
+        var id = Guid.NewGuid();
+        var tenant = Guid.NewGuid();
+        var now = DateTime.UtcNow;
+        var meta = new Dictionary<string, string> { ["x"] = "y" };
+
+        var record = MemoryRecord.Create(
+            id,
+            tenant,
+            MemoryScopeType.Tenant,
+            null,
+            MemoryKind.Fact,
+            "MyKey",
+            " content ",
+            meta,
+            MemoryImportance.Medium,
+            MemorySource.UserInput,
+            now,
+            now);
+
+        Assert.Equal(id, record.Id);
+        Assert.Equal(tenant, record.TenantId);
+        Assert.Equal(MemoryScopeType.Tenant, record.ScopeType);
+        Assert.Equal(MemoryKind.Fact, record.MemoryKind);
+        Assert.Equal("content", record.Content);
+        Assert.Equal("y", record.Metadata["x"]);
+        Assert.Equal(MemoryImportance.Medium, record.Importance);
+        Assert.Equal(MemorySource.UserInput, record.Source);
+        Assert.Equal("mykey", record.Key);
+    }
 }

@@ -1,11 +1,7 @@
-using AIL.Modules.PromptRegistry.Domain;
-using System.Threading;
-using System.Threading.Tasks;
-
-using AIL.Modules.PromptRegistry.Domain;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using AIL.Modules.PromptRegistry.Domain;
 
 namespace AIL.Modules.PromptRegistry.Application;
 

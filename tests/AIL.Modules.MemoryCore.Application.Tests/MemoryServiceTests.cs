@@ -194,8 +194,10 @@ public class MemoryServiceTests
 
         var page1 = await service.ListMemoryAsync(new ListMemoryRequest(tenantId, null, null, null, null, null, null, null, 1, 2));
         var page2 = await service.ListMemoryAsync(new ListMemoryRequest(tenantId, null, null, null, null, null, null, null, 2, 2));
-        Assert.Equal(2, page1.Items.Count);
-        Assert.Equal(1, page2.Items.Count);
+        Assert.Collection(page1.Items,
+            _ => Assert.NotNull(_),
+            _ => Assert.NotNull(_));
+        Assert.Single(page2.Items);
 
         Assert.True(page1.Items[0].CreatedAtUtc >= page1.Items[^1].CreatedAtUtc);
 
@@ -316,9 +318,9 @@ public class MemoryServiceTests
             CreatedAfterUtc: null,
             CreatedBeforeUtc: null));
 
-        Assert.Equal(2, response.Records.Count);
-        Assert.Equal(high.Id, response.Records[0].Id); // exact scope + key + higher importance
-        Assert.Equal(med.Id, response.Records[1].Id);
+        Assert.Collection(response.Records,
+            r => Assert.Equal(high.Id, r.Id),
+            r => Assert.Equal(med.Id, r.Id));
 
         async Task<MemoryRecordResponse> Write(MemoryService svc, Guid tid, string scopeType, string? scopeId, string memoryKind, string? key, string content, string importance)
         {
@@ -354,7 +356,9 @@ public class MemoryServiceTests
             CreatedAfterUtc: null,
             CreatedBeforeUtc: null));
 
-        Assert.Equal(2, response.Records.Count);
+        Assert.Collection(response.Records,
+            _ => Assert.NotNull(_),
+            _ => Assert.NotNull(_));
         Assert.Contains(response.Records, r => r.Content == "medium");
         Assert.Contains(response.Records, r => r.Content == "high");
         Assert.DoesNotContain(response.Records, r => r.Content == "low");
@@ -385,10 +389,9 @@ public class MemoryServiceTests
             CreatedAfterUtc: null,
             CreatedBeforeUtc: null));
 
-        Assert.Equal(2, response.Records.Count);
-        // High should come first (exact key match + higher importance)
-        Assert.Equal(high.Id, response.Records[0].Id);
-        Assert.Equal(med.Id, response.Records[1].Id);
+        Assert.Collection(response.Records,
+            r => Assert.Equal(high.Id, r.Id),
+            r => Assert.Equal(med.Id, r.Id));
     }
 
     [Fact]
@@ -525,7 +528,10 @@ public class MemoryServiceTests
             CreatedAfterUtc: null,
             CreatedBeforeUtc: null));
 
-        Assert.Equal(3, response.Records.Count);
+        Assert.Collection(response.Records,
+            _ => Assert.NotNull(_),
+            _ => Assert.NotNull(_),
+            _ => Assert.NotNull(_));
     }
 
     [Fact]
@@ -608,10 +614,10 @@ public class MemoryServiceTests
             CreatedBeforeUtc: null));
 
         // Results should be identical and deterministic
-        Assert.Equal(2, response1.Records.Count);
-        Assert.Equal(2, response2.Records.Count);
-        Assert.Equal(response1.Records[0].Id, response2.Records[0].Id);
-        Assert.Equal(response1.Records[1].Id, response2.Records[1].Id);
+        Assert.Collection(
+            response1.Records.Zip(response2.Records),
+            pair => Assert.Equal(pair.First.Id, pair.Second.Id),
+            pair => Assert.Equal(pair.First.Id, pair.Second.Id));
     }
 
     [Fact]
@@ -640,7 +646,10 @@ public class MemoryServiceTests
             CreatedAfterUtc: null,
             CreatedBeforeUtc: null));
 
-        Assert.Equal(3, response.Records.Count);
+        Assert.Collection(response.Records,
+            _ => Assert.NotNull(_),
+            _ => Assert.NotNull(_),
+            _ => Assert.NotNull(_));
         Assert.Contains(response.Records, r => r.Content == "low");
         Assert.Contains(response.Records, r => r.Content == "med");
         Assert.Contains(response.Records, r => r.Content == "high");
@@ -696,7 +705,10 @@ public class MemoryServiceTests
             CreatedAfterUtc: null,
             CreatedBeforeUtc: null));
 
-        Assert.Equal(3, response.Records.Count);
+        Assert.Collection(response.Records,
+            _ => Assert.NotNull(_),
+            _ => Assert.NotNull(_),
+            _ => Assert.NotNull(_));
     }
 
     [Fact]
@@ -749,8 +761,8 @@ public class MemoryServiceTests
             CreatedAfterUtc: null,
             CreatedBeforeUtc: null));
 
-        Assert.Equal(1, response.Records.Count);
-        Assert.Equal(withKey.Id, response.Records[0].Id); // exact key match first
+        var sole = Assert.Single(response.Records);
+        Assert.Equal(withKey.Id, sole.Id);
     }
 
     [Fact]
