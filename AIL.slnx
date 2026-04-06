@@ -44,6 +44,16 @@
   <Folder Name="/src/AIL.Modules.Execution/Infrastructure/">
     <Project Path="src/AIL.Modules.Execution/Infrastructure/AIL.Modules.Execution.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/src/AIL.Modules.Decision/" />
+  <Folder Name="/src/AIL.Modules.Decision/Application/">
+    <Project Path="src/AIL.Modules.Decision/Application/AIL.Modules.Decision.Application.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.Decision/Domain/">
+    <Project Path="src/AIL.Modules.Decision/Domain/AIL.Modules.Decision.Domain.csproj" />
+  </Folder>
+  <Folder Name="/src/AIL.Modules.Decision/Infrastructure/">
+    <Project Path="src/AIL.Modules.Decision/Infrastructure/AIL.Modules.Decision.Infrastructure.csproj" />
+  </Folder>
   <Folder Name="/src/AIL.Modules.Observability/" />
   <Folder Name="/src/AIL.Modules.Observability/Application/">
     <Project Path="src/AIL.Modules.Observability/Application/AIL.Modules.Observability.Application.csproj" />
@@ -124,5 +134,6 @@
     <Project Path="tests/AIL.Modules.MemoryCore.Application.Tests/AIL.Modules.MemoryCore.Application.Tests.csproj" />
     <Project Path="tests/AIL.Modules.MemoryCore.Architecture.Tests/AIL.Modules.MemoryCore.Architecture.Tests.csproj" />
     <Project Path="tests/AIL.Modules.MemoryCore.Infrastructure.Tests/AIL.Modules.MemoryCore.Infrastructure.Tests.csproj" />
+    <Project Path="tests/AIL.Modules.Decision.Tests/AIL.Modules.Decision.Tests.csproj" />
   </Folder>
 </Solution>

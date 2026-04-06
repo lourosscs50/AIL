@@ -65,6 +65,7 @@ public sealed class DecisionServiceTests
         var result = await svc.DecideAsync(BaseRequest());
 
         Assert.Equal(KnownDecisionStrategyKeys.DefaultSafe, result.SelectedStrategyKey);
+        Assert.Equal("generic.test", result.PolicyKey);
         Assert.False(result.UsedMemory);
         Assert.Equal(0, result.MemoryItemCount);
         Assert.Contains(KnownDecisionStrategyKeys.DefaultSafe, result.ConsideredStrategies);

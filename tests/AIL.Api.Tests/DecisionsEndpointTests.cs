@@ -2,6 +2,8 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Net.Http.Json;
+using System.Text.Json;
+using AIL.Api;
 using AIL.Api.Contracts;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
@@ -43,6 +45,7 @@ public sealed class DecisionsEndpointTests : IClassFixture<WebApplicationFactory
         var body = await response.Content.ReadFromJsonAsync<DecideResponse>();
         Assert.NotNull(body);
         Assert.Equal("control_trigger_routing", body!.DecisionType);
+        Assert.Equal("control_trigger_routing", body.PolicyKey);
         Assert.Equal("default_safe", body.SelectedStrategyKey);
         Assert.False(body.UsedMemory);
         Assert.NotEmpty(body.Options);
@@ -150,6 +153,79 @@ public sealed class DecisionsEndpointTests : IClassFixture<WebApplicationFactory
         var response = await client.PostAsJsonAsync("/decisions", request);
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task Post_Decisions_StructuredContext_ExceedsMaxEntries_Returns400()
+    {
+        var client = _factory.CreateClient();
+        var oversized = Enumerable.Range(0, DecisionEndpointMapping.MaxStructuredContextEntries + 1)
+            .ToDictionary(i => $"k{i}", i => "v");
+        var request = new DecideRequest(
+            TenantId: Guid.NewGuid(),
+            DecisionType: "control_trigger_routing",
+            SubjectType: "control_trigger",
+            SubjectId: "x",
+            ContextText: null,
+            StructuredContext: oversized,
+            IncludeMemory: false,
+            MemoryQuery: null,
+            CandidateStrategies: null,
+            Metadata: null);
+
+        var response = await client.PostAsJsonAsync("/decisions", request);
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task Post_Decisions_Response_DoesNotEcho_ClientMetadata()
+    {
+        var client = _factory.CreateClient();
+        var request = new DecideRequest(
+            TenantId: Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"),
+            DecisionType: "control_trigger_routing",
+            SubjectType: "control_trigger",
+            SubjectId: Guid.NewGuid().ToString("D"),
+            ContextText: null,
+            StructuredContext: new Dictionary<string, string> { ["lifecycle_event_type"] = "AlertCreated" },
+            IncludeMemory: false,
+            MemoryQuery: null,
+            CandidateStrategies: null,
+            Metadata: new Dictionary<string, string> { ["client_secret"] = "should-not-appear" });
+
+        var response = await client.PostAsJsonAsync("/decisions", request);
+        response.EnsureSuccessStatusCode();
+        var json = await response.Content.ReadAsStringAsync();
+        var body = JsonSerializer.Deserialize<DecideResponse>(json, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        });
+        Assert.NotNull(body);
+        Assert.Null(body!.Metadata);
+
+        using var doc = JsonDocument.Parse(json);
+        Assert.False(doc.RootElement.TryGetProperty("prompt", out _));
+        Assert.False(doc.RootElement.TryGetProperty("rawModelOutput", out _));
+    }
+
+    [Fact]
+    public void ValidateDecideRequest_AcceptsBoundarySizedStructuredContext()
+    {
+        var keys = Enumerable.Range(0, DecisionEndpointMapping.MaxStructuredContextEntries)
+            .ToDictionary(i => $"k{i}", _ => "v");
+        var req = new DecideRequest(
+            TenantId: Guid.NewGuid(),
+            DecisionType: "t",
+            SubjectType: "s",
+            SubjectId: "id",
+            ContextText: null,
+            StructuredContext: keys,
+            IncludeMemory: false,
+            MemoryQuery: null,
+            CandidateStrategies: null,
+            Metadata: null);
+        DecisionEndpointMapping.ValidateDecideRequest(req);
     }
 
     private static async Task<DecideResponse> PostDecisionsAsync(HttpClient client, DecideRequest request)

@@ -122,6 +122,7 @@ internal sealed class DecisionService : IDecisionService
                 UsedMemory: usedMemory,
                 MemoryItemCount: memoryItemCount,
                 Options: options,
+                PolicyKey: policy.PolicyKey,
                 Metadata: request.Metadata);
 
             stopwatch.Stop();

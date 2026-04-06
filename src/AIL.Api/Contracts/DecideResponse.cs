@@ -4,9 +4,12 @@ using System.Collections.Generic;
 namespace AIL.Api.Contracts;
 
 /// <summary>
-/// Advisory decision response. Options remain the canonical option payload.
-/// <see cref="SelectedOptionId"/> is the explicit winning option identifier when it matches
-/// an <see cref="DecideOptionResponse.OptionId"/> in <see cref="Options"/>; otherwise <c>null</c>.
+/// Bounded, operator-safe advisory decision response. Exposes only decision truth A.I.L. derives from its pipeline
+/// (strategy selection, confidence tier, high-level rationale, policy key). Does not include prompts, raw provider
+/// payloads, memory record bodies, or hidden reasoning traces.
+/// <see cref="SelectedOptionId"/> is set when it matches an <see cref="DecideOptionResponse.OptionId"/> in <see cref="Options"/>; otherwise <c>null</c>.
+/// <see cref="PolicyKey"/> is the resolved policy key for <see cref="DecisionType"/> (aligned with observability telemetry).
+/// <see cref="Metadata"/> is always <c>null</c> on this public surface—client-supplied request metadata is not echoed.
 /// </summary>
 public sealed record DecideResponse(
     string DecisionType,
@@ -17,5 +20,6 @@ public sealed record DecideResponse(
     IReadOnlyList<string> ConsideredStrategies,
     bool UsedMemory,
     int MemoryItemCount,
+    string PolicyKey,
     IReadOnlyDictionary<string, string>? Metadata,
     string? SelectedOptionId);

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace AIL.Modules.Decision.Application;
 
+/// <summary>
+/// Application-layer decision input for <see cref="IDecisionService"/>; hosts map their transport contracts to this shape.
+/// </summary>
 public sealed record DecisionRequest(
     Guid TenantId,
     string DecisionType,
