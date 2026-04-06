@@ -5,10 +5,29 @@ using AIL.Modules.Decision.Application;
 namespace AIL.Api;
 
 /// <summary>
-/// Maps application decision history records to API response DTOs.
+/// Maps application decision history records to API response DTOs (list vs detail shapes).
 /// </summary>
 public static class DecisionHistoryEndpointMapping
 {
+    public static DecisionHistoryListItemResponse ToListItemResponse(DecisionHistoryRecord r) =>
+        new(
+            Id: r.Id,
+            TenantId: r.TenantId,
+            CorrelationGroupId: r.CorrelationGroupId,
+            ExecutionInstanceId: r.ExecutionInstanceId,
+            DecisionType: r.DecisionType,
+            SubjectType: r.SubjectType,
+            SubjectId: r.SubjectId,
+            SelectedStrategyKey: r.SelectedStrategyKey,
+            SelectedOptionId: r.SelectedOptionId,
+            ConfidenceTier: r.ConfidenceTier,
+            PolicyKey: r.PolicyKey,
+            UsedMemory: r.UsedMemory,
+            MemoryItemCount: r.MemoryItemCount,
+            MemoryInfluenceSummary: r.MemoryInfluenceSummary,
+            Outcome: r.Outcome,
+            CreatedAtUtc: r.CreatedAtUtc);
+
     public static DecisionHistoryItemResponse ToItemResponse(DecisionHistoryRecord r) =>
         new(
             Id: r.Id,

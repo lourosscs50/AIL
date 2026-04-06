@@ -89,16 +89,20 @@ internal sealed class InMemoryDecisionHistoryStore : IDecisionHistoryStore
                         query.MemoryInfluenceSummary,
                         StringComparison.Ordinal));
 
-            var ordered = rows
-                .OrderByDescending(r => r.CreatedAtUtc)
-                .ThenBy(r => r.Id)
-                .ToList();
+            IEnumerable<DecisionHistoryRecord> ordered = query.SortBy switch
+            {
+                DecisionHistorySortBy.CreatedAtUtc => query.SortDirection == DecisionHistorySortDirection.Descending
+                    ? rows.OrderByDescending(r => r.CreatedAtUtc).ThenBy(r => r.Id)
+                    : rows.OrderBy(r => r.CreatedAtUtc).ThenBy(r => r.Id),
+                _ => throw new ArgumentException($"Unsupported SortBy: {query.SortBy}.", nameof(query)),
+            };
+            var list = ordered.ToList();
 
-            var total = ordered.Count;
+            var total = list.Count;
             var skip = (p - 1) * ps;
-            var slice = skip >= ordered.Count
+            var slice = skip >= list.Count
                 ? new List<DecisionHistoryRecord>()
-                : ordered.Skip(skip).Take(ps).ToList();
+                : list.Skip(skip).Take(ps).ToList();
 
             return (slice, total);
         }

@@ -16,9 +16,11 @@ public sealed class DecisionHistoryStoreTests
         string strategy = "default_safe",
         Guid? correlationGroupId = null,
         string? memoryInfluenceSummary = null,
-        Guid? executionInstanceId = null)
+        Guid? executionInstanceId = null,
+        DateTime? createdAtUtc = null,
+        Guid? fixedId = null)
     {
-        var id = Guid.NewGuid();
+        var id = fixedId ?? Guid.NewGuid();
         return new DecisionHistoryRecord(
             Id: id,
             TenantId: tenantId,
@@ -41,7 +43,7 @@ public sealed class DecisionHistoryStoreTests
                 new DecisionHistoryOptionSnapshot(strategy, DecisionConfidence.Low.ToString(), 0.1, "x")
             },
             Outcome: "Succeeded",
-            CreatedAtUtc: DateTime.UtcNow);
+            CreatedAtUtc: createdAtUtc ?? DateTime.UtcNow);
     }
 
     [Fact]
@@ -168,5 +170,80 @@ public sealed class DecisionHistoryStoreTests
         var (items, total) = store.List(
             new DecisionHistoryListQuery(tenant, 1, 10, CorrelationGroupId: cg, ExecutionInstanceId: ex));
         Assert.Equal(1, total);
+    }
+
+    [Fact]
+    public void List_SortsByCreatedAtUtc_Descending_ByDefault_TieBreakById()
+    {
+        var store = new InMemoryDecisionHistoryStore();
+        var tenant = Guid.NewGuid();
+        var tEarly = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        var tLate = new DateTime(2026, 1, 3, 0, 0, 0, DateTimeKind.Utc);
+        var idA = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
+        var idB = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
+        store.Put(SampleRecord(tenant, createdAtUtc: tEarly, fixedId: idA));
+        store.Put(SampleRecord(tenant, createdAtUtc: tLate, fixedId: idB));
+
+        var (items, total) = store.List(new DecisionHistoryListQuery(tenant, 1, 10));
+        Assert.Equal(2, total);
+        Assert.Equal(idB, items[0].Id);
+        Assert.Equal(idA, items[1].Id);
+    }
+
+    [Fact]
+    public void List_SortsByCreatedAtUtc_Ascending_TieBreakById()
+    {
+        var store = new InMemoryDecisionHistoryStore();
+        var tenant = Guid.NewGuid();
+        var t1 = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        var idLo = Guid.Parse("11111111-1111-1111-1111-111111111111");
+        var idHi = Guid.Parse("22222222-2222-2222-2222-222222222222");
+        store.Put(SampleRecord(tenant, createdAtUtc: t1, fixedId: idHi));
+        store.Put(SampleRecord(tenant, createdAtUtc: t1, fixedId: idLo));
+
+        var q = new DecisionHistoryListQuery(
+            tenant,
+            1,
+            10,
+            SortBy: DecisionHistorySortBy.CreatedAtUtc,
+            SortDirection: DecisionHistorySortDirection.Ascending);
+        var (items, _) = store.List(q);
+        Assert.Equal(idLo, items[0].Id);
+        Assert.Equal(idHi, items[1].Id);
+    }
+
+    [Fact]
+    public void List_PagingStable_UnderAscendingSort()
+    {
+        var store = new InMemoryDecisionHistoryStore();
+        var tenant = Guid.NewGuid();
+        var t = new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc);
+        var id1 = Guid.Parse("00000000-0000-0000-0000-000000000001");
+        var id2 = Guid.Parse("00000000-0000-0000-0000-000000000002");
+        var id3 = Guid.Parse("00000000-0000-0000-0000-000000000003");
+        store.Put(SampleRecord(tenant, createdAtUtc: t, fixedId: id3));
+        store.Put(SampleRecord(tenant, createdAtUtc: t, fixedId: id1));
+        store.Put(SampleRecord(tenant, createdAtUtc: t, fixedId: id2));
+
+        var q = new DecisionHistoryListQuery(
+            tenant,
+            1,
+            2,
+            SortBy: DecisionHistorySortBy.CreatedAtUtc,
+            SortDirection: DecisionHistorySortDirection.Ascending);
+        var (page1, total) = store.List(q);
+        Assert.Equal(3, total);
+        Assert.Equal(2, page1.Count);
+        Assert.Equal(id1, page1[0].Id);
+        Assert.Equal(id2, page1[1].Id);
+
+        var (page2, _) = store.List(new DecisionHistoryListQuery(
+            tenant,
+            2,
+            2,
+            SortBy: DecisionHistorySortBy.CreatedAtUtc,
+            SortDirection: DecisionHistorySortDirection.Ascending));
+        Assert.Single(page2);
+        Assert.Equal(id3, page2[0].Id);
     }
 }

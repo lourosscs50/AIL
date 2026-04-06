@@ -27,6 +27,79 @@ public static class DecisionEndpointMapping
     public const int MaxMemoryTakeRecent = 500;
     public const int MaxMemoryInfluenceSummaryFilterLength = 64;
 
+    /// <summary>API value for <see cref="DecisionHistorySortBy.CreatedAtUtc"/> (bounded list sort).</summary>
+    public const string DecisionHistorySortByCreatedAtUtc = "createdAtUtc";
+
+    public const string DecisionHistorySortDirectionAsc = "asc";
+    public const string DecisionHistorySortDirectionDesc = "desc";
+
+    public static DecisionHistorySortBy ParseDecisionHistorySortBy(string? sortBy)
+    {
+        if (string.IsNullOrWhiteSpace(sortBy))
+            return DecisionHistorySortBy.CreatedAtUtc;
+        if (string.Equals(sortBy.Trim(), DecisionHistorySortByCreatedAtUtc, StringComparison.OrdinalIgnoreCase))
+            return DecisionHistorySortBy.CreatedAtUtc;
+        throw new ArgumentException(
+            $"sortBy must be '{DecisionHistorySortByCreatedAtUtc}' or omitted.",
+            nameof(sortBy));
+    }
+
+    public static DecisionHistorySortDirection ParseDecisionHistorySortDirection(string? sortDirection)
+    {
+        if (string.IsNullOrWhiteSpace(sortDirection))
+            return DecisionHistorySortDirection.Descending;
+        var s = sortDirection.Trim();
+        if (string.Equals(s, DecisionHistorySortDirectionAsc, StringComparison.OrdinalIgnoreCase))
+            return DecisionHistorySortDirection.Ascending;
+        if (string.Equals(s, DecisionHistorySortDirectionDesc, StringComparison.OrdinalIgnoreCase))
+            return DecisionHistorySortDirection.Descending;
+        throw new ArgumentException("sortDirection must be 'asc' or 'desc'.", nameof(sortDirection));
+    }
+
+    public static string ToDecisionHistorySortByApiValue(DecisionHistorySortBy sortBy) =>
+        sortBy switch
+        {
+            DecisionHistorySortBy.CreatedAtUtc => DecisionHistorySortByCreatedAtUtc,
+            _ => throw new ArgumentOutOfRangeException(nameof(sortBy)),
+        };
+
+    public static string ToDecisionHistorySortDirectionApiValue(DecisionHistorySortDirection direction) =>
+        direction == DecisionHistorySortDirection.Ascending
+            ? DecisionHistorySortDirectionAsc
+            : DecisionHistorySortDirectionDesc;
+
+    /// <summary>
+    /// Builds a tenant-scoped list query with normalized filter strings (caller trims text filters as needed).
+    /// </summary>
+    public static DecisionHistoryListQuery CreateDecisionHistoryListQuery(
+        Guid tenantId,
+        int page,
+        int pageSize,
+        string? decisionType,
+        string? selectedStrategyKey,
+        string? policyKey,
+        DateTime? createdFromUtc,
+        DateTime? createdToUtc,
+        Guid? correlationGroupId,
+        string? memoryInfluenceSummary,
+        Guid? executionInstanceId,
+        DecisionHistorySortBy sortBy,
+        DecisionHistorySortDirection sortDirection) =>
+        new(
+            TenantId: tenantId,
+            Page: page,
+            PageSize: pageSize,
+            DecisionType: decisionType,
+            SelectedStrategyKey: selectedStrategyKey,
+            PolicyKey: policyKey,
+            CreatedFromUtc: createdFromUtc,
+            CreatedToUtc: createdToUtc,
+            CorrelationGroupId: correlationGroupId,
+            MemoryInfluenceSummary: memoryInfluenceSummary,
+            ExecutionInstanceId: executionInstanceId,
+            SortBy: sortBy,
+            SortDirection: sortDirection);
+
     public static AppDecisionRequest MapToDecisionRequest(DecideRequest req)
     {
         ArgumentNullException.ThrowIfNull(req);
@@ -103,6 +176,7 @@ public static class DecisionEndpointMapping
 
     /// <summary>
     /// Validates optional history list filters (throws <see cref="ArgumentException"/> for bad combinations).
+    /// Empty GUIDs are rejected for correlation/execution filters; <paramref name="memoryInfluenceSummary"/> length is capped.
     /// </summary>
     public static void ValidateDecisionHistoryListFilters(
         Guid? correlationGroupId,

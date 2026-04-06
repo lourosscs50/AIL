@@ -4,7 +4,9 @@ namespace AIL.Modules.Decision.Application;
 
 /// <summary>
 /// Bounded filters for listing decision history. <see cref="TenantId"/> is required for tenant isolation.
-/// Optional <c>CorrelationGroupId</c>, <c>ExecutionInstanceId</c>, and <c>MemoryInfluenceSummary</c> narrow results with exact matches (tenant-scoped first).
+/// Filters combine conjunctively (AND). <see cref="CreatedFromUtc"/> / <see cref="CreatedToUtc"/> are inclusive range bounds on <c>CreatedAtUtc</c>.
+/// String filters use ordinal case-sensitive equality unless noted otherwise at the API boundary.
+/// Sorting is bounded to <see cref="SortBy"/> with stable tie-break on record <c>Id</c> ascending.
 /// </summary>
 public sealed record DecisionHistoryListQuery(
     Guid TenantId,
@@ -17,4 +19,6 @@ public sealed record DecisionHistoryListQuery(
     DateTime? CreatedToUtc = null,
     Guid? CorrelationGroupId = null,
     string? MemoryInfluenceSummary = null,
-    Guid? ExecutionInstanceId = null);
+    Guid? ExecutionInstanceId = null,
+    DecisionHistorySortBy SortBy = DecisionHistorySortBy.CreatedAtUtc,
+    DecisionHistorySortDirection SortDirection = DecisionHistorySortDirection.Descending);

@@ -138,6 +138,8 @@ app.MapGet("/decisions/history", (
     Guid? correlationGroupId,
     string? memoryInfluenceSummary,
     Guid? executionInstanceId,
+    string? sortBy,
+    string? sortDirection,
     IDecisionHistoryStore store) =>
 {
     if (tenantId == Guid.Empty)
@@ -158,26 +160,44 @@ app.MapGet("/decisions/history", (
         return Results.BadRequest(new { error = ex.Message });
     }
 
+    DecisionHistorySortBy sortByEnum;
+    DecisionHistorySortDirection sortDirEnum;
+    try
+    {
+        sortByEnum = DecisionEndpointMapping.ParseDecisionHistorySortBy(sortBy);
+        sortDirEnum = DecisionEndpointMapping.ParseDecisionHistorySortDirection(sortDirection);
+    }
+    catch (ArgumentException ex)
+    {
+        return Results.BadRequest(new { error = ex.Message });
+    }
+
     var p = page is >= 1 ? page.Value : 1;
     var ps = pageSize is >= 1 && pageSize <= 100 ? pageSize.Value : 50;
-    var query = new DecisionHistoryListQuery(
-        TenantId: tenantId,
-        Page: p,
-        PageSize: ps,
-        DecisionType: string.IsNullOrWhiteSpace(decisionType) ? null : decisionType,
-        SelectedStrategyKey: string.IsNullOrWhiteSpace(selectedStrategyKey) ? null : selectedStrategyKey,
-        PolicyKey: string.IsNullOrWhiteSpace(policyKey) ? null : policyKey,
-        CreatedFromUtc: fromUtc,
-        CreatedToUtc: toUtc,
-        CorrelationGroupId: correlationGroupId,
-        MemoryInfluenceSummary: string.IsNullOrWhiteSpace(memoryInfluenceSummary)
-            ? null
-            : memoryInfluenceSummary.Trim(),
-        ExecutionInstanceId: executionInstanceId);
+    var query = DecisionEndpointMapping.CreateDecisionHistoryListQuery(
+        tenantId,
+        p,
+        ps,
+        string.IsNullOrWhiteSpace(decisionType) ? null : decisionType,
+        string.IsNullOrWhiteSpace(selectedStrategyKey) ? null : selectedStrategyKey,
+        string.IsNullOrWhiteSpace(policyKey) ? null : policyKey,
+        fromUtc,
+        toUtc,
+        correlationGroupId,
+        string.IsNullOrWhiteSpace(memoryInfluenceSummary) ? null : memoryInfluenceSummary.Trim(),
+        executionInstanceId,
+        sortByEnum,
+        sortDirEnum);
 
     var (items, total) = store.List(query);
-    var dto = items.Select(DecisionHistoryEndpointMapping.ToItemResponse).ToList();
-    return Results.Ok(new PagedDecisionHistoryResponse(dto, p, ps, total));
+    var dto = items.Select(DecisionHistoryEndpointMapping.ToListItemResponse).ToList();
+    return Results.Ok(new PagedDecisionHistoryResponse(
+        dto,
+        p,
+        ps,
+        total,
+        DecisionEndpointMapping.ToDecisionHistorySortByApiValue(sortByEnum),
+        DecisionEndpointMapping.ToDecisionHistorySortDirectionApiValue(sortDirEnum)));
 });
 
 app.Run();

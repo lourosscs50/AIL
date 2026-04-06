@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\AIL.Api\AIL.Api.csproj" />
+    <ProjectReference Include="..\..\src\AIL.Modules.Decision\Application\AIL.Modules.Decision.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>

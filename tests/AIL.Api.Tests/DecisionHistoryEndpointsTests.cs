@@ -123,6 +123,8 @@ public sealed class DecisionHistoryEndpointsTests : IClassFixture<WebApplication
         Assert.Equal(2, page!.TotalCount);
         Assert.All(page.Items, x => Assert.Equal("beta_route", x.DecisionType));
         Assert.True(page.Items.Count <= 10);
+        Assert.Equal(DecisionEndpointMapping.DecisionHistorySortByCreatedAtUtc, page.SortBy);
+        Assert.Equal(DecisionEndpointMapping.DecisionHistorySortDirectionDesc, page.SortDirection);
     }
 
     [Fact]
@@ -361,5 +363,87 @@ public sealed class DecisionHistoryEndpointsTests : IClassFixture<WebApplication
             $"/decisions/history?tenantId={tenant:D}&executionInstanceId={Guid.Empty:D}";
         var res = await client.GetAsync(url);
         Assert.Equal(HttpStatusCode.BadRequest, res.StatusCode);
+    }
+
+    [Fact]
+    public async Task Get_DecisionHistory_List_InvalidSortBy_Returns400()
+    {
+        var client = _factory.CreateClient();
+        var tenant = Guid.NewGuid();
+        var url =
+            $"/decisions/history?tenantId={tenant:D}&sortBy=invalidSort";
+        var res = await client.GetAsync(url);
+        Assert.Equal(HttpStatusCode.BadRequest, res.StatusCode);
+    }
+
+    [Fact]
+    public async Task Get_DecisionHistory_List_SortDirectionAsc_IsAccepted_AndEchoed()
+    {
+        var client = _factory.CreateClient();
+        var tenant = Guid.NewGuid();
+        await client.PostAsJsonAsync("/decisions", new DecideRequest(
+            tenant,
+            "alpha_route",
+            "s",
+            "x",
+            null,
+            null,
+            false,
+            null,
+            null,
+            null,
+            null));
+
+        var url =
+            $"/decisions/history?tenantId={tenant:D}&sortBy=createdAtUtc&sortDirection=asc";
+        var list = await client.GetAsync(url);
+        list.EnsureSuccessStatusCode();
+        var page = await list.Content.ReadFromJsonAsync<PagedDecisionHistoryResponse>();
+        Assert.NotNull(page);
+        Assert.Equal(DecisionEndpointMapping.DecisionHistorySortByCreatedAtUtc, page!.SortBy);
+        Assert.Equal(DecisionEndpointMapping.DecisionHistorySortDirectionAsc, page.SortDirection);
+    }
+
+    [Fact]
+    public async Task Get_DecisionHistory_List_AndDetail_ShareCoreFields_DetailHasRationaleAndOptions()
+    {
+        var client = _factory.CreateClient();
+        var tenant = Guid.NewGuid();
+        var post = await client.PostAsJsonAsync("/decisions", new DecideRequest(
+            tenant,
+            "control_trigger_routing",
+            "control_trigger",
+            "subj",
+            null,
+            null,
+            false,
+            null,
+            null,
+            null,
+            null));
+        post.EnsureSuccessStatusCode();
+        var decided = await post.Content.ReadFromJsonAsync<DecideResponse>();
+        Assert.NotNull(decided?.DecisionRecordId);
+        var id = decided!.DecisionRecordId!.Value;
+
+        var listUrl = $"/decisions/history?tenantId={tenant:D}&decisionType=control_trigger_routing&page=1&pageSize=10";
+        var list = await client.GetAsync(listUrl);
+        list.EnsureSuccessStatusCode();
+        var page = await list.Content.ReadFromJsonAsync<PagedDecisionHistoryResponse>();
+        Assert.NotNull(page);
+        var row = Assert.Single(page!.Items, i => i.Id == id);
+        Assert.Equal(decided.PolicyKey, row.PolicyKey);
+        Assert.Equal(decided.SelectedStrategyKey, row.SelectedStrategyKey);
+        Assert.Equal(decided.MemoryInfluenceSummary, row.MemoryInfluenceSummary);
+
+        var get = await client.GetAsync($"/decisions/history/{id:D}?tenantId={tenant:D}");
+        get.EnsureSuccessStatusCode();
+        var detail = await get.Content.ReadFromJsonAsync<DecisionHistoryItemResponse>();
+        Assert.NotNull(detail);
+        Assert.Equal(row.Id, detail!.Id);
+        Assert.Equal(row.PolicyKey, detail.PolicyKey);
+        Assert.Equal(row.CreatedAtUtc, detail.CreatedAtUtc);
+        Assert.NotNull(detail.ReasonSummary);
+        Assert.True(detail.Options.Count > 0);
     }
 }

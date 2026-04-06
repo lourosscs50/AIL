@@ -13,7 +13,29 @@ public sealed record DecisionHistoryOptionItemResponse(
     string RationaleSummary);
 
 /// <summary>
-/// Operator-safe decision history item (durable snapshot). Distinct from execution visibility and audit.
+/// Compact operator-safe row for <c>GET /decisions/history</c> list responses. Excludes rationale text, per-option rows,
+/// and considered-strategy lists—use <see cref="DecisionHistoryItemResponse"/> from <c>GET /decisions/history/{{id}}</c> for those.
+/// </summary>
+public sealed record DecisionHistoryListItemResponse(
+    Guid Id,
+    Guid TenantId,
+    Guid? CorrelationGroupId,
+    Guid? ExecutionInstanceId,
+    string DecisionType,
+    string SubjectType,
+    string SubjectId,
+    string SelectedStrategyKey,
+    string? SelectedOptionId,
+    string ConfidenceTier,
+    string PolicyKey,
+    bool UsedMemory,
+    int MemoryItemCount,
+    string MemoryInfluenceSummary,
+    string Outcome,
+    DateTime CreatedAtUtc);
+
+/// <summary>
+/// Full operator-safe decision history detail (durable snapshot). Distinct from execution visibility and audit.
 /// </summary>
 public sealed record DecisionHistoryItemResponse(
     Guid Id,
@@ -36,8 +58,13 @@ public sealed record DecisionHistoryItemResponse(
     string Outcome,
     DateTime CreatedAtUtc);
 
+/// <summary>
+/// Paged list of compact history rows. <see cref="SortBy"/> and <see cref="SortDirection"/> echo the applied bounded sort (default: <c>createdAtUtc</c> descending).
+/// </summary>
 public sealed record PagedDecisionHistoryResponse(
-    IReadOnlyList<DecisionHistoryItemResponse> Items,
+    IReadOnlyList<DecisionHistoryListItemResponse> Items,
     int Page,
     int PageSize,
-    int TotalCount);
+    int TotalCount,
+    string SortBy,
+    string SortDirection);
