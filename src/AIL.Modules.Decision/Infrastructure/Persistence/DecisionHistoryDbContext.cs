@@ -20,8 +20,12 @@ internal sealed class DecisionHistoryDbContext : DbContext
         {
             e.ToTable("DecisionHistory");
             e.HasKey(x => x.Id);
-            e.HasIndex(x => x.TenantId);
+            // List queries are always tenant-scoped and ordered by CreatedAtUtc (then Id). Single-column TenantId alone is redundant with composites below.
             e.HasIndex(x => new { x.TenantId, x.CreatedAtUtc });
+            // Optional exact-match filters in EfDecisionHistoryStore.List — composites support tenant + filter + chronological access (sort/range on CreatedAtUtc).
+            e.HasIndex(x => new { x.TenantId, x.DecisionType, x.CreatedAtUtc });
+            e.HasIndex(x => new { x.TenantId, x.CorrelationGroupId, x.CreatedAtUtc });
+            e.HasIndex(x => new { x.TenantId, x.ExecutionInstanceId, x.CreatedAtUtc });
             e.Property(x => x.ReasonSummary).HasMaxLength(4096);
             e.Property(x => x.DecisionType).HasMaxLength(512);
             e.Property(x => x.SubjectType).HasMaxLength(256);
