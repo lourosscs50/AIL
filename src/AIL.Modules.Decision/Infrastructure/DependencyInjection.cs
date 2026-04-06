@@ -18,7 +18,8 @@ public static class DependencyInjection
         services.TryAddSingleton<IDecisionPolicyService, DefaultDecisionPolicyService>();
         services.AddSingleton<DecisionService>();
         services.AddSingleton<IDecisionService>(sp => sp.GetRequiredService<DecisionService>());
-        services.TryAddSingleton<IDecisionHistoryStore, InMemoryDecisionHistoryStore>();
+        services.TryAddSingleton<IDecisionHistoryStore>(_ =>
+            new InMemoryDecisionHistoryStore(new DecisionHistoryRetentionOptions()));
         services.TryAddSingleton<IDecisionHistoryRecorder, DecisionHistoryRecorder>();
         return services;
     }

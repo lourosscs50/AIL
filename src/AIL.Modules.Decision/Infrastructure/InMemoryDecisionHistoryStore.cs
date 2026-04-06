@@ -7,14 +7,24 @@ namespace AIL.Modules.Decision.Infrastructure;
 
 /// <summary>
 /// Bounded in-process store for operator decision history (same deployment profile as execution visibility snapshots).
+/// Retention is count-based: see <see cref="DecisionHistoryRetentionOptions"/>. Eviction removes the oldest-inserted
+/// record first (FIFO). Replaced rows (same <see cref="DecisionHistoryRecord.Id"/>) do not trigger eviction.
 /// </summary>
 internal sealed class InMemoryDecisionHistoryStore : IDecisionHistoryStore
 {
-    private const int MaxEntries = 512;
     private const int MaxPageSize = 100;
+    private readonly int _maxRetainedRecords;
     private readonly object _lock = new();
     private readonly Dictionary<Guid, DecisionHistoryRecord> _byId = new();
     private readonly Queue<Guid> _insertionOrder = new();
+
+    public InMemoryDecisionHistoryStore(DecisionHistoryRetentionOptions? options = null)
+    {
+        options ??= new DecisionHistoryRetentionOptions();
+        if (options.MaxRetainedRecords < 1)
+            throw new ArgumentOutOfRangeException(nameof(options), "MaxRetainedRecords must be at least 1.");
+        _maxRetainedRecords = options.MaxRetainedRecords;
+    }
 
     public void Put(DecisionHistoryRecord record)
     {
@@ -25,7 +35,7 @@ internal sealed class InMemoryDecisionHistoryStore : IDecisionHistoryStore
             var isNew = !_byId.ContainsKey(id);
             if (isNew)
             {
-                while (_byId.Count >= MaxEntries && _insertionOrder.Count > 0)
+                while (_byId.Count >= _maxRetainedRecords && _insertionOrder.Count > 0)
                 {
                     var evict = _insertionOrder.Dequeue();
                     _byId.Remove(evict);

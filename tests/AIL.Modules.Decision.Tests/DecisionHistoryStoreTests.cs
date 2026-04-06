@@ -246,4 +246,79 @@ public sealed class DecisionHistoryStoreTests
         Assert.Single(page2);
         Assert.Equal(id3, page2[0].Id);
     }
+
+    [Fact]
+    public void Put_EvictsOldestInserted_WhenAtCapacity_Fifo()
+    {
+        var store = new InMemoryDecisionHistoryStore(new DecisionHistoryRetentionOptions { MaxRetainedRecords = 3 });
+        var tenant = Guid.NewGuid();
+        var id1 = Guid.Parse("30000000-0000-0000-0000-000000000001");
+        var id2 = Guid.Parse("30000000-0000-0000-0000-000000000002");
+        var id3 = Guid.Parse("30000000-0000-0000-0000-000000000003");
+        var id4 = Guid.Parse("30000000-0000-0000-0000-000000000004");
+        store.Put(SampleRecord(tenant, fixedId: id1));
+        store.Put(SampleRecord(tenant, fixedId: id2));
+        store.Put(SampleRecord(tenant, fixedId: id3));
+        Assert.NotNull(store.TryGet(tenant, id1));
+        store.Put(SampleRecord(tenant, fixedId: id4));
+        Assert.Null(store.TryGet(tenant, id1));
+        Assert.NotNull(store.TryGet(tenant, id2));
+        Assert.NotNull(store.TryGet(tenant, id3));
+        Assert.NotNull(store.TryGet(tenant, id4));
+    }
+
+    [Fact]
+    public void List_TotalCount_ReflectsOnlyRetained_AfterEviction()
+    {
+        var store = new InMemoryDecisionHistoryStore(new DecisionHistoryRetentionOptions { MaxRetainedRecords = 2 });
+        var tenant = Guid.NewGuid();
+        var id1 = Guid.Parse("40000000-0000-0000-0000-000000000001");
+        var id2 = Guid.Parse("40000000-0000-0000-0000-000000000002");
+        var id3 = Guid.Parse("40000000-0000-0000-0000-000000000003");
+        store.Put(SampleRecord(tenant, fixedId: id1));
+        store.Put(SampleRecord(tenant, fixedId: id2));
+        store.Put(SampleRecord(tenant, fixedId: id3));
+        var (items, total) = store.List(new DecisionHistoryListQuery(tenant, 1, 10));
+        Assert.Equal(2, total);
+        Assert.Equal(2, items.Count);
+        Assert.DoesNotContain(items, r => r.Id == id1);
+    }
+
+    [Fact]
+    public void List_Paging_AfterEviction_NoSkippedPages()
+    {
+        var store = new InMemoryDecisionHistoryStore(new DecisionHistoryRetentionOptions { MaxRetainedRecords = 3 });
+        var tenant = Guid.NewGuid();
+        var t = new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        var id1 = Guid.Parse("50000000-0000-0000-0000-000000000001");
+        var id2 = Guid.Parse("50000000-0000-0000-0000-000000000002");
+        var id3 = Guid.Parse("50000000-0000-0000-0000-000000000003");
+        var id4 = Guid.Parse("50000000-0000-0000-0000-000000000004");
+        store.Put(SampleRecord(tenant, createdAtUtc: t, fixedId: id1));
+        store.Put(SampleRecord(tenant, createdAtUtc: t, fixedId: id2));
+        store.Put(SampleRecord(tenant, createdAtUtc: t, fixedId: id3));
+        store.Put(SampleRecord(tenant, createdAtUtc: t, fixedId: id4));
+        var (p1, total) = store.List(new DecisionHistoryListQuery(
+            tenant,
+            1,
+            2,
+            SortBy: DecisionHistorySortBy.CreatedAtUtc,
+            SortDirection: DecisionHistorySortDirection.Ascending));
+        Assert.Equal(3, total);
+        Assert.Equal(2, p1.Count);
+        var (p2, _) = store.List(new DecisionHistoryListQuery(
+            tenant,
+            2,
+            2,
+            SortBy: DecisionHistorySortBy.CreatedAtUtc,
+            SortDirection: DecisionHistorySortDirection.Ascending));
+        Assert.Single(p2);
+    }
+
+    [Fact]
+    public void RetentionOptions_MaxRetainedRecords_BelowOne_Throws()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new InMemoryDecisionHistoryStore(new DecisionHistoryRetentionOptions { MaxRetainedRecords = 0 }));
+    }
 }
