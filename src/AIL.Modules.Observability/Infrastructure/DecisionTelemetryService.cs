@@ -22,7 +22,7 @@ internal sealed class DecisionTelemetryService : IDecisionTelemetryService
         _logger.Log(
             level,
             "Decision telemetry | TenantId={TenantId} DecisionType={DecisionType} Strategy={Strategy} PolicyKey={PolicyKey} " +
-            "UsedMemory={UsedMemory} MemoryItemCount={MemoryItemCount} Candidates={Candidates} Considered={Considered} " +
+            "UsedMemory={UsedMemory} MemoryItemCount={MemoryItemCount} MemoryInfluence={MemoryInfluence} Candidates={Candidates} Considered={Considered} " +
             "Duration={DurationMs}ms Succeeded={Succeeded}",
             telemetry.TenantId,
             telemetry.DecisionType,
@@ -30,6 +30,7 @@ internal sealed class DecisionTelemetryService : IDecisionTelemetryService
             telemetry.PolicyKey,
             telemetry.UsedMemory,
             telemetry.MemoryItemCount,
+            telemetry.MemoryInfluenceSummary,
             telemetry.CandidateStrategyCount,
             telemetry.ConsideredStrategyCount,
             telemetry.DurationMs,

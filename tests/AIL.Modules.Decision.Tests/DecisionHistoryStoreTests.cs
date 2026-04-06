@@ -4,6 +4,7 @@ using System.Linq;
 using AIL.Modules.Decision.Application;
 using AIL.Modules.Decision.Domain;
 using AIL.Modules.Decision.Infrastructure;
+using KnownSummaries = AIL.Modules.Decision.Domain.KnownMemoryInfluenceSummaries;
 
 namespace AIL.Modules.Decision.Tests;
 
@@ -27,6 +28,7 @@ public sealed class DecisionHistoryStoreTests
             ConsideredStrategies: new[] { strategy },
             UsedMemory: false,
             MemoryItemCount: 0,
+            MemoryInfluenceSummary: KnownSummaries.NoMemory,
             Options: new[]
             {
                 new DecisionHistoryOptionSnapshot(strategy, DecisionConfidence.Low.ToString(), 0.1, "x")

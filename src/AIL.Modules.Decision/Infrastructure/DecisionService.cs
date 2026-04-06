@@ -113,6 +113,12 @@ internal sealed class DecisionService : IDecisionService
             if (options.Count == 0)
                 options = BuildWinnerFallbackOptionsList(winner);
 
+            var memoryInfluenceSummary = MemoryInfluenceSummaryResolver.Resolve(
+                usedMemory,
+                memoryItemCount,
+                winner,
+                evaluated);
+
             var result = new DecisionResult(
                 DecisionType: request.DecisionType,
                 SelectedStrategyKey: winner.Eval.SuggestedStrategyKey,
@@ -121,6 +127,7 @@ internal sealed class DecisionService : IDecisionService
                 ConsideredStrategies: considered,
                 UsedMemory: usedMemory,
                 MemoryItemCount: memoryItemCount,
+                MemoryInfluenceSummary: memoryInfluenceSummary,
                 Options: options,
                 PolicyKey: policy.PolicyKey,
                 Metadata: request.Metadata);
@@ -137,7 +144,8 @@ internal sealed class DecisionService : IDecisionService
                     ConsideredStrategyCount: considered.Count,
                     DurationMs: stopwatch.ElapsedMilliseconds,
                     Succeeded: true,
-                    PolicyKey: policy.PolicyKey),
+                    PolicyKey: policy.PolicyKey,
+                    MemoryInfluenceSummary: memoryInfluenceSummary),
                 cancellationToken).ConfigureAwait(false);
 
             return result;

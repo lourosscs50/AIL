@@ -85,6 +85,7 @@ public static class DecisionEndpointMapping
             ConsideredStrategies: result.ConsideredStrategies,
             UsedMemory: result.UsedMemory,
             MemoryItemCount: result.MemoryItemCount,
+            MemoryInfluenceSummary: result.MemoryInfluenceSummary,
             PolicyKey: result.PolicyKey,
             Metadata: null,
             SelectedOptionId: selectedOptionId,

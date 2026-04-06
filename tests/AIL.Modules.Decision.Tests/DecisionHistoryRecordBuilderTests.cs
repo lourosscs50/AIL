@@ -5,6 +5,7 @@ using System.Reflection;
 using AIL.Modules.Decision.Application;
 using AIL.Modules.Decision.Domain;
 using AIL.Modules.Decision.Infrastructure;
+using KnownSummaries = AIL.Modules.Decision.Domain.KnownMemoryInfluenceSummaries;
 
 namespace AIL.Modules.Decision.Tests;
 
@@ -42,6 +43,7 @@ public sealed class DecisionHistoryRecordBuilderTests
             ConsideredStrategies: new[] { "opt_a", "opt_b" },
             UsedMemory: false,
             MemoryItemCount: 0,
+            MemoryInfluenceSummary: KnownSummaries.NoMemory,
             Options: options,
             PolicyKey: "dtype",
             Metadata: request.Metadata);
@@ -95,6 +97,7 @@ public sealed class DecisionHistoryRecordBuilderTests
             new[] { "k" },
             false,
             0,
+            KnownSummaries.NoMemory,
             new[] { new DecisionOption("k", DecisionConfidence.Low, 0.1, longRat) },
             "d",
             null);

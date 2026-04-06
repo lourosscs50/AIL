@@ -13,4 +13,5 @@ public sealed record DecisionTelemetry(
     long DurationMs,
     bool Succeeded,
     string? PolicyKey = null,
-    string? ErrorMessage = null);
+    string? ErrorMessage = null,
+    string? MemoryInfluenceSummary = null);

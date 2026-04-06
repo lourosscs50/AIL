@@ -25,6 +25,7 @@ public static class DecisionHistoryEndpointMapping
             ConsideredStrategies: r.ConsideredStrategies,
             UsedMemory: r.UsedMemory,
             MemoryItemCount: r.MemoryItemCount,
+            MemoryInfluenceSummary: r.MemoryInfluenceSummary,
             Options: r.Options.Select(o => new DecisionHistoryOptionItemResponse(
                 o.OptionId,
                 o.ConfidenceTier,

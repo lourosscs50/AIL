@@ -51,6 +51,7 @@ public sealed class DecisionHistoryEndpointsTests : IClassFixture<WebApplication
         Assert.Equal("control_trigger_routing", item.DecisionType);
         Assert.Equal(decided.SelectedStrategyKey, item.SelectedStrategyKey);
         Assert.Equal(decided.PolicyKey, item.PolicyKey);
+        Assert.Equal(decided.MemoryInfluenceSummary, item.MemoryInfluenceSummary);
         Assert.Equal("hist-subj", item.SubjectId);
         Assert.DoesNotContain("sensitive", item.ReasonSummary, StringComparison.OrdinalIgnoreCase);
         Assert.True(item.Options.Count > 0);

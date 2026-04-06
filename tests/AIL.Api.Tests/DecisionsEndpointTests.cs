@@ -50,6 +50,7 @@ public sealed class DecisionsEndpointTests : IClassFixture<WebApplicationFactory
         Assert.NotNull(body.DecisionRecordId);
         Assert.NotEqual(Guid.Empty, body.DecisionRecordId!.Value);
         Assert.False(body.UsedMemory);
+        Assert.Equal("no_memory", body.MemoryInfluenceSummary);
         Assert.NotEmpty(body.Options);
         AssertSelectedOptionIsExplicitAndInCanonicalOptions(body, "default_safe");
         AssertNoParallelSelectedOptionPayload(body);
@@ -134,6 +135,32 @@ public sealed class DecisionsEndpointTests : IClassFixture<WebApplicationFactory
         Assert.Equal(first.SelectedStrategyKey, second.SelectedStrategyKey);
         Assert.Equal(first.Confidence, second.Confidence);
         Assert.Equal(first.ReasonSummary, second.ReasonSummary);
+    }
+
+    [Fact]
+    public async Task Post_Decisions_IncludeMemory_EmptyStore_ReturnsMemoryEmptySummary()
+    {
+        var client = _factory.CreateClient();
+        var request = new DecideRequest(
+            TenantId: Guid.NewGuid(),
+            DecisionType: "control_trigger_routing",
+            SubjectType: "control_trigger",
+            SubjectId: "subj",
+            ContextText: null,
+            StructuredContext: null,
+            IncludeMemory: true,
+            MemoryQuery: new DecideMemoryQueryRequest("Tenant", null, "Fact"),
+            CandidateStrategies: null,
+            Metadata: null,
+            CorrelationGroupId: null);
+
+        var response = await client.PostAsJsonAsync("/decisions", request);
+        response.EnsureSuccessStatusCode();
+        var body = await response.Content.ReadFromJsonAsync<DecideResponse>();
+        Assert.NotNull(body);
+        Assert.True(body!.UsedMemory);
+        Assert.Equal(0, body.MemoryItemCount);
+        Assert.Equal("memory_empty", body.MemoryInfluenceSummary);
     }
 
     [Fact]

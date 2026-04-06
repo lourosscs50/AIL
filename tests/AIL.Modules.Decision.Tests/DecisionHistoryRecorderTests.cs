@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AIL.Modules.Decision.Application;
 using AIL.Modules.Decision.Domain;
 using AIL.Modules.Decision.Infrastructure;
+using KnownSummaries = AIL.Modules.Decision.Domain.KnownMemoryInfluenceSummaries;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace AIL.Modules.Decision.Tests;
@@ -34,6 +35,7 @@ public sealed class DecisionHistoryRecorderTests
             new[] { "k" },
             false,
             0,
+            KnownSummaries.NoMemory,
             new[] { new DecisionOption("k", DecisionConfidence.Low, 0.1, "x") },
             "t",
             null);

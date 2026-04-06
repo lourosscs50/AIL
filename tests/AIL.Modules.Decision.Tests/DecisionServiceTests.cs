@@ -9,6 +9,7 @@ using AIL.Modules.Observability.Application;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
+using KnownSummaries = AIL.Modules.Decision.Domain.KnownMemoryInfluenceSummaries;
 
 namespace AIL.Modules.Decision.Tests;
 
@@ -71,6 +72,7 @@ public sealed class DecisionServiceTests
         Assert.Contains(KnownDecisionStrategyKeys.DefaultSafe, result.ConsideredStrategies);
         memory.Verify(m => m.ListMemoryAsync(It.IsAny<ListMemoryRequest>()), Times.Never);
         memory.Verify(m => m.GetMemoryByKeyAsync(It.IsAny<GetMemoryByKeyRequest>()), Times.Never);
+        Assert.Equal(KnownSummaries.NoMemory, result.MemoryInfluenceSummary);
     }
 
     [Fact]
@@ -83,6 +85,7 @@ public sealed class DecisionServiceTests
         Assert.Equal("custom_route", result.SelectedStrategyKey);
         Assert.Equal("Decision influenced by exact candidate match", result.ReasonSummary);
         Assert.Equal(DecisionConfidence.High, result.Confidence);
+        Assert.Equal(KnownSummaries.NoMemory, result.MemoryInfluenceSummary);
     }
 
     [Fact]
@@ -147,6 +150,7 @@ public sealed class DecisionServiceTests
         Assert.Equal(KnownDecisionStrategyKeys.MemoryInformed, result.SelectedStrategyKey);
         Assert.True(result.UsedMemory);
         Assert.Equal(1, result.MemoryItemCount);
+        Assert.Equal(KnownSummaries.MemoryReinforced, result.MemoryInfluenceSummary);
     }
 
     [Fact]
@@ -172,6 +176,7 @@ public sealed class DecisionServiceTests
         }));
 
         Assert.Equal(KnownDecisionStrategyKeys.MemoryInformed, result.SelectedStrategyKey);
+        Assert.Equal(KnownSummaries.MemoryReinforced, result.MemoryInfluenceSummary);
     }
 
     [Fact]
@@ -194,6 +199,7 @@ public sealed class DecisionServiceTests
         Assert.Equal(KnownDecisionStrategyKeys.DefaultSafe, result.SelectedStrategyKey);
         Assert.True(result.UsedMemory);
         Assert.Equal(0, result.MemoryItemCount);
+        Assert.Equal(KnownSummaries.MemoryEmpty, result.MemoryInfluenceSummary);
     }
 
     [Fact]
@@ -368,6 +374,7 @@ public sealed class DecisionServiceTests
 
         Assert.Equal("route_from_candidate", result.SelectedStrategyKey);
         Assert.Equal(DecisionConfidence.High, result.Confidence);
+        Assert.Equal(KnownSummaries.MemoryNeutral, result.MemoryInfluenceSummary);
     }
 
     [Fact]
@@ -397,6 +404,7 @@ public sealed class DecisionServiceTests
 
         Assert.Equal(KnownDecisionStrategyKeys.ContextEscalated, result.SelectedStrategyKey);
         Assert.Equal(DecisionConfidence.High, result.Confidence);
+        Assert.Equal(KnownSummaries.MemoryNeutral, result.MemoryInfluenceSummary);
     }
 
     [Fact]
@@ -427,6 +435,7 @@ public sealed class DecisionServiceTests
         Assert.Equal("sole_candidate", result.SelectedStrategyKey);
         Assert.Equal(DecisionConfidence.High, result.Confidence);
         Assert.Contains(KnownDecisionStrategyKeys.DecisionContinuity, result.ConsideredStrategies);
+        Assert.Equal(KnownSummaries.MemoryNeutral, result.MemoryInfluenceSummary);
     }
 
     [Fact]
@@ -457,6 +466,62 @@ public sealed class DecisionServiceTests
                 b.IncludeMemory = true;
                 b.MemoryQuery = null;
             })));
+    }
+
+    [Fact]
+    public async Task DecideAsync_MemoryInfluenceSummary_MemoryConflict_WhenContinuityAndMemoryInformedDisagree()
+    {
+        var tenant = Guid.NewGuid();
+        var memory = new Mock<IMemoryService>();
+        memory.Setup(m => m.ListMemoryAsync(It.IsAny<ListMemoryRequest>()))
+            .ReturnsAsync(new MemoryListResult(
+                new[] { CreateContinuityMemoryRecord(tenant, "generic.test", "continuity_route") },
+                1,
+                20,
+                1));
+
+        var svc = CreateService(memory);
+        var result = await svc.DecideAsync(BaseRequest(b =>
+        {
+            b.TenantId = tenant;
+            b.DecisionType = "generic.test";
+            b.IncludeMemory = true;
+            b.MemoryQuery = new DecisionMemoryQuery("Tenant", null, "Fact");
+            b.ContextText = "operator context";
+            b.Candidates = new[] { "continuity_route", "memory_informed", "default_safe" };
+        }));
+
+        Assert.Contains(KnownDecisionStrategyKeys.MemoryInformed, result.ConsideredStrategies);
+        Assert.Contains(KnownDecisionStrategyKeys.DecisionContinuity, result.ConsideredStrategies);
+        Assert.Equal(KnownSummaries.MemoryConflict, result.MemoryInfluenceSummary);
+        Assert.Equal(KnownDecisionStrategyKeys.MemoryInformed, result.SelectedStrategyKey);
+    }
+
+    [Fact]
+    public async Task DecideAsync_MemoryInformedOptionStrength_ScalesDeterministicallyWithBoundedItemCount()
+    {
+        var tenant = Guid.NewGuid();
+        async Task<DecisionResult> RunAsync(int count)
+        {
+            var records = Enumerable.Range(0, count).Select(_ => CreateMemoryRecord(tenant)).ToArray();
+            var memory = new Mock<IMemoryService>();
+            memory.Setup(m => m.ListMemoryAsync(It.IsAny<ListMemoryRequest>()))
+                .ReturnsAsync(new MemoryListResult(records, 1, 20, count));
+            var svc = CreateService(memory);
+            return await svc.DecideAsync(BaseRequest(b =>
+            {
+                b.TenantId = tenant;
+                b.IncludeMemory = true;
+                b.MemoryQuery = new DecisionMemoryQuery("Tenant", null, "Fact");
+                b.WithInputs(new Dictionary<string, string> { ["context_sensitive"] = "true" });
+            }));
+        }
+
+        var one = await RunAsync(1);
+        var many = await RunAsync(12);
+        var optOne = Assert.Single(one.Options, o => o.OptionId == KnownDecisionStrategyKeys.MemoryInformed);
+        var optMany = Assert.Single(many.Options, o => o.OptionId == KnownDecisionStrategyKeys.MemoryInformed);
+        Assert.True(optMany.Strength > optOne.Strength);
     }
 
     private static MemoryRecord CreateMemoryRecord(Guid tenant) =>
@@ -601,6 +666,7 @@ public sealed class DecisionServiceTests
         
         // Verify continuity strategy was considered
         Assert.Contains("decision_continuity", result.ConsideredStrategies);
+        Assert.Equal(KnownSummaries.MemoryNeutral, result.MemoryInfluenceSummary);
     }
 
     [Fact]
@@ -629,6 +695,9 @@ public sealed class DecisionServiceTests
         // Should have loaded memory and considered continuity
         Assert.True(result.UsedMemory);
         Assert.Equal(1, result.MemoryItemCount);
+        Assert.Contains(KnownDecisionStrategyKeys.DecisionContinuity, result.ConsideredStrategies);
+        Assert.Equal(historicalStrategy, result.SelectedStrategyKey);
+        Assert.Equal(KnownSummaries.MemoryConsistent, result.MemoryInfluenceSummary);
     }
 
     [Fact]

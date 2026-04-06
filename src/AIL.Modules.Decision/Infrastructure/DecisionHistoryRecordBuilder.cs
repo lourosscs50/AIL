@@ -10,6 +10,7 @@ internal static class DecisionHistoryRecordBuilder
     internal const int MaxSubjectFieldLength = 256;
     internal const int MaxReasonSummaryLength = 2048;
     internal const int MaxOptionRationaleLength = 1024;
+    internal const int MaxMemoryInfluenceSummaryLength = 64;
 
     public static DecisionHistoryRecord Build(Guid id, DecisionRequest request, DecisionResult result, DateTime createdAtUtc)
     {
@@ -41,6 +42,7 @@ internal static class DecisionHistoryRecordBuilder
             ConsideredStrategies: result.ConsideredStrategies,
             UsedMemory: result.UsedMemory,
             MemoryItemCount: result.MemoryItemCount,
+            MemoryInfluenceSummary: Truncate(result.MemoryInfluenceSummary, MaxMemoryInfluenceSummaryLength),
             Options: options,
             Outcome: "Succeeded",
             CreatedAtUtc: createdAtUtc);

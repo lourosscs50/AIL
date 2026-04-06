@@ -22,6 +22,7 @@ public sealed record DecisionHistoryRecord(
     IReadOnlyList<string> ConsideredStrategies,
     bool UsedMemory,
     int MemoryItemCount,
+    string MemoryInfluenceSummary,
     IReadOnlyList<DecisionHistoryOptionSnapshot> Options,
     string Outcome,
     DateTime CreatedAtUtc);
