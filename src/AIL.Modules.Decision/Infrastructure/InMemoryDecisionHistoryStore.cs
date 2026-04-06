@@ -79,6 +79,9 @@ internal sealed class InMemoryDecisionHistoryStore : IDecisionHistoryStore
             if (query.CorrelationGroupId is { } correlationId)
                 rows = rows.Where(r => r.CorrelationGroupId == correlationId);
 
+            if (query.ExecutionInstanceId is { } executionId)
+                rows = rows.Where(r => r.ExecutionInstanceId == executionId);
+
             if (!string.IsNullOrWhiteSpace(query.MemoryInfluenceSummary))
                 rows = rows.Where(r =>
                     string.Equals(

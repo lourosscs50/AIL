@@ -26,4 +26,12 @@ public sealed class DecisionHistoryListFiltersTests
         var s = new string('m', DecisionEndpointMapping.MaxMemoryInfluenceSummaryFilterLength);
         DecisionEndpointMapping.ValidateDecisionHistoryListFilters(null, s);
     }
+
+    [Fact]
+    public void ValidateDecisionHistoryListFilters_RejectsEmptyExecutionInstanceId()
+    {
+        var ex = Assert.Throws<ArgumentException>(() =>
+            DecisionEndpointMapping.ValidateDecisionHistoryListFilters(null, null, Guid.Empty));
+        Assert.Equal("executionInstanceId", ex.ParamName);
+    }
 }

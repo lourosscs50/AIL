@@ -13,6 +13,7 @@ namespace AIL.Api.Contracts;
 /// <see cref="DecisionRecordId"/> is the durable history row id when persistence succeeded; <c>null</c> if history was not recorded.
 /// <see cref="MemoryInfluenceSummary"/> is a bounded vocabulary label (e.g. <c>no_memory</c>, <c>memory_reinforced</c>)—never raw memory text.
 /// <see cref="CorrelationGroupId"/> echoes the optional client-supplied grouping id from the request when present; never inferred or fabricated.
+/// <see cref="ExecutionInstanceId"/> echoes an optional external execution instance id from the request when present; never generated or inferred by A.I.L.
 /// </summary>
 public sealed record DecideResponse(
     string DecisionType,
@@ -28,4 +29,5 @@ public sealed record DecideResponse(
     IReadOnlyDictionary<string, string>? Metadata,
     string? SelectedOptionId,
     Guid? DecisionRecordId,
-    Guid? CorrelationGroupId);
+    Guid? CorrelationGroupId,
+    Guid? ExecutionInstanceId);

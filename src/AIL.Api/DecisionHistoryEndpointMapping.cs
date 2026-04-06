@@ -14,6 +14,7 @@ public static class DecisionHistoryEndpointMapping
             Id: r.Id,
             TenantId: r.TenantId,
             CorrelationGroupId: r.CorrelationGroupId,
+            ExecutionInstanceId: r.ExecutionInstanceId,
             DecisionType: r.DecisionType,
             SubjectType: r.SubjectType,
             SubjectId: r.SubjectId,

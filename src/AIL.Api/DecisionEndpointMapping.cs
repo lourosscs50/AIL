@@ -57,16 +57,19 @@ public static class DecisionEndpointMapping
             MemoryQuery: memoryQuery,
             CandidateStrategies: req.CandidateStrategies,
             Metadata: req.Metadata,
-            CorrelationGroupId: req.CorrelationGroupId);
+            CorrelationGroupId: req.CorrelationGroupId,
+            ExecutionInstanceId: req.ExecutionInstanceId);
     }
 
     /// <summary>
-    /// Maps a domain result to the public API contract. <paramref name="correlationGroupId"/> is explicit request pass-through only.
+    /// Maps a domain result to the public API contract. <paramref name="correlationGroupId"/> and
+    /// <paramref name="executionInstanceId"/> are explicit request pass-through only (never inferred).
     /// </summary>
     public static DecideResponse MapToDecideResponse(
         DecisionResult result,
         Guid? decisionRecordId = null,
-        Guid? correlationGroupId = null)
+        Guid? correlationGroupId = null,
+        Guid? executionInstanceId = null)
     {
         ArgumentNullException.ThrowIfNull(result);
 
@@ -94,16 +97,23 @@ public static class DecisionEndpointMapping
             Metadata: null,
             SelectedOptionId: selectedOptionId,
             DecisionRecordId: decisionRecordId,
-            CorrelationGroupId: correlationGroupId);
+            CorrelationGroupId: correlationGroupId,
+            ExecutionInstanceId: executionInstanceId);
     }
 
     /// <summary>
     /// Validates optional history list filters (throws <see cref="ArgumentException"/> for bad combinations).
     /// </summary>
-    public static void ValidateDecisionHistoryListFilters(Guid? correlationGroupId, string? memoryInfluenceSummary)
+    public static void ValidateDecisionHistoryListFilters(
+        Guid? correlationGroupId,
+        string? memoryInfluenceSummary,
+        Guid? executionInstanceId = null)
     {
         if (correlationGroupId is Guid g && g == Guid.Empty)
             throw new ArgumentException("correlationGroupId must not be empty when provided.", nameof(correlationGroupId));
+
+        if (executionInstanceId is Guid ex && ex == Guid.Empty)
+            throw new ArgumentException("executionInstanceId must not be empty when provided.", nameof(executionInstanceId));
 
         if (memoryInfluenceSummary is { Length: > MaxMemoryInfluenceSummaryFilterLength })
             throw new ArgumentException(

@@ -106,7 +106,8 @@ app.MapPost("/decisions", async (
         return Results.Ok(DecisionEndpointMapping.MapToDecideResponse(
             result,
             recordId,
-            decisionRequest.CorrelationGroupId));
+            decisionRequest.CorrelationGroupId,
+            decisionRequest.ExecutionInstanceId));
     }
     catch (Exception ex) when (ex is ArgumentException or ArgumentNullException or InvalidOperationException)
     {
@@ -136,6 +137,7 @@ app.MapGet("/decisions/history", (
     DateTime? toUtc,
     Guid? correlationGroupId,
     string? memoryInfluenceSummary,
+    Guid? executionInstanceId,
     IDecisionHistoryStore store) =>
 {
     if (tenantId == Guid.Empty)
@@ -146,7 +148,10 @@ app.MapGet("/decisions/history", (
 
     try
     {
-        DecisionEndpointMapping.ValidateDecisionHistoryListFilters(correlationGroupId, memoryInfluenceSummary);
+        DecisionEndpointMapping.ValidateDecisionHistoryListFilters(
+            correlationGroupId,
+            memoryInfluenceSummary,
+            executionInstanceId);
     }
     catch (ArgumentException ex)
     {
@@ -167,7 +172,8 @@ app.MapGet("/decisions/history", (
         CorrelationGroupId: correlationGroupId,
         MemoryInfluenceSummary: string.IsNullOrWhiteSpace(memoryInfluenceSummary)
             ? null
-            : memoryInfluenceSummary.Trim());
+            : memoryInfluenceSummary.Trim(),
+        ExecutionInstanceId: executionInstanceId);
 
     var (items, total) = store.List(query);
     var dto = items.Select(DecisionHistoryEndpointMapping.ToItemResponse).ToList();

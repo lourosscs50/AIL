@@ -76,6 +76,18 @@ public sealed class DecisionServiceTests
     }
 
     [Fact]
+    public async Task DecideAsync_ExecutionInstanceId_DoesNotAffect_StrategySelection()
+    {
+        var svc = CreateService();
+        var baseReq = BaseRequest();
+        var r1 = await svc.DecideAsync(baseReq with { ExecutionInstanceId = Guid.NewGuid() });
+        var r2 = await svc.DecideAsync(baseReq with { ExecutionInstanceId = Guid.NewGuid() });
+        var r3 = await svc.DecideAsync(baseReq with { ExecutionInstanceId = null });
+        Assert.Equal(r1.SelectedStrategyKey, r2.SelectedStrategyKey);
+        Assert.Equal(r2.SelectedStrategyKey, r3.SelectedStrategyKey);
+    }
+
+    [Fact]
     public async Task DecideAsync_SingleCandidate_Selects_CandidateKey_Deterministically()
     {
         var svc = CreateService();
@@ -618,7 +630,8 @@ public sealed class DecisionServiceTests
                 MemoryQuery,
                 Candidates,
                 Metadata: null,
-                CorrelationGroupId: null);
+                CorrelationGroupId: null,
+                ExecutionInstanceId: null);
     }
 
     [Fact]

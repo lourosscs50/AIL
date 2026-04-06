@@ -15,13 +15,15 @@ public sealed class DecisionHistoryStoreTests
         string decisionType = "t1",
         string strategy = "default_safe",
         Guid? correlationGroupId = null,
-        string? memoryInfluenceSummary = null)
+        string? memoryInfluenceSummary = null,
+        Guid? executionInstanceId = null)
     {
         var id = Guid.NewGuid();
         return new DecisionHistoryRecord(
             Id: id,
             TenantId: tenantId,
             CorrelationGroupId: correlationGroupId,
+            ExecutionInstanceId: executionInstanceId,
             DecisionType: decisionType,
             SubjectType: "st",
             SubjectId: "sid",
@@ -135,5 +137,36 @@ public sealed class DecisionHistoryStoreTests
         var (items, total) = store.List(new DecisionHistoryListQuery(tenant, 1, 10, CorrelationGroupId: cg));
         Assert.Equal(1, total);
         Assert.Equal(cg, items[0].CorrelationGroupId);
+    }
+
+    [Fact]
+    public void List_FiltersByExecutionInstanceId_ExactMatch()
+    {
+        var store = new InMemoryDecisionHistoryStore();
+        var tenant = Guid.NewGuid();
+        var exA = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
+        var exB = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
+        store.Put(SampleRecord(tenant, executionInstanceId: exA));
+        store.Put(SampleRecord(tenant, executionInstanceId: exB));
+
+        var q = new DecisionHistoryListQuery(tenant, 1, 10, ExecutionInstanceId: exA);
+        var (items, total) = store.List(q);
+        Assert.Equal(1, total);
+        Assert.Equal(exA, items[0].ExecutionInstanceId);
+    }
+
+    [Fact]
+    public void List_FilterByExecutionInstance_CombinedWithCorrelation()
+    {
+        var store = new InMemoryDecisionHistoryStore();
+        var tenant = Guid.NewGuid();
+        var cg = Guid.NewGuid();
+        var ex = Guid.NewGuid();
+        store.Put(SampleRecord(tenant, correlationGroupId: cg, executionInstanceId: ex));
+        store.Put(SampleRecord(tenant, correlationGroupId: cg, executionInstanceId: Guid.NewGuid()));
+
+        var (items, total) = store.List(
+            new DecisionHistoryListQuery(tenant, 1, 10, CorrelationGroupId: cg, ExecutionInstanceId: ex));
+        Assert.Equal(1, total);
     }
 }

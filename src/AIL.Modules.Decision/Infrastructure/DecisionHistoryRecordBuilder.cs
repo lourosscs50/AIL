@@ -31,6 +31,7 @@ internal static class DecisionHistoryRecordBuilder
             Id: id,
             TenantId: request.TenantId,
             CorrelationGroupId: request.CorrelationGroupId,
+            ExecutionInstanceId: request.ExecutionInstanceId,
             DecisionType: result.DecisionType,
             SubjectType: Truncate(request.SubjectType, MaxSubjectFieldLength),
             SubjectId: Truncate(request.SubjectId, MaxSubjectFieldLength),

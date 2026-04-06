@@ -19,6 +19,7 @@ public sealed record DecisionHistoryItemResponse(
     Guid Id,
     Guid TenantId,
     Guid? CorrelationGroupId,
+    Guid? ExecutionInstanceId,
     string DecisionType,
     string SubjectType,
     string SubjectId,

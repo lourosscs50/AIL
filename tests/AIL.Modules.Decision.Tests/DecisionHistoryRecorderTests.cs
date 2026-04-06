@@ -26,6 +26,7 @@ public sealed class DecisionHistoryRecorderTests
             null,
             null,
             null,
+            null,
             null);
         var result = new DecisionResult(
             "t",

@@ -34,13 +34,15 @@ public sealed class DecisionHistoryEndpointsTests : IClassFixture<WebApplication
             MemoryQuery: null,
             CandidateStrategies: null,
             Metadata: null,
-            CorrelationGroupId: Guid.Parse("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"));
+            CorrelationGroupId: Guid.Parse("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"),
+            ExecutionInstanceId: Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff"));
 
         var post = await client.PostAsJsonAsync("/decisions", postReq);
         post.EnsureSuccessStatusCode();
         var decided = await post.Content.ReadFromJsonAsync<DecideResponse>();
         Assert.NotNull(decided?.DecisionRecordId);
         Assert.Equal(postReq.CorrelationGroupId, decided!.CorrelationGroupId);
+        Assert.Equal(postReq.ExecutionInstanceId, decided.ExecutionInstanceId);
 
         var getUrl = $"/decisions/history/{decided!.DecisionRecordId}?tenantId={tenant:D}";
         var get = await client.GetAsync(getUrl);
@@ -49,8 +51,11 @@ public sealed class DecisionHistoryEndpointsTests : IClassFixture<WebApplication
         Assert.NotNull(item);
         Assert.Equal(decided.DecisionRecordId, item!.Id);
         Assert.NotEqual(item.Id, item.CorrelationGroupId);
+        Assert.NotEqual(item.Id, item.ExecutionInstanceId);
+        Assert.NotEqual(item.CorrelationGroupId, item.ExecutionInstanceId);
         Assert.Equal(tenant, item.TenantId);
         Assert.Equal(postReq.CorrelationGroupId, item.CorrelationGroupId);
+        Assert.Equal(postReq.ExecutionInstanceId, item.ExecutionInstanceId);
         Assert.Equal("control_trigger_routing", item.DecisionType);
         Assert.Equal(decided.SelectedStrategyKey, item.SelectedStrategyKey);
         Assert.Equal(decided.PolicyKey, item.PolicyKey);
@@ -287,6 +292,73 @@ public sealed class DecisionHistoryEndpointsTests : IClassFixture<WebApplication
         var tooLong = new string('x', DecisionEndpointMapping.MaxMemoryInfluenceSummaryFilterLength + 1);
         var url =
             $"/decisions/history?tenantId={tenant:D}&memoryInfluenceSummary={Uri.EscapeDataString(tooLong)}";
+        var res = await client.GetAsync(url);
+        Assert.Equal(HttpStatusCode.BadRequest, res.StatusCode);
+    }
+
+    [Fact]
+    public async Task Get_DecisionHistory_List_FiltersByExecutionInstanceId()
+    {
+        var client = _factory.CreateClient();
+        var tenant = Guid.NewGuid();
+        var exA = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
+        var exB = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
+        await client.PostAsJsonAsync("/decisions", new DecideRequest(
+            tenant,
+            "alpha_route",
+            "s",
+            "e0",
+            null,
+            null,
+            false,
+            null,
+            null,
+            null,
+            null,
+            exA));
+        await client.PostAsJsonAsync("/decisions", new DecideRequest(
+            tenant,
+            "alpha_route",
+            "s",
+            "e1",
+            null,
+            null,
+            false,
+            null,
+            null,
+            null,
+            null,
+            exA));
+        await client.PostAsJsonAsync("/decisions", new DecideRequest(
+            tenant,
+            "alpha_route",
+            "s",
+            "e2",
+            null,
+            null,
+            false,
+            null,
+            null,
+            null,
+            null,
+            exB));
+
+        var url = $"/decisions/history?tenantId={tenant:D}&executionInstanceId={exA:D}&page=1&pageSize=10";
+        var list = await client.GetAsync(url);
+        list.EnsureSuccessStatusCode();
+        var page = await list.Content.ReadFromJsonAsync<PagedDecisionHistoryResponse>();
+        Assert.NotNull(page);
+        Assert.Equal(2, page!.TotalCount);
+        Assert.All(page.Items, x => Assert.Equal(exA, x.ExecutionInstanceId));
+    }
+
+    [Fact]
+    public async Task Get_DecisionHistory_List_EmptyExecutionInstanceId_Returns400()
+    {
+        var client = _factory.CreateClient();
+        var tenant = Guid.NewGuid();
+        var url =
+            $"/decisions/history?tenantId={tenant:D}&executionInstanceId={Guid.Empty:D}";
         var res = await client.GetAsync(url);
         Assert.Equal(HttpStatusCode.BadRequest, res.StatusCode);
     }

@@ -5,6 +5,7 @@ namespace AIL.Modules.Decision.Application;
 
 /// <summary>
 /// Application-layer decision input for <see cref="IDecisionService"/>; hosts map their transport contracts to this shape.
+/// <c>ExecutionInstanceId</c> is pass-through for external trace linkage; decision logic must not depend on it.
 /// </summary>
 public sealed record DecisionRequest(
     Guid TenantId,
@@ -17,4 +18,5 @@ public sealed record DecisionRequest(
     DecisionMemoryQuery? MemoryQuery = null,
     IReadOnlyList<string>? CandidateStrategies = null,
     IReadOnlyDictionary<string, string>? Metadata = null,
-    Guid? CorrelationGroupId = null);
+    Guid? CorrelationGroupId = null,
+    Guid? ExecutionInstanceId = null);

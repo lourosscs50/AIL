@@ -52,6 +52,7 @@ public sealed class DecisionsEndpointTests : IClassFixture<WebApplicationFactory
         Assert.False(body.UsedMemory);
         Assert.Equal("no_memory", body.MemoryInfluenceSummary);
         Assert.Null(body.CorrelationGroupId);
+        Assert.Null(body.ExecutionInstanceId);
         Assert.NotEmpty(body.Options);
         AssertSelectedOptionIsExplicitAndInCanonicalOptions(body, "default_safe");
         AssertNoParallelSelectedOptionPayload(body);
@@ -78,6 +79,33 @@ public sealed class DecisionsEndpointTests : IClassFixture<WebApplicationFactory
         var body = await PostDecisionsAsync(client, request);
         Assert.Equal(correlation, body.CorrelationGroupId);
         Assert.NotEqual(body.DecisionRecordId, body.CorrelationGroupId);
+    }
+
+    [Fact]
+    public async Task Post_Decisions_Preserves_ExecutionInstanceId_On_Response_When_Provided()
+    {
+        var client = _factory.CreateClient();
+        var execution = Guid.Parse("22222222-2222-2222-2222-222222222222");
+        var correlation = Guid.Parse("33333333-3333-3333-3333-333333333333");
+        var request = new DecideRequest(
+            TenantId: Guid.NewGuid(),
+            DecisionType: "control_trigger_routing",
+            SubjectType: "control_trigger",
+            SubjectId: "subj",
+            ContextText: null,
+            StructuredContext: null,
+            IncludeMemory: false,
+            MemoryQuery: null,
+            CandidateStrategies: null,
+            Metadata: null,
+            CorrelationGroupId: correlation,
+            ExecutionInstanceId: execution);
+
+        var body = await PostDecisionsAsync(client, request);
+        Assert.Equal(execution, body.ExecutionInstanceId);
+        Assert.Equal(correlation, body.CorrelationGroupId);
+        Assert.NotEqual(body.DecisionRecordId, body.ExecutionInstanceId);
+        Assert.NotEqual(body.CorrelationGroupId, body.ExecutionInstanceId);
     }
 
     [Fact]

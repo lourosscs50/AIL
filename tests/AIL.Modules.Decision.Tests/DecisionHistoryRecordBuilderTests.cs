@@ -16,6 +16,7 @@ public sealed class DecisionHistoryRecordBuilderTests
     {
         var tenant = Guid.NewGuid();
         var correlation = Guid.NewGuid();
+        var execution = Guid.NewGuid();
         var request = new DecisionRequest(
             tenant,
             "dtype",
@@ -27,7 +28,8 @@ public sealed class DecisionHistoryRecordBuilderTests
             MemoryQuery: null,
             CandidateStrategies: null,
             Metadata: new Dictionary<string, string> { ["secret"] = "meta" },
-            CorrelationGroupId: correlation);
+            CorrelationGroupId: correlation,
+            ExecutionInstanceId: execution);
 
         var options = new List<DecisionOption>
         {
@@ -55,6 +57,7 @@ public sealed class DecisionHistoryRecordBuilderTests
         Assert.Equal(id, record.Id);
         Assert.Equal(tenant, record.TenantId);
         Assert.Equal(correlation, record.CorrelationGroupId);
+        Assert.Equal(execution, record.ExecutionInstanceId);
         Assert.Equal("dtype", record.DecisionType);
         Assert.Equal("opt_a", record.SelectedStrategyKey);
         Assert.Equal("opt_a", record.SelectedOptionId);
@@ -84,6 +87,7 @@ public sealed class DecisionHistoryRecordBuilderTests
             null,
             null,
             false,
+            null,
             null,
             null,
             null,
