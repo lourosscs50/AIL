@@ -11,6 +11,11 @@ obj/
 # Logs
 *.log
 
+# Local SQLite decision history (default API data file)
+ail_decision_history.db
+ail_decision_history.db-shm
+ail_decision_history.db-wal
+
 # Node (safe to include anyway)
 node_modules/
 .next/
