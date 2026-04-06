@@ -4,6 +4,10 @@ using Microsoft.Extensions.Logging;
 
 namespace AIL.Modules.Decision.Infrastructure;
 
+/// <summary>
+/// Writes decision history via <see cref="IDecisionHistoryStore"/>. If persistence fails after a decision has already been computed, the failure is logged and <see cref="IDecisionHistoryRecorder.TryRecord"/> returns <c>null</c>
+/// (the decision outcome is still valid; <c>null</c> means no durable record id — not a silent success claim).
+/// </summary>
 internal sealed class DecisionHistoryRecorder : IDecisionHistoryRecorder
 {
     private readonly IDecisionHistoryStore _store;

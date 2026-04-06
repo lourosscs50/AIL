@@ -12,7 +12,9 @@ namespace AIL.Modules.Decision.Infrastructure;
 public static class DependencyInjection
 {
     /// <summary>
-    /// Registers SQLite-backed <see cref="IDecisionHistoryStore"/> (durable). Use <see cref="DecisionHistoryPersistenceOptions"/> under <c>DecisionHistory</c> configuration.
+    /// Registers SQLite-backed <see cref="IDecisionHistoryStore"/> (durable). Connection strings are validated immediately; invalid configuration throws <see cref="InvalidOperationException"/> during registration.
+    /// When running inside a generic host (for example the AIL API), <see cref="DecisionHistoryStoreReadinessHostedService"/> runs at startup and applies the schema via <see cref="Microsoft.EntityFrameworkCore.DatabaseFacade.EnsureCreated"/> before the server accepts traffic.
+    /// Consumers that only build an <see cref="IServiceProvider"/> without running hosted services still get deterministic initialization on the first store operation via <see cref="EfDecisionHistoryStore"/>.
     /// </summary>
     public static IServiceCollection AddDecisionHistoryStore(this IServiceCollection services, IConfiguration? configuration = null)
     {
@@ -20,14 +22,17 @@ public static class DependencyInjection
             ? new DecisionHistoryPersistenceOptions()
             : configuration.GetSection(DecisionHistoryPersistenceOptions.SectionName).Get<DecisionHistoryPersistenceOptions>()
               ?? new DecisionHistoryPersistenceOptions();
-        var conn = string.IsNullOrWhiteSpace(opts.SqliteConnectionString)
+        var raw = string.IsNullOrWhiteSpace(opts.SqliteConnectionString)
             ? new DecisionHistoryPersistenceOptions().SqliteConnectionString
             : opts.SqliteConnectionString.Trim();
+
+        var conn = DecisionHistoryPersistenceValidator.ValidateAndNormalizeSqliteConnectionString(raw);
 
         services.AddDbContextFactory<DecisionHistoryDbContext>(options =>
             options.UseSqlite(conn));
 
         services.TryAddSingleton<IDecisionHistoryStore, EfDecisionHistoryStore>();
+        services.AddHostedService<DecisionHistoryStoreReadinessHostedService>();
         return services;
     }
 

@@ -11,6 +11,7 @@ namespace AIL.Modules.Decision.Infrastructure;
 /// SQLite-backed <see cref="IDecisionHistoryStore"/>. Persists only fields on <see cref="DecisionHistoryRecord"/> (operator-safe snapshot).
 /// Unlike <see cref="InMemoryDecisionHistoryStore"/>, this implementation does <b>not</b> apply <see cref="DecisionHistoryRetentionOptions.MaxRetainedRecords"/>;
 /// retention is unbounded at the store layer (use external lifecycle policies if needed).
+/// Database creation is eager when the API host runs (<see cref="DecisionHistoryStoreReadinessHostedService"/>); otherwise the first call to this store triggers the same initialization (for example in tests that do not start hosted services).
 /// </summary>
 internal sealed class EfDecisionHistoryStore : IDecisionHistoryStore
 {
@@ -33,8 +34,7 @@ internal sealed class EfDecisionHistoryStore : IDecisionHistoryStore
         {
             if (_initialized)
                 return;
-            using var db = _factory.CreateDbContext();
-            db.Database.EnsureCreated();
+            DecisionHistoryDatabaseInitializer.EnsureReady(_factory);
             _initialized = true;
         }
     }

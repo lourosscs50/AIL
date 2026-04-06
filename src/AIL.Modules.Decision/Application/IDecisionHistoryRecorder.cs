@@ -8,7 +8,7 @@ namespace AIL.Modules.Decision.Application;
 public interface IDecisionHistoryRecorder
 {
     /// <summary>
-    /// Returns the new history record id, or <c>null</c> if persistence failed (decision result remains valid).
+    /// Returns the new history record id, or <c>null</c> if persistence failed after the decision was computed (decision result remains valid; <c>null</c> means no durable id — not a claim that history was written).
     /// </summary>
     Guid? TryRecord(DecisionRequest request, DecisionResult result);
 }

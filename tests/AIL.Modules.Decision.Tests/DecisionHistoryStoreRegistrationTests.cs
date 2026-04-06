@@ -47,4 +47,20 @@ public sealed class DecisionHistoryStoreRegistrationTests
             }
         }
     }
+
+    [Fact]
+    public void AddDecisionHistoryStore_ThrowsInvalidOperation_WhenConnectionStringHasNoDataSource()
+    {
+        var config = new ConfigurationBuilder()
+            .Add(new MemoryConfigurationSource
+            {
+                InitialData = new Dictionary<string, string?>
+                {
+                    ["DecisionHistory:SqliteConnectionString"] = "Data Source=",
+                },
+            })
+            .Build();
+        var services = new ServiceCollection();
+        Assert.Throws<InvalidOperationException>(() => services.AddDecisionHistoryStore(config));
+    }
 }
