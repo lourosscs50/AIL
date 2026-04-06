@@ -2,6 +2,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AIL.Modules.Decision.Infrastructure.Persistence;
 
+/// <summary>
+/// EF Core context for operator-safe decision history rows. Schema lifecycle is managed with compiled migrations under <c>Migrations/</c>; at runtime <see cref="DecisionHistoryDatabaseInitializer"/> applies pending migrations (host startup and first store use when hosted services do not run).
+/// </summary>
 internal sealed class DecisionHistoryDbContext : DbContext
 {
     public DecisionHistoryDbContext(DbContextOptions<DecisionHistoryDbContext> options)

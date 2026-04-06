@@ -8,7 +8,7 @@ using Microsoft.Extensions.Hosting;
 namespace AIL.Modules.Decision.Infrastructure;
 
 /// <summary>
-/// Eagerly initializes the durable decision history SQLite store during host startup. If the database cannot be created or opened,
+/// Eagerly applies pending decision history migrations during host startup. If the database file cannot be opened or migrations fail,
 /// <see cref="IHostedService.StartAsync"/> fails and the host does not complete startup (no silent durability). This runs before the server accepts requests.
 /// </summary>
 internal sealed class DecisionHistoryStoreReadinessHostedService : IHostedService

@@ -13,7 +13,7 @@ public static class DependencyInjection
 {
     /// <summary>
     /// Registers SQLite-backed <see cref="IDecisionHistoryStore"/> (durable). Connection strings are validated immediately; invalid configuration throws <see cref="InvalidOperationException"/> during registration.
-    /// When running inside a generic host (for example the AIL API), <see cref="DecisionHistoryStoreReadinessHostedService"/> runs at startup and applies the schema via <see cref="Microsoft.EntityFrameworkCore.DatabaseFacade.EnsureCreated"/> before the server accepts traffic.
+    /// When running inside a generic host (for example the AIL API), <see cref="DecisionHistoryStoreReadinessHostedService"/> runs at startup and applies pending EF Core migrations for <see cref="Persistence.DecisionHistoryDbContext"/> before the server accepts traffic.
     /// Consumers that only build an <see cref="IServiceProvider"/> without running hosted services still get deterministic initialization on the first store operation via <see cref="EfDecisionHistoryStore"/>.
     /// </summary>
     public static IServiceCollection AddDecisionHistoryStore(this IServiceCollection services, IConfiguration? configuration = null)
