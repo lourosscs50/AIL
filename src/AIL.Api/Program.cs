@@ -92,18 +92,68 @@ app.MapGet("/executions/{id:guid}", (Guid id, IExecutionVisibilityReadStore stor
         : Results.Ok(DecisionVisibilityFromExecutionMapping.ToDecisionVisibilityResponse(model));
 });
 
-app.MapPost("/decisions", async (DecideRequest request, IDecisionService decision, CancellationToken ct) =>
+app.MapPost("/decisions", async (
+    DecideRequest request,
+    IDecisionService decision,
+    IDecisionHistoryRecorder historyRecorder,
+    CancellationToken ct) =>
 {
     try
     {
         var decisionRequest = DecisionEndpointMapping.MapToDecisionRequest(request);
         var result = await decision.DecideAsync(decisionRequest, ct).ConfigureAwait(false);
-        return Results.Ok(DecisionEndpointMapping.MapToDecideResponse(result));
+        var recordId = historyRecorder.TryRecord(decisionRequest, result);
+        return Results.Ok(DecisionEndpointMapping.MapToDecideResponse(result, recordId));
     }
     catch (Exception ex) when (ex is ArgumentException or ArgumentNullException or InvalidOperationException)
     {
         return Results.BadRequest(new { error = ex.Message });
     }
+});
+
+app.MapGet("/decisions/history/{id:guid}", (Guid id, Guid tenantId, IDecisionHistoryStore store) =>
+{
+    if (tenantId == Guid.Empty)
+        return Results.BadRequest(new { error = "tenantId is required." });
+
+    var record = store.TryGet(tenantId, id);
+    return record is null
+        ? Results.NotFound()
+        : Results.Ok(DecisionHistoryEndpointMapping.ToItemResponse(record));
+});
+
+app.MapGet("/decisions/history", (
+    Guid tenantId,
+    int? page,
+    int? pageSize,
+    string? decisionType,
+    string? selectedStrategyKey,
+    string? policyKey,
+    DateTime? fromUtc,
+    DateTime? toUtc,
+    IDecisionHistoryStore store) =>
+{
+    if (tenantId == Guid.Empty)
+        return Results.BadRequest(new { error = "tenantId is required." });
+
+    if (fromUtc is DateTime f && toUtc is DateTime t && f > t)
+        return Results.BadRequest(new { error = "fromUtc must not be after toUtc." });
+
+    var p = page is >= 1 ? page.Value : 1;
+    var ps = pageSize is >= 1 && pageSize <= 100 ? pageSize.Value : 50;
+    var query = new DecisionHistoryListQuery(
+        TenantId: tenantId,
+        Page: p,
+        PageSize: ps,
+        DecisionType: string.IsNullOrWhiteSpace(decisionType) ? null : decisionType,
+        SelectedStrategyKey: string.IsNullOrWhiteSpace(selectedStrategyKey) ? null : selectedStrategyKey,
+        PolicyKey: string.IsNullOrWhiteSpace(policyKey) ? null : policyKey,
+        CreatedFromUtc: fromUtc,
+        CreatedToUtc: toUtc);
+
+    var (items, total) = store.List(query);
+    var dto = items.Select(DecisionHistoryEndpointMapping.ToItemResponse).ToList();
+    return Results.Ok(new PagedDecisionHistoryResponse(dto, p, ps, total));
 });
 
 app.Run();

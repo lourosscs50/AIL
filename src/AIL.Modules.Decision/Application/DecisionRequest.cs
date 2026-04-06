@@ -16,4 +16,5 @@ public sealed record DecisionRequest(
     bool IncludeMemory = false,
     DecisionMemoryQuery? MemoryQuery = null,
     IReadOnlyList<string>? CandidateStrategies = null,
-    IReadOnlyDictionary<string, string>? Metadata = null);
+    IReadOnlyDictionary<string, string>? Metadata = null,
+    Guid? CorrelationGroupId = null);

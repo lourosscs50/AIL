@@ -55,13 +55,14 @@ public static class DecisionEndpointMapping
             IncludeMemory: req.IncludeMemory,
             MemoryQuery: memoryQuery,
             CandidateStrategies: req.CandidateStrategies,
-            Metadata: req.Metadata);
+            Metadata: req.Metadata,
+            CorrelationGroupId: req.CorrelationGroupId);
     }
 
     /// <summary>
     /// Maps a domain result to the public API contract. Does not echo client request metadata or any non-decision payload.
     /// </summary>
-    public static DecideResponse MapToDecideResponse(DecisionResult result)
+    public static DecideResponse MapToDecideResponse(DecisionResult result, Guid? decisionRecordId = null)
     {
         ArgumentNullException.ThrowIfNull(result);
 
@@ -86,7 +87,8 @@ public static class DecisionEndpointMapping
             MemoryItemCount: result.MemoryItemCount,
             PolicyKey: result.PolicyKey,
             Metadata: null,
-            SelectedOptionId: selectedOptionId);
+            SelectedOptionId: selectedOptionId,
+            DecisionRecordId: decisionRecordId);
     }
 
     public static void ValidateDecideRequest(DecideRequest req)

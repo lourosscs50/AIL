@@ -47,6 +47,8 @@ public sealed class DecisionsEndpointTests : IClassFixture<WebApplicationFactory
         Assert.Equal("control_trigger_routing", body!.DecisionType);
         Assert.Equal("control_trigger_routing", body.PolicyKey);
         Assert.Equal("default_safe", body.SelectedStrategyKey);
+        Assert.NotNull(body.DecisionRecordId);
+        Assert.NotEqual(Guid.Empty, body.DecisionRecordId!.Value);
         Assert.False(body.UsedMemory);
         Assert.NotEmpty(body.Options);
         AssertSelectedOptionIsExplicitAndInCanonicalOptions(body, "default_safe");

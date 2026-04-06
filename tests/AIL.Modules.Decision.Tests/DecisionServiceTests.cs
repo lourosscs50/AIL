@@ -552,7 +552,8 @@ public sealed class DecisionServiceTests
                 IncludeMemory,
                 MemoryQuery,
                 Candidates,
-                Metadata: null);
+                Metadata: null,
+                CorrelationGroupId: null);
     }
 
     [Fact]

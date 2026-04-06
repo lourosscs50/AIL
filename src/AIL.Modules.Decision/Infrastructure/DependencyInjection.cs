@@ -16,7 +16,10 @@ public static class DependencyInjection
         services.TryAddEnumerable(ServiceDescriptor.Singleton<IDecisionStrategy, DecisionContinuityStrategy>());
 
         services.TryAddSingleton<IDecisionPolicyService, DefaultDecisionPolicyService>();
-        services.AddSingleton<IDecisionService, DecisionService>();
+        services.AddSingleton<DecisionService>();
+        services.AddSingleton<IDecisionService>(sp => sp.GetRequiredService<DecisionService>());
+        services.TryAddSingleton<IDecisionHistoryStore, InMemoryDecisionHistoryStore>();
+        services.TryAddSingleton<IDecisionHistoryRecorder, DecisionHistoryRecorder>();
         return services;
     }
 }

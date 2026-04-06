@@ -18,4 +18,5 @@ public sealed record DecideRequest(
     bool IncludeMemory = false,
     DecideMemoryQueryRequest? MemoryQuery = null,
     IReadOnlyList<string>? CandidateStrategies = null,
-    IReadOnlyDictionary<string, string>? Metadata = null);
+    IReadOnlyDictionary<string, string>? Metadata = null,
+    Guid? CorrelationGroupId = null);

@@ -10,6 +10,7 @@ namespace AIL.Api.Contracts;
 /// <see cref="SelectedOptionId"/> is set when it matches an <see cref="DecideOptionResponse.OptionId"/> in <see cref="Options"/>; otherwise <c>null</c>.
 /// <see cref="PolicyKey"/> is the resolved policy key for <see cref="DecisionType"/> (aligned with observability telemetry).
 /// <see cref="Metadata"/> is always <c>null</c> on this public surface—client-supplied request metadata is not echoed.
+/// <see cref="DecisionRecordId"/> is the durable history row id when persistence succeeded; <c>null</c> if history was not recorded.
 /// </summary>
 public sealed record DecideResponse(
     string DecisionType,
@@ -22,4 +23,5 @@ public sealed record DecideResponse(
     int MemoryItemCount,
     string PolicyKey,
     IReadOnlyDictionary<string, string>? Metadata,
-    string? SelectedOptionId);
+    string? SelectedOptionId,
+    Guid? DecisionRecordId);
