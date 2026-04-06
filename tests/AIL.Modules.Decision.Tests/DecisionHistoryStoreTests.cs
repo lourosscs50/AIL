@@ -10,6 +10,10 @@ namespace AIL.Modules.Decision.Tests;
 
 public sealed class DecisionHistoryStoreTests
 {
+    /// <summary>Default in-memory implementation; tests assert behavior through <see cref="IDecisionHistoryStore"/> only.</summary>
+    private static IDecisionHistoryStore CreateStore(DecisionHistoryRetentionOptions? options = null) =>
+        new InMemoryDecisionHistoryStore(options);
+
     private static DecisionHistoryRecord SampleRecord(
         Guid tenantId,
         string decisionType = "t1",
@@ -49,7 +53,7 @@ public sealed class DecisionHistoryStoreTests
     [Fact]
     public void TryGet_ReturnsNull_WhenTenantMismatch()
     {
-        var store = new InMemoryDecisionHistoryStore();
+        var store = CreateStore();
         var tenantA = Guid.NewGuid();
         var tenantB = Guid.NewGuid();
         var r = SampleRecord(tenantA);
@@ -62,7 +66,7 @@ public sealed class DecisionHistoryStoreTests
     [Fact]
     public void List_FiltersByTenantAndDecisionType_AndPages()
     {
-        var store = new InMemoryDecisionHistoryStore();
+        var store = CreateStore();
         var tenant = Guid.NewGuid();
         store.Put(SampleRecord(tenant, "alpha"));
         store.Put(SampleRecord(tenant, "beta"));
@@ -81,7 +85,7 @@ public sealed class DecisionHistoryStoreTests
     [Fact]
     public void List_ClampPageSize_ToMax100()
     {
-        var store = new InMemoryDecisionHistoryStore();
+        var store = CreateStore();
         var tenant = Guid.NewGuid();
         for (var i = 0; i < 120; i++)
             store.Put(SampleRecord(tenant));
@@ -94,7 +98,7 @@ public sealed class DecisionHistoryStoreTests
     [Fact]
     public void List_FiltersByCorrelationGroupId_ExactMatch()
     {
-        var store = new InMemoryDecisionHistoryStore();
+        var store = CreateStore();
         var tenant = Guid.NewGuid();
         var cgA = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
         var cgB = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
@@ -110,7 +114,7 @@ public sealed class DecisionHistoryStoreTests
     [Fact]
     public void List_FiltersByMemoryInfluenceSummary_CombinedWithCorrelation()
     {
-        var store = new InMemoryDecisionHistoryStore();
+        var store = CreateStore();
         var tenant = Guid.NewGuid();
         var cg = Guid.NewGuid();
         store.Put(SampleRecord(tenant, memoryInfluenceSummary: KnownSummaries.MemoryEmpty, correlationGroupId: cg));
@@ -130,7 +134,7 @@ public sealed class DecisionHistoryStoreTests
     [Fact]
     public void List_FilterByCorrelation_ExcludesNullCorrelationRows()
     {
-        var store = new InMemoryDecisionHistoryStore();
+        var store = CreateStore();
         var tenant = Guid.NewGuid();
         var cg = Guid.NewGuid();
         store.Put(SampleRecord(tenant, correlationGroupId: null));
@@ -144,7 +148,7 @@ public sealed class DecisionHistoryStoreTests
     [Fact]
     public void List_FiltersByExecutionInstanceId_ExactMatch()
     {
-        var store = new InMemoryDecisionHistoryStore();
+        var store = CreateStore();
         var tenant = Guid.NewGuid();
         var exA = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
         var exB = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
@@ -160,7 +164,7 @@ public sealed class DecisionHistoryStoreTests
     [Fact]
     public void List_FilterByExecutionInstance_CombinedWithCorrelation()
     {
-        var store = new InMemoryDecisionHistoryStore();
+        var store = CreateStore();
         var tenant = Guid.NewGuid();
         var cg = Guid.NewGuid();
         var ex = Guid.NewGuid();
@@ -175,7 +179,7 @@ public sealed class DecisionHistoryStoreTests
     [Fact]
     public void List_SortsByCreatedAtUtc_Descending_ByDefault_TieBreakById()
     {
-        var store = new InMemoryDecisionHistoryStore();
+        var store = CreateStore();
         var tenant = Guid.NewGuid();
         var tEarly = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         var tLate = new DateTime(2026, 1, 3, 0, 0, 0, DateTimeKind.Utc);
@@ -193,7 +197,7 @@ public sealed class DecisionHistoryStoreTests
     [Fact]
     public void List_SortsByCreatedAtUtc_Ascending_TieBreakById()
     {
-        var store = new InMemoryDecisionHistoryStore();
+        var store = CreateStore();
         var tenant = Guid.NewGuid();
         var t1 = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         var idLo = Guid.Parse("11111111-1111-1111-1111-111111111111");
@@ -215,7 +219,7 @@ public sealed class DecisionHistoryStoreTests
     [Fact]
     public void List_PagingStable_UnderAscendingSort()
     {
-        var store = new InMemoryDecisionHistoryStore();
+        var store = CreateStore();
         var tenant = Guid.NewGuid();
         var t = new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc);
         var id1 = Guid.Parse("00000000-0000-0000-0000-000000000001");
@@ -250,7 +254,7 @@ public sealed class DecisionHistoryStoreTests
     [Fact]
     public void Put_EvictsOldestInserted_WhenAtCapacity_Fifo()
     {
-        var store = new InMemoryDecisionHistoryStore(new DecisionHistoryRetentionOptions { MaxRetainedRecords = 3 });
+        var store = CreateStore(new DecisionHistoryRetentionOptions { MaxRetainedRecords = 3 });
         var tenant = Guid.NewGuid();
         var id1 = Guid.Parse("30000000-0000-0000-0000-000000000001");
         var id2 = Guid.Parse("30000000-0000-0000-0000-000000000002");
@@ -270,7 +274,7 @@ public sealed class DecisionHistoryStoreTests
     [Fact]
     public void List_TotalCount_ReflectsOnlyRetained_AfterEviction()
     {
-        var store = new InMemoryDecisionHistoryStore(new DecisionHistoryRetentionOptions { MaxRetainedRecords = 2 });
+        var store = CreateStore(new DecisionHistoryRetentionOptions { MaxRetainedRecords = 2 });
         var tenant = Guid.NewGuid();
         var id1 = Guid.Parse("40000000-0000-0000-0000-000000000001");
         var id2 = Guid.Parse("40000000-0000-0000-0000-000000000002");
@@ -287,7 +291,7 @@ public sealed class DecisionHistoryStoreTests
     [Fact]
     public void List_Paging_AfterEviction_NoSkippedPages()
     {
-        var store = new InMemoryDecisionHistoryStore(new DecisionHistoryRetentionOptions { MaxRetainedRecords = 3 });
+        var store = CreateStore(new DecisionHistoryRetentionOptions { MaxRetainedRecords = 3 });
         var tenant = Guid.NewGuid();
         var t = new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
         var id1 = Guid.Parse("50000000-0000-0000-0000-000000000001");
@@ -319,6 +323,6 @@ public sealed class DecisionHistoryStoreTests
     public void RetentionOptions_MaxRetainedRecords_BelowOne_Throws()
     {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            new InMemoryDecisionHistoryStore(new DecisionHistoryRetentionOptions { MaxRetainedRecords = 0 }));
+            CreateStore(new DecisionHistoryRetentionOptions { MaxRetainedRecords = 0 }));
     }
 }
