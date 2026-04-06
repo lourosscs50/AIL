@@ -103,7 +103,10 @@ app.MapPost("/decisions", async (
         var decisionRequest = DecisionEndpointMapping.MapToDecisionRequest(request);
         var result = await decision.DecideAsync(decisionRequest, ct).ConfigureAwait(false);
         var recordId = historyRecorder.TryRecord(decisionRequest, result);
-        return Results.Ok(DecisionEndpointMapping.MapToDecideResponse(result, recordId));
+        return Results.Ok(DecisionEndpointMapping.MapToDecideResponse(
+            result,
+            recordId,
+            decisionRequest.CorrelationGroupId));
     }
     catch (Exception ex) when (ex is ArgumentException or ArgumentNullException or InvalidOperationException)
     {
@@ -131,6 +134,8 @@ app.MapGet("/decisions/history", (
     string? policyKey,
     DateTime? fromUtc,
     DateTime? toUtc,
+    Guid? correlationGroupId,
+    string? memoryInfluenceSummary,
     IDecisionHistoryStore store) =>
 {
     if (tenantId == Guid.Empty)
@@ -138,6 +143,15 @@ app.MapGet("/decisions/history", (
 
     if (fromUtc is DateTime f && toUtc is DateTime t && f > t)
         return Results.BadRequest(new { error = "fromUtc must not be after toUtc." });
+
+    try
+    {
+        DecisionEndpointMapping.ValidateDecisionHistoryListFilters(correlationGroupId, memoryInfluenceSummary);
+    }
+    catch (ArgumentException ex)
+    {
+        return Results.BadRequest(new { error = ex.Message });
+    }
 
     var p = page is >= 1 ? page.Value : 1;
     var ps = pageSize is >= 1 && pageSize <= 100 ? pageSize.Value : 50;
@@ -149,7 +163,11 @@ app.MapGet("/decisions/history", (
         SelectedStrategyKey: string.IsNullOrWhiteSpace(selectedStrategyKey) ? null : selectedStrategyKey,
         PolicyKey: string.IsNullOrWhiteSpace(policyKey) ? null : policyKey,
         CreatedFromUtc: fromUtc,
-        CreatedToUtc: toUtc);
+        CreatedToUtc: toUtc,
+        CorrelationGroupId: correlationGroupId,
+        MemoryInfluenceSummary: string.IsNullOrWhiteSpace(memoryInfluenceSummary)
+            ? null
+            : memoryInfluenceSummary.Trim());
 
     var (items, total) = store.List(query);
     var dto = items.Select(DecisionHistoryEndpointMapping.ToItemResponse).ToList();

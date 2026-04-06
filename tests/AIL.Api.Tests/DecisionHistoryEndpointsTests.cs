@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http.Json;
+using AIL.Api;
 using AIL.Api.Contracts;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
@@ -39,6 +40,7 @@ public sealed class DecisionHistoryEndpointsTests : IClassFixture<WebApplication
         post.EnsureSuccessStatusCode();
         var decided = await post.Content.ReadFromJsonAsync<DecideResponse>();
         Assert.NotNull(decided?.DecisionRecordId);
+        Assert.Equal(postReq.CorrelationGroupId, decided!.CorrelationGroupId);
 
         var getUrl = $"/decisions/history/{decided!.DecisionRecordId}?tenantId={tenant:D}";
         var get = await client.GetAsync(getUrl);
@@ -46,6 +48,7 @@ public sealed class DecisionHistoryEndpointsTests : IClassFixture<WebApplication
         var item = await get.Content.ReadFromJsonAsync<DecisionHistoryItemResponse>();
         Assert.NotNull(item);
         Assert.Equal(decided.DecisionRecordId, item!.Id);
+        Assert.NotEqual(item.Id, item.CorrelationGroupId);
         Assert.Equal(tenant, item.TenantId);
         Assert.Equal(postReq.CorrelationGroupId, item.CorrelationGroupId);
         Assert.Equal("control_trigger_routing", item.DecisionType);
@@ -133,6 +136,158 @@ public sealed class DecisionHistoryEndpointsTests : IClassFixture<WebApplication
     {
         var client = _factory.CreateClient();
         var res = await client.GetAsync("/decisions/history");
+        Assert.Equal(HttpStatusCode.BadRequest, res.StatusCode);
+    }
+
+    [Fact]
+    public async Task Get_DecisionHistory_List_FiltersByCorrelationGroupId()
+    {
+        var client = _factory.CreateClient();
+        var tenant = Guid.NewGuid();
+        var cgA = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
+        var cgB = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
+        for (var i = 0; i < 2; i++)
+        {
+            await client.PostAsJsonAsync("/decisions", new DecideRequest(
+                tenant,
+                "alpha_route",
+                "s",
+                $"a{i}",
+                null,
+                null,
+                false,
+                null,
+                null,
+                null,
+                cgA));
+        }
+
+        await client.PostAsJsonAsync("/decisions", new DecideRequest(
+            tenant,
+            "alpha_route",
+            "s",
+            "b0",
+            null,
+            null,
+            false,
+            null,
+            null,
+            null,
+            cgB));
+
+        var url =
+            $"/decisions/history?tenantId={tenant:D}&correlationGroupId={cgA:D}&page=1&pageSize=10";
+        var list = await client.GetAsync(url);
+        list.EnsureSuccessStatusCode();
+        var page = await list.Content.ReadFromJsonAsync<PagedDecisionHistoryResponse>();
+        Assert.NotNull(page);
+        Assert.Equal(2, page!.TotalCount);
+        Assert.All(page.Items, x => Assert.Equal(cgA, x.CorrelationGroupId));
+    }
+
+    [Fact]
+    public async Task Get_DecisionHistory_List_CombinedCorrelationAndDecisionType_AndPaging()
+    {
+        var client = _factory.CreateClient();
+        var tenant = Guid.NewGuid();
+        var cg = Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc");
+        for (var i = 0; i < 3; i++)
+        {
+            var dt = i == 0 ? "gamma_route" : "delta_route";
+            await client.PostAsJsonAsync("/decisions", new DecideRequest(
+                tenant,
+                dt,
+                "s",
+                $"c{i}",
+                null,
+                null,
+                false,
+                null,
+                null,
+                null,
+                cg));
+        }
+
+        var url =
+            $"/decisions/history?tenantId={tenant:D}&correlationGroupId={cg:D}&decisionType=delta_route&page=1&pageSize=1";
+        var p1 = await client.GetAsync(url);
+        p1.EnsureSuccessStatusCode();
+        var page1 = await p1.Content.ReadFromJsonAsync<PagedDecisionHistoryResponse>();
+        Assert.NotNull(page1);
+        Assert.Equal(2, page1!.TotalCount);
+        Assert.Single(page1.Items);
+        Assert.Equal("delta_route", page1.Items[0].DecisionType);
+
+        var p2 = await client.GetAsync(
+            $"/decisions/history?tenantId={tenant:D}&correlationGroupId={cg:D}&decisionType=delta_route&page=2&pageSize=1");
+        p2.EnsureSuccessStatusCode();
+        var page2 = await p2.Content.ReadFromJsonAsync<PagedDecisionHistoryResponse>();
+        Assert.NotNull(page2);
+        Assert.Equal(2, page2!.TotalCount);
+        Assert.Single(page2.Items);
+    }
+
+    [Fact]
+    public async Task Get_DecisionHistory_List_FiltersByMemoryInfluenceSummary()
+    {
+        var client = _factory.CreateClient();
+        var tenant = Guid.NewGuid();
+        var cg = Guid.Parse("dddddddd-dddd-dddd-dddd-dddddddddddd");
+        await client.PostAsJsonAsync("/decisions", new DecideRequest(
+            tenant,
+            "control_trigger_routing",
+            "control_trigger",
+            "mem-empty",
+            null,
+            null,
+            true,
+            new DecideMemoryQueryRequest("Tenant", null, "Fact"),
+            null,
+            null,
+            cg));
+        await client.PostAsJsonAsync("/decisions", new DecideRequest(
+            tenant,
+            "control_trigger_routing",
+            "control_trigger",
+            "no-mem",
+            null,
+            null,
+            false,
+            null,
+            null,
+            null,
+            cg));
+
+        var url =
+            $"/decisions/history?tenantId={tenant:D}&correlationGroupId={cg:D}&memoryInfluenceSummary=memory_empty&page=1&pageSize=10";
+        var list = await client.GetAsync(url);
+        list.EnsureSuccessStatusCode();
+        var page = await list.Content.ReadFromJsonAsync<PagedDecisionHistoryResponse>();
+        Assert.NotNull(page);
+        Assert.Equal(1, page!.TotalCount);
+        Assert.Equal("memory_empty", page.Items[0].MemoryInfluenceSummary);
+    }
+
+    [Fact]
+    public async Task Get_DecisionHistory_List_EmptyCorrelationGroupId_Returns400()
+    {
+        var client = _factory.CreateClient();
+        var tenant = Guid.NewGuid();
+        var url =
+            $"/decisions/history?tenantId={tenant:D}&correlationGroupId={Guid.Empty:D}";
+        var res = await client.GetAsync(url);
+        Assert.Equal(HttpStatusCode.BadRequest, res.StatusCode);
+    }
+
+    [Fact]
+    public async Task Get_DecisionHistory_List_MemoryInfluenceSummaryTooLong_Returns400()
+    {
+        var client = _factory.CreateClient();
+        var tenant = Guid.NewGuid();
+        var tooLong = new string('x', DecisionEndpointMapping.MaxMemoryInfluenceSummaryFilterLength + 1);
+        var url =
+            $"/decisions/history?tenantId={tenant:D}&memoryInfluenceSummary={Uri.EscapeDataString(tooLong)}";
+        var res = await client.GetAsync(url);
         Assert.Equal(HttpStatusCode.BadRequest, res.StatusCode);
     }
 }

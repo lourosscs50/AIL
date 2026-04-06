@@ -76,6 +76,16 @@ internal sealed class InMemoryDecisionHistoryStore : IDecisionHistoryStore
             if (query.CreatedToUtc is DateTime to)
                 rows = rows.Where(r => r.CreatedAtUtc <= to);
 
+            if (query.CorrelationGroupId is { } correlationId)
+                rows = rows.Where(r => r.CorrelationGroupId == correlationId);
+
+            if (!string.IsNullOrWhiteSpace(query.MemoryInfluenceSummary))
+                rows = rows.Where(r =>
+                    string.Equals(
+                        r.MemoryInfluenceSummary,
+                        query.MemoryInfluenceSummary,
+                        StringComparison.Ordinal));
+
             var ordered = rows
                 .OrderByDescending(r => r.CreatedAtUtc)
                 .ThenBy(r => r.Id)

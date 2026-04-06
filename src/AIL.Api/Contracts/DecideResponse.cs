@@ -12,6 +12,7 @@ namespace AIL.Api.Contracts;
 /// <see cref="Metadata"/> is always <c>null</c> on this public surface—client-supplied request metadata is not echoed.
 /// <see cref="DecisionRecordId"/> is the durable history row id when persistence succeeded; <c>null</c> if history was not recorded.
 /// <see cref="MemoryInfluenceSummary"/> is a bounded vocabulary label (e.g. <c>no_memory</c>, <c>memory_reinforced</c>)—never raw memory text.
+/// <see cref="CorrelationGroupId"/> echoes the optional client-supplied grouping id from the request when present; never inferred or fabricated.
 /// </summary>
 public sealed record DecideResponse(
     string DecisionType,
@@ -26,4 +27,5 @@ public sealed record DecideResponse(
     string PolicyKey,
     IReadOnlyDictionary<string, string>? Metadata,
     string? SelectedOptionId,
-    Guid? DecisionRecordId);
+    Guid? DecisionRecordId,
+    Guid? CorrelationGroupId);

@@ -25,6 +25,7 @@ public static class DecisionEndpointMapping
     public const int MaxMemoryQueryKeys = 50;
     public const int MaxMemoryQueryKeyLength = 256;
     public const int MaxMemoryTakeRecent = 500;
+    public const int MaxMemoryInfluenceSummaryFilterLength = 64;
 
     public static AppDecisionRequest MapToDecisionRequest(DecideRequest req)
     {
@@ -60,9 +61,12 @@ public static class DecisionEndpointMapping
     }
 
     /// <summary>
-    /// Maps a domain result to the public API contract. Does not echo client request metadata or any non-decision payload.
+    /// Maps a domain result to the public API contract. <paramref name="correlationGroupId"/> is explicit request pass-through only.
     /// </summary>
-    public static DecideResponse MapToDecideResponse(DecisionResult result, Guid? decisionRecordId = null)
+    public static DecideResponse MapToDecideResponse(
+        DecisionResult result,
+        Guid? decisionRecordId = null,
+        Guid? correlationGroupId = null)
     {
         ArgumentNullException.ThrowIfNull(result);
 
@@ -89,7 +93,22 @@ public static class DecisionEndpointMapping
             PolicyKey: result.PolicyKey,
             Metadata: null,
             SelectedOptionId: selectedOptionId,
-            DecisionRecordId: decisionRecordId);
+            DecisionRecordId: decisionRecordId,
+            CorrelationGroupId: correlationGroupId);
+    }
+
+    /// <summary>
+    /// Validates optional history list filters (throws <see cref="ArgumentException"/> for bad combinations).
+    /// </summary>
+    public static void ValidateDecisionHistoryListFilters(Guid? correlationGroupId, string? memoryInfluenceSummary)
+    {
+        if (correlationGroupId is Guid g && g == Guid.Empty)
+            throw new ArgumentException("correlationGroupId must not be empty when provided.", nameof(correlationGroupId));
+
+        if (memoryInfluenceSummary is { Length: > MaxMemoryInfluenceSummaryFilterLength })
+            throw new ArgumentException(
+                $"memoryInfluenceSummary filter must not exceed {MaxMemoryInfluenceSummaryFilterLength} characters.",
+                nameof(memoryInfluenceSummary));
     }
 
     public static void ValidateDecideRequest(DecideRequest req)

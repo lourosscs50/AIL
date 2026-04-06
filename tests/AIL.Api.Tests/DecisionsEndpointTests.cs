@@ -51,9 +51,33 @@ public sealed class DecisionsEndpointTests : IClassFixture<WebApplicationFactory
         Assert.NotEqual(Guid.Empty, body.DecisionRecordId!.Value);
         Assert.False(body.UsedMemory);
         Assert.Equal("no_memory", body.MemoryInfluenceSummary);
+        Assert.Null(body.CorrelationGroupId);
         Assert.NotEmpty(body.Options);
         AssertSelectedOptionIsExplicitAndInCanonicalOptions(body, "default_safe");
         AssertNoParallelSelectedOptionPayload(body);
+    }
+
+    [Fact]
+    public async Task Post_Decisions_Preserves_CorrelationGroupId_On_Response_When_Provided()
+    {
+        var client = _factory.CreateClient();
+        var correlation = Guid.Parse("11111111-1111-1111-1111-111111111111");
+        var request = new DecideRequest(
+            TenantId: Guid.NewGuid(),
+            DecisionType: "control_trigger_routing",
+            SubjectType: "control_trigger",
+            SubjectId: "subj",
+            ContextText: null,
+            StructuredContext: null,
+            IncludeMemory: false,
+            MemoryQuery: null,
+            CandidateStrategies: null,
+            Metadata: null,
+            CorrelationGroupId: correlation);
+
+        var body = await PostDecisionsAsync(client, request);
+        Assert.Equal(correlation, body.CorrelationGroupId);
+        Assert.NotEqual(body.DecisionRecordId, body.CorrelationGroupId);
     }
 
     [Fact]

@@ -10,13 +10,18 @@ namespace AIL.Modules.Decision.Tests;
 
 public sealed class DecisionHistoryStoreTests
 {
-    private static DecisionHistoryRecord SampleRecord(Guid tenantId, string decisionType = "t1", string strategy = "default_safe")
+    private static DecisionHistoryRecord SampleRecord(
+        Guid tenantId,
+        string decisionType = "t1",
+        string strategy = "default_safe",
+        Guid? correlationGroupId = null,
+        string? memoryInfluenceSummary = null)
     {
         var id = Guid.NewGuid();
         return new DecisionHistoryRecord(
             Id: id,
             TenantId: tenantId,
-            CorrelationGroupId: null,
+            CorrelationGroupId: correlationGroupId,
             DecisionType: decisionType,
             SubjectType: "st",
             SubjectId: "sid",
@@ -28,7 +33,7 @@ public sealed class DecisionHistoryStoreTests
             ConsideredStrategies: new[] { strategy },
             UsedMemory: false,
             MemoryItemCount: 0,
-            MemoryInfluenceSummary: KnownSummaries.NoMemory,
+            MemoryInfluenceSummary: memoryInfluenceSummary ?? KnownSummaries.NoMemory,
             Options: new[]
             {
                 new DecisionHistoryOptionSnapshot(strategy, DecisionConfidence.Low.ToString(), 0.1, "x")
@@ -80,5 +85,55 @@ public sealed class DecisionHistoryStoreTests
         var (slice, total) = store.List(new DecisionHistoryListQuery(tenant, Page: 1, PageSize: 500));
         Assert.Equal(120, total);
         Assert.Equal(100, slice.Count);
+    }
+
+    [Fact]
+    public void List_FiltersByCorrelationGroupId_ExactMatch()
+    {
+        var store = new InMemoryDecisionHistoryStore();
+        var tenant = Guid.NewGuid();
+        var cgA = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
+        var cgB = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
+        store.Put(SampleRecord(tenant, correlationGroupId: cgA));
+        store.Put(SampleRecord(tenant, correlationGroupId: cgB));
+
+        var q = new DecisionHistoryListQuery(tenant, 1, 10, CorrelationGroupId: cgA);
+        var (items, total) = store.List(q);
+        Assert.Equal(1, total);
+        Assert.Equal(cgA, items[0].CorrelationGroupId);
+    }
+
+    [Fact]
+    public void List_FiltersByMemoryInfluenceSummary_CombinedWithCorrelation()
+    {
+        var store = new InMemoryDecisionHistoryStore();
+        var tenant = Guid.NewGuid();
+        var cg = Guid.NewGuid();
+        store.Put(SampleRecord(tenant, memoryInfluenceSummary: KnownSummaries.MemoryEmpty, correlationGroupId: cg));
+        store.Put(SampleRecord(tenant, memoryInfluenceSummary: KnownSummaries.NoMemory, correlationGroupId: cg));
+
+        var q = new DecisionHistoryListQuery(
+            tenant,
+            1,
+            10,
+            CorrelationGroupId: cg,
+            MemoryInfluenceSummary: KnownSummaries.MemoryEmpty);
+        var (items, total) = store.List(q);
+        Assert.Equal(1, total);
+        Assert.Equal(KnownSummaries.MemoryEmpty, items[0].MemoryInfluenceSummary);
+    }
+
+    [Fact]
+    public void List_FilterByCorrelation_ExcludesNullCorrelationRows()
+    {
+        var store = new InMemoryDecisionHistoryStore();
+        var tenant = Guid.NewGuid();
+        var cg = Guid.NewGuid();
+        store.Put(SampleRecord(tenant, correlationGroupId: null));
+        store.Put(SampleRecord(tenant, correlationGroupId: cg));
+
+        var (items, total) = store.List(new DecisionHistoryListQuery(tenant, 1, 10, CorrelationGroupId: cg));
+        Assert.Equal(1, total);
+        Assert.Equal(cg, items[0].CorrelationGroupId);
     }
 }
