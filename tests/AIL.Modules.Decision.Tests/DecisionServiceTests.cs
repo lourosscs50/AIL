@@ -507,6 +507,34 @@ public sealed class DecisionServiceTests
     }
 
     [Fact]
+    public async Task DecideAsync_Success_Stages_Are_StrictlyIncreasing_And_Not_Duplicated()
+    {
+        var telemetry = new Mock<IDecisionTelemetryService>();
+        var svc = CreateService(telemetry: telemetry);
+
+        _ = await svc.DecideAsync(BaseRequest());
+
+        var stages = telemetry.Invocations
+            .Where(i => i.Method.Name == nameof(IDecisionTelemetryService.TrackAsync))
+            .Select(i => ((DecisionTelemetry)i.Arguments[0]).ExecutionStage)
+            .ToList();
+        Assert.Equal(stages.Count, stages.Distinct(StringComparer.Ordinal).Count());
+
+        var index = new Dictionary<string, int>(StringComparer.Ordinal)
+        {
+            ["EvaluationStarted"] = 0,
+            ["StrategiesEvaluated"] = 1,
+            ["WinnerSelected"] = 2,
+            ["PolicyFiltered"] = 3,
+            ["FallbackApplied"] = 4,
+            ["Completed"] = 5,
+        };
+        var numeric = stages.Select(s => index[s]).ToList();
+        for (var i = 1; i < numeric.Count; i++)
+            Assert.True(numeric[i] > numeric[i - 1], "Stage order must be strictly increasing.");
+    }
+
+    [Fact]
     public async Task DecideAsync_Failure_Emits_FailedStage_With_ValidationCategory()
     {
         var telemetry = new Mock<IDecisionTelemetryService>();
@@ -523,6 +551,55 @@ public sealed class DecisionServiceTests
         Assert.Equal("Failed", failed.ExecutionStage);
         Assert.Equal("Validation", failed.FailureCategory);
         Assert.Null(failed.ErrorMessage);
+    }
+
+    [Fact]
+    public async Task DecideAsync_PolicyResolutionFailure_Ends_With_Failed_And_No_Stages_After()
+    {
+        var telemetry = new Mock<IDecisionTelemetryService>();
+        var policy = new Mock<IDecisionPolicyService>();
+        policy.Setup(p => p.ResolvePolicyAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new InvalidOperationException("policy unavailable"));
+        var svc = CreateService(telemetry: telemetry, policy: policy);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => svc.DecideAsync(BaseRequest()));
+
+        var stages = telemetry.Invocations
+            .Where(i => i.Method.Name == nameof(IDecisionTelemetryService.TrackAsync))
+            .Select(i => ((DecisionTelemetry)i.Arguments[0]).ExecutionStage)
+            .ToList();
+        Assert.Equal(new[] { "EvaluationStarted", "Failed" }, stages);
+
+        var failedTelemetry = (DecisionTelemetry)telemetry.Invocations
+            .Where(i => i.Method.Name == nameof(IDecisionTelemetryService.TrackAsync))
+            .Last().Arguments[0];
+        Assert.Equal("PolicyResolution", failedTelemetry.FailureCategory);
+    }
+
+    [Fact]
+    public async Task DecideAsync_FallbackApplied_Emits_Optional_Stage_Between_Filtered_And_Completed()
+    {
+        var telemetry = new Mock<IDecisionTelemetryService>();
+        var policy = new Mock<IDecisionPolicyService>();
+        policy.Setup(p => p.ResolvePolicyAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new DecisionPolicy("strict", MaxOptions: 3, MinimumConfidence: DecisionConfidence.High));
+        var svc = CreateService(telemetry: telemetry, policy: policy);
+
+        _ = await svc.DecideAsync(BaseRequest());
+
+        var stages = telemetry.Invocations
+            .Where(i => i.Method.Name == nameof(IDecisionTelemetryService.TrackAsync))
+            .Select(i => ((DecisionTelemetry)i.Arguments[0]).ExecutionStage)
+            .ToList();
+        Assert.Equal(new[]
+        {
+            "EvaluationStarted",
+            "StrategiesEvaluated",
+            "WinnerSelected",
+            "PolicyFiltered",
+            "FallbackApplied",
+            "Completed",
+        }, stages);
     }
 
     [Fact]

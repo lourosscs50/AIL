@@ -47,6 +47,7 @@ internal sealed class DecisionService : IDecisionService
         var stopwatch = Stopwatch.StartNew();
         string? policyKey = null;
         var stage = DecisionExecutionObservability.Stage.EvaluationStarted;
+        var stageGuard = new DecisionExecutionObservability.StageSequenceGuard();
 
         try
         {
@@ -54,7 +55,8 @@ internal sealed class DecisionService : IDecisionService
                 throw new ArgumentNullException(nameof(request));
 
             Validate(request);
-            await EmitTelemetryAsync(
+            await EmitStageTelemetryAsync(
+                stageGuard,
                 request,
                 stopwatch,
                 stage,
@@ -70,7 +72,6 @@ internal sealed class DecisionService : IDecisionService
                 failureCategory: null,
                 cancellationToken).ConfigureAwait(false);
 
-            stage = DecisionExecutionObservability.Stage.StrategiesEvaluated;
             var policy = await _policyService.ResolvePolicyAsync(request.DecisionType, cancellationToken).ConfigureAwait(false);
             policyKey = policy.PolicyKey;
 
@@ -105,7 +106,9 @@ internal sealed class DecisionService : IDecisionService
             if (evaluated.Count == 0)
                 throw new InvalidOperationException("No decision strategy applied.");
 
-            await EmitTelemetryAsync(
+            stage = DecisionExecutionObservability.Stage.StrategiesEvaluated;
+            await EmitStageTelemetryAsync(
+                stageGuard,
                 request,
                 stopwatch,
                 stage,
@@ -143,7 +146,8 @@ internal sealed class DecisionService : IDecisionService
                     .ToList();
             }
 
-            await EmitTelemetryAsync(
+            await EmitStageTelemetryAsync(
+                stageGuard,
                 request,
                 stopwatch,
                 stage,
@@ -162,7 +166,8 @@ internal sealed class DecisionService : IDecisionService
             var options = BuildPolicyFilteredOptions(evaluated, policy);
             var fallbackApplied = false;
             stage = DecisionExecutionObservability.Stage.PolicyFiltered;
-            await EmitTelemetryAsync(
+            await EmitStageTelemetryAsync(
+                stageGuard,
                 request,
                 stopwatch,
                 stage,
@@ -182,7 +187,8 @@ internal sealed class DecisionService : IDecisionService
                 options = BuildWinnerFallbackOptionsList(winner);
                 fallbackApplied = true;
                 stage = DecisionExecutionObservability.Stage.FallbackApplied;
-                await EmitTelemetryAsync(
+                await EmitStageTelemetryAsync(
+                    stageGuard,
                     request,
                     stopwatch,
                     stage,
@@ -219,7 +225,8 @@ internal sealed class DecisionService : IDecisionService
                 Metadata: request.Metadata);
 
             stopwatch.Stop();
-            await EmitTelemetryAsync(
+            await EmitStageTelemetryAsync(
+                stageGuard,
                 request,
                 stopwatch,
                 DecisionExecutionObservability.Stage.Completed,
@@ -241,6 +248,7 @@ internal sealed class DecisionService : IDecisionService
         {
             stopwatch.Stop();
             var failureCategory = ClassifyFailureCategory(ex, stage);
+            stageGuard.RecordStage(DecisionExecutionObservability.Stage.Failed);
             await _telemetry.TrackAsync(
                 new DecisionTelemetry(
                     TenantId: request?.TenantId ?? Guid.Empty,
@@ -352,7 +360,8 @@ internal sealed class DecisionService : IDecisionService
             throw new ArgumentException("MemoryQuery is required when IncludeMemory is true.", nameof(request));
     }
 
-    private Task EmitTelemetryAsync(
+    private Task EmitStageTelemetryAsync(
+        DecisionExecutionObservability.StageSequenceGuard stageGuard,
         DecisionRequest request,
         Stopwatch stopwatch,
         DecisionExecutionObservability.Stage stage,
@@ -366,8 +375,10 @@ internal sealed class DecisionService : IDecisionService
         bool fallbackApplied,
         bool succeeded,
         DecisionExecutionObservability.FailureCategory? failureCategory,
-        CancellationToken cancellationToken) =>
-        _telemetry.TrackAsync(
+        CancellationToken cancellationToken)
+    {
+        stageGuard.RecordStage(stage);
+        return _telemetry.TrackAsync(
             new DecisionTelemetry(
                 TenantId: request.TenantId,
                 DecisionType: request.DecisionType,
@@ -386,6 +397,7 @@ internal sealed class DecisionService : IDecisionService
                 ErrorMessage: null,
                 MemoryInfluenceSummary: memoryInfluenceSummary),
             cancellationToken);
+    }
 
     private static DecisionExecutionObservability.FailureCategory ClassifyFailureCategory(
         Exception ex,
