@@ -25,7 +25,7 @@ builder.Services.AddAuditModule();
 builder.Services.AddObservabilityModule();
 builder.Services.AddProviderRegistryModule();
 builder.Services.AddMemoryCoreModule();
-builder.Services.AddDecisionModule(builder.Configuration);
+builder.Services.AddDecisionModule(builder.Configuration, builder.Environment);
 builder.Services.AddExecutionModule(builder.Configuration);
 
 var app = builder.Build();
