@@ -15,4 +15,10 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
   </ItemGroup>
+  <Target Name="RemoveLiteralResxGlobEmbeddedResource" BeforeTargets="CoreResGen">
+    <ItemGroup>
+      <_LiteralResxGlob Include="@(EmbeddedResource)" Condition="'%(Identity)' == '**/*.resx'" />
+      <EmbeddedResource Remove="@(_LiteralResxGlob)" />
+    </ItemGroup>
+  </Target>
 </Project>
