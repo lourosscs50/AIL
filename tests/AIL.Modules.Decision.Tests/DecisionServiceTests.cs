@@ -616,6 +616,57 @@ public sealed class DecisionServiceTests
     }
 
     [Fact]
+    public async Task DecideAsync_Cancellation_MapsFailureCategory_To_Canceled_And_NotUnexpected()
+    {
+        var telemetry = new Mock<IDecisionTelemetryService>();
+        var policy = new Mock<IDecisionPolicyService>();
+        policy.Setup(p => p.ResolvePolicyAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new TaskCanceledException("caller canceled"));
+        var svc = CreateService(telemetry: telemetry, policy: policy);
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => svc.DecideAsync(BaseRequest()));
+
+        var emissions = telemetry.Invocations
+            .Where(i => i.Method.Name == nameof(IDecisionTelemetryService.TrackAsync))
+            .Select(i => (DecisionTelemetry)i.Arguments[0])
+            .ToList();
+        Assert.Equal(new[] { "EvaluationStarted", "Failed" }, emissions.Select(e => e.ExecutionStage).ToList());
+        var failed = Assert.Single(emissions, e => e.ExecutionStage == "Failed");
+        Assert.Equal("Canceled", failed.FailureCategory);
+        Assert.NotEqual("Unexpected", failed.FailureCategory);
+        Assert.Null(failed.ErrorMessage);
+    }
+
+    [Fact]
+    public async Task DecideAsync_CancellationTelemetry_DoesNotContain_ExceptionMessageText()
+    {
+        var telemetry = new Mock<IDecisionTelemetryService>();
+        var policy = new Mock<IDecisionPolicyService>();
+        const string secretCancellationMessage = "SECRET_CANCEL_TOKEN_ABC123";
+        policy.Setup(p => p.ResolvePolicyAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new TaskCanceledException(secretCancellationMessage));
+        var svc = CreateService(telemetry: telemetry, policy: policy);
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => svc.DecideAsync(BaseRequest()));
+
+        var emissions = telemetry.Invocations
+            .Where(i => i.Method.Name == nameof(IDecisionTelemetryService.TrackAsync))
+            .Select(i => (DecisionTelemetry)i.Arguments[0])
+            .ToList();
+        Assert.NotEmpty(emissions);
+        Assert.All(emissions, e =>
+        {
+            Assert.DoesNotContain(secretCancellationMessage, e.FailureCategory ?? string.Empty, StringComparison.Ordinal);
+            Assert.DoesNotContain(secretCancellationMessage, e.ExecutionStage, StringComparison.Ordinal);
+            Assert.DoesNotContain(secretCancellationMessage, e.ErrorMessage ?? string.Empty, StringComparison.Ordinal);
+            Assert.DoesNotContain(secretCancellationMessage, e.DecisionType, StringComparison.Ordinal);
+            Assert.DoesNotContain(secretCancellationMessage, e.SelectedStrategyKey, StringComparison.Ordinal);
+            Assert.DoesNotContain(secretCancellationMessage, e.PolicyKey ?? string.Empty, StringComparison.Ordinal);
+            Assert.DoesNotContain(secretCancellationMessage, e.MemoryInfluenceSummary ?? string.Empty, StringComparison.Ordinal);
+        });
+    }
+
+    [Fact]
     public async Task DecideAsync_FallbackApplied_Emits_Optional_Stage_Between_Filtered_And_Completed()
     {
         var telemetry = new Mock<IDecisionTelemetryService>();

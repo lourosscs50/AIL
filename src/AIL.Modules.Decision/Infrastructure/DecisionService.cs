@@ -403,7 +403,7 @@ internal sealed class DecisionService : IDecisionService
         Exception ex,
         DecisionExecutionObservability.Stage stage)
     {
-        if (ex is OperationCanceledException)
+        if (IsCancellationException(ex))
             return DecisionExecutionObservability.FailureCategory.Canceled;
 
         if (ex is ArgumentException or ArgumentNullException or ArgumentOutOfRangeException)
@@ -420,4 +420,8 @@ internal sealed class DecisionService : IDecisionService
 
         return DecisionExecutionObservability.FailureCategory.Unexpected;
     }
+
+    private static bool IsCancellationException(Exception ex) =>
+        // TaskCanceledException derives from OperationCanceledException; this helper keeps intent explicit.
+        ex is OperationCanceledException;
 }
