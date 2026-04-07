@@ -103,10 +103,10 @@ internal sealed class DecisionService : IDecisionService
                 evaluated.Add((strategy.StrategyKey, eval, signal));
             }
 
+            // Strategy evaluation phase completed (successfully or with zero applicable strategies).
+            stage = DecisionExecutionObservability.Stage.StrategiesEvaluated;
             if (evaluated.Count == 0)
                 throw new InvalidOperationException("No decision strategy applied.");
-
-            stage = DecisionExecutionObservability.Stage.StrategiesEvaluated;
             await EmitStageTelemetryAsync(
                 stageGuard,
                 request,

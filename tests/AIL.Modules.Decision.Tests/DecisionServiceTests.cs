@@ -50,6 +50,28 @@ public sealed class DecisionServiceTests
         return provider.GetRequiredService<IDecisionService>();
     }
 
+    private static IDecisionService CreateServiceWithoutStrategies(
+        Mock<IMemoryService>? memory = null,
+        Mock<IDecisionTelemetryService>? telemetry = null,
+        Mock<IDecisionPolicyService>? policy = null)
+    {
+        memory ??= new Mock<IMemoryService>();
+        telemetry ??= new Mock<IDecisionTelemetryService>();
+        telemetry.Setup(t => t.TrackAsync(It.IsAny<DecisionTelemetry>(), It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+        policy ??= new Mock<IDecisionPolicyService>();
+        policy.Setup(p => p.ResolvePolicyAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((string decisionType, CancellationToken _) => new DecisionPolicy(decisionType, MaxOptions: 3, MinimumConfidence: DecisionConfidence.Low));
+
+        var services = new ServiceCollection();
+        services.AddSingleton(memory.Object);
+        services.AddSingleton(telemetry.Object);
+        services.AddSingleton(policy.Object);
+        services.AddSingleton<IDecisionService, DecisionService>();
+
+        return services.BuildServiceProvider().GetRequiredService<IDecisionService>();
+    }
+
     private static DecisionRequest BaseRequest(Action<DecisionRequestBuilder>? configure = null)
     {
         var b = new DecisionRequestBuilder();
@@ -574,6 +596,23 @@ public sealed class DecisionServiceTests
             .Where(i => i.Method.Name == nameof(IDecisionTelemetryService.TrackAsync))
             .Last().Arguments[0];
         Assert.Equal("PolicyResolution", failedTelemetry.FailureCategory);
+    }
+
+    [Fact]
+    public async Task DecideAsync_NoApplicableStrategies_MapsFailureCategory_To_StrategyEvaluation()
+    {
+        var telemetry = new Mock<IDecisionTelemetryService>();
+        var svc = CreateServiceWithoutStrategies(telemetry: telemetry);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => svc.DecideAsync(BaseRequest()));
+
+        var emissions = telemetry.Invocations
+            .Where(i => i.Method.Name == nameof(IDecisionTelemetryService.TrackAsync))
+            .Select(i => (DecisionTelemetry)i.Arguments[0])
+            .ToList();
+        var failed = Assert.Single(emissions, e => e.ExecutionStage == "Failed");
+        Assert.Equal("StrategyEvaluation", failed.FailureCategory);
+        Assert.Null(failed.ErrorMessage);
     }
 
     [Fact]
