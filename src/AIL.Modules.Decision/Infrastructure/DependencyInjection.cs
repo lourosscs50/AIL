@@ -10,6 +10,11 @@ using Microsoft.Extensions.Hosting;
 
 namespace AIL.Modules.Decision.Infrastructure;
 
+/// <summary>
+/// Infrastructure composition root for the Decision module.
+/// This layer wires outward concerns (storage, hosting, strategy implementations) and depends inward on Decision.Application/Decision.Domain contracts.
+/// API hosts should consume Decision through Application contracts and registration extensions, not by coupling to infrastructure internals.
+/// </summary>
 public static class DependencyInjection
 {
     /// <summary>
