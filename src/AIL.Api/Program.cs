@@ -1,6 +1,7 @@
 using System.Linq;
 using AIL.Api;
 using AIL.Api.Contracts;
+using Microsoft.Extensions.Logging;
 using AIL.Modules.Audit.Infrastructure;
 using AIL.Modules.ContextEngine.Infrastructure;
 using AIL.Modules.Decision.Application;
@@ -115,10 +116,16 @@ app.MapPost("/decisions", async (
     }
 });
 
-app.MapGet("/decisions/history/{id:guid}", (Guid id, Guid tenantId, IDecisionHistoryStore store) =>
+app.MapGet("/decisions/history/{id:guid}", (Guid id, Guid tenantId, ILogger<Program> logger, IDecisionHistoryStore store) =>
 {
     if (tenantId == Guid.Empty)
+    {
+        DecisionHistoryQueryValidationDiagnostics.LogDetailRejected(
+            logger,
+            DecisionHistoryQueryValidationDiagnostics.FailureCategory.InvalidTenant,
+            tenantSuppliedNonEmpty: false);
         return Results.BadRequest(new { error = "tenantId is required." });
+    }
 
     var record = store.TryGet(tenantId, id);
     return record is null
@@ -140,16 +147,35 @@ app.MapGet("/decisions/history", (
     Guid? executionInstanceId,
     string? sortBy,
     string? sortDirection,
+    ILogger<Program> logger,
     IDecisionHistoryStore store) =>
 {
     if (tenantId == Guid.Empty)
+    {
+        DecisionHistoryQueryValidationDiagnostics.LogListRejected(
+            logger,
+            DecisionHistoryQueryValidationDiagnostics.FailureCategory.InvalidTenant,
+            tenantSuppliedNonEmpty: false);
         return Results.BadRequest(new { error = "tenantId is required." });
+    }
 
     if (fromUtc is DateTime f && toUtc is DateTime t && f > t)
+    {
+        DecisionHistoryQueryValidationDiagnostics.LogListRejected(
+            logger,
+            DecisionHistoryQueryValidationDiagnostics.FailureCategory.InvalidDateRange,
+            tenantSuppliedNonEmpty: true);
         return Results.BadRequest(new { error = "fromUtc must not be after toUtc." });
+    }
 
     if (!DecisionEndpointMapping.TryNormalizeDecisionHistoryListPaging(page, pageSize, out var p, out var ps, out var pagingError))
+    {
+        DecisionHistoryQueryValidationDiagnostics.LogListRejected(
+            logger,
+            DecisionHistoryQueryValidationDiagnostics.FailureCategory.InvalidPaging,
+            tenantSuppliedNonEmpty: true);
         return Results.BadRequest(new { error = pagingError });
+    }
 
     var decisionTypeFilter = string.IsNullOrWhiteSpace(decisionType) ? null : decisionType.Trim();
     var selectedStrategyFilter = string.IsNullOrWhiteSpace(selectedStrategyKey) ? null : selectedStrategyKey.Trim();
@@ -168,6 +194,10 @@ app.MapGet("/decisions/history", (
     }
     catch (ArgumentException ex)
     {
+        DecisionHistoryQueryValidationDiagnostics.LogListRejected(
+            logger,
+            DecisionHistoryQueryValidationDiagnostics.FailureCategoryFromFilterValidationException(ex),
+            tenantSuppliedNonEmpty: true);
         return Results.BadRequest(new { error = ex.Message });
     }
 
@@ -180,6 +210,10 @@ app.MapGet("/decisions/history", (
     }
     catch (ArgumentException ex)
     {
+        DecisionHistoryQueryValidationDiagnostics.LogListRejected(
+            logger,
+            DecisionHistoryQueryValidationDiagnostics.FailureCategory.InvalidSortParameters,
+            tenantSuppliedNonEmpty: true);
         return Results.BadRequest(new { error = ex.Message });
     }
 
