@@ -17,8 +17,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\AIL.Modules.Security\Domain\AIL.Modules.Security.Domain.csproj" />
+    <ProjectReference Include="..\..\src\AIL.Modules.Decision\Domain\AIL.Modules.Decision.Domain.csproj" />
     <ProjectReference Include="..\..\src\AIL.Modules.Execution\Application\AIL.Modules.Execution.Application.csproj" />
     <ProjectReference Include="..\..\src\AIL.Modules.Decision\Application\AIL.Modules.Decision.Application.csproj" />
+    <ProjectReference Include="..\..\src\AIL.Modules.Decision\Infrastructure\AIL.Modules.Decision.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
