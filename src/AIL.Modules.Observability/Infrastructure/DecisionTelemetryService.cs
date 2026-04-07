@@ -21,18 +21,22 @@ internal sealed class DecisionTelemetryService : IDecisionTelemetryService
 
         _logger.Log(
             level,
-            "Decision telemetry | TenantId={TenantId} DecisionType={DecisionType} Strategy={Strategy} PolicyKey={PolicyKey} " +
+            "Decision telemetry | TenantId={TenantId} DecisionType={DecisionType} Stage={Stage} Strategy={Strategy} Confidence={Confidence} PolicyKey={PolicyKey} " +
             "UsedMemory={UsedMemory} MemoryItemCount={MemoryItemCount} MemoryInfluence={MemoryInfluence} Candidates={Candidates} Considered={Considered} " +
-            "Duration={DurationMs}ms Succeeded={Succeeded}",
+            "FallbackApplied={FallbackApplied} FailureCategory={FailureCategory} Duration={DurationMs}ms Succeeded={Succeeded}",
             telemetry.TenantId,
             telemetry.DecisionType,
+            telemetry.ExecutionStage,
             telemetry.SelectedStrategyKey,
+            telemetry.ConfidenceTier,
             telemetry.PolicyKey,
             telemetry.UsedMemory,
             telemetry.MemoryItemCount,
             telemetry.MemoryInfluenceSummary,
             telemetry.CandidateStrategyCount,
             telemetry.ConsideredStrategyCount,
+            telemetry.FallbackApplied,
+            telemetry.FailureCategory,
             telemetry.DurationMs,
             telemetry.Succeeded);
 

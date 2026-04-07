@@ -481,6 +481,89 @@ public sealed class DecisionServiceTests
     }
 
     [Fact]
+    public async Task DecideAsync_Success_Emits_Consistent_Bounded_Stages()
+    {
+        var telemetry = new Mock<IDecisionTelemetryService>();
+
+        var svc = CreateService(telemetry: telemetry);
+
+        _ = await svc.DecideAsync(BaseRequest());
+
+        var captured = telemetry.Invocations
+            .Where(i => i.Method.Name == nameof(IDecisionTelemetryService.TrackAsync))
+            .Select(i => (DecisionTelemetry)i.Arguments[0])
+            .ToList();
+        var stages = captured.Select(t => t.ExecutionStage).ToList();
+        Assert.Equal(new[]
+        {
+            "EvaluationStarted",
+            "StrategiesEvaluated",
+            "WinnerSelected",
+            "PolicyFiltered",
+            "Completed",
+        }, stages);
+        Assert.All(captured, t => Assert.Null(t.ErrorMessage));
+        Assert.DoesNotContain(captured, t => t.ExecutionStage == "Failed");
+    }
+
+    [Fact]
+    public async Task DecideAsync_Failure_Emits_FailedStage_With_ValidationCategory()
+    {
+        var telemetry = new Mock<IDecisionTelemetryService>();
+        var svc = CreateService(telemetry: telemetry);
+
+        await Assert.ThrowsAsync<ArgumentException>(() =>
+            svc.DecideAsync(BaseRequest(b => b.TenantId = Guid.Empty)));
+
+        var captured = telemetry.Invocations
+            .Where(i => i.Method.Name == nameof(IDecisionTelemetryService.TrackAsync))
+            .Select(i => (DecisionTelemetry)i.Arguments[0])
+            .ToList();
+        var failed = Assert.Single(captured);
+        Assert.Equal("Failed", failed.ExecutionStage);
+        Assert.Equal("Validation", failed.FailureCategory);
+        Assert.Null(failed.ErrorMessage);
+    }
+
+    [Fact]
+    public async Task DecideAsync_Telemetry_Does_Not_Leak_Context_Or_Memory_Content()
+    {
+        var secret = "TOP_SECRET_CONTEXT_TOKEN_123";
+        var telemetry = new Mock<IDecisionTelemetryService>();
+
+        var tenant = Guid.NewGuid();
+        var memory = new Mock<IMemoryService>();
+        memory.Setup(m => m.ListMemoryAsync(It.IsAny<ListMemoryRequest>()))
+            .ReturnsAsync(new MemoryListResult(new[] { CreateMemoryRecord(tenant) }, 1, 20, 1));
+        var svc = CreateService(memory, telemetry: telemetry);
+
+        _ = await svc.DecideAsync(BaseRequest(b =>
+        {
+            b.TenantId = tenant;
+            b.ContextText = secret;
+            b.IncludeMemory = true;
+            b.MemoryQuery = new DecisionMemoryQuery("Tenant", null, "Fact");
+        }));
+
+        var captured = telemetry.Invocations
+            .Where(i => i.Method.Name == nameof(IDecisionTelemetryService.TrackAsync))
+            .Select(i => (DecisionTelemetry)i.Arguments[0])
+            .ToList();
+        Assert.NotEmpty(captured);
+        Assert.All(captured, t =>
+        {
+            Assert.DoesNotContain(secret, t.DecisionType, StringComparison.Ordinal);
+            Assert.DoesNotContain(secret, t.SelectedStrategyKey, StringComparison.Ordinal);
+            Assert.DoesNotContain(secret, t.PolicyKey ?? string.Empty, StringComparison.Ordinal);
+            Assert.DoesNotContain(secret, t.MemoryInfluenceSummary ?? string.Empty, StringComparison.Ordinal);
+            Assert.DoesNotContain(secret, t.ExecutionStage, StringComparison.Ordinal);
+            Assert.DoesNotContain(secret, t.ConfidenceTier ?? string.Empty, StringComparison.Ordinal);
+            Assert.DoesNotContain(secret, t.FailureCategory ?? string.Empty, StringComparison.Ordinal);
+            Assert.DoesNotContain(secret, t.ErrorMessage ?? string.Empty, StringComparison.Ordinal);
+        });
+    }
+
+    [Fact]
     public async Task DecideAsync_MemoryInfluenceSummary_MemoryConflict_WhenContinuityAndMemoryInformedDisagree()
     {
         var tenant = Guid.NewGuid();

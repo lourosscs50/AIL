@@ -46,6 +46,7 @@ internal sealed class DecisionService : IDecisionService
     {
         var stopwatch = Stopwatch.StartNew();
         string? policyKey = null;
+        var stage = DecisionExecutionObservability.Stage.EvaluationStarted;
 
         try
         {
@@ -53,7 +54,23 @@ internal sealed class DecisionService : IDecisionService
                 throw new ArgumentNullException(nameof(request));
 
             Validate(request);
+            await EmitTelemetryAsync(
+                request,
+                stopwatch,
+                stage,
+                selectedStrategyKey: "none",
+                confidence: null,
+                usedMemory: false,
+                memoryItemCount: 0,
+                consideredStrategyCount: 0,
+                policyKey: null,
+                memoryInfluenceSummary: null,
+                fallbackApplied: false,
+                succeeded: true,
+                failureCategory: null,
+                cancellationToken).ConfigureAwait(false);
 
+            stage = DecisionExecutionObservability.Stage.StrategiesEvaluated;
             var policy = await _policyService.ResolvePolicyAsync(request.DecisionType, cancellationToken).ConfigureAwait(false);
             policyKey = policy.PolicyKey;
 
@@ -88,8 +105,25 @@ internal sealed class DecisionService : IDecisionService
             if (evaluated.Count == 0)
                 throw new InvalidOperationException("No decision strategy applied.");
 
+            await EmitTelemetryAsync(
+                request,
+                stopwatch,
+                stage,
+                selectedStrategyKey: "none",
+                confidence: null,
+                usedMemory: usedMemory,
+                memoryItemCount: memoryItemCount,
+                consideredStrategyCount: evaluated.Count,
+                policyKey: policy.PolicyKey,
+                memoryInfluenceSummary: null,
+                fallbackApplied: false,
+                succeeded: true,
+                failureCategory: null,
+                cancellationToken).ConfigureAwait(false);
+
             // Winner: score ordering and tie-breakers only — policy never vetoes or reshapes this selection.
             var winner = SelectWinnerByScore(evaluated);
+            stage = DecisionExecutionObservability.Stage.WinnerSelected;
 
             var considered = evaluated
                 .Select(x => x.RegistryKey)
@@ -109,9 +143,61 @@ internal sealed class DecisionService : IDecisionService
                     .ToList();
             }
 
+            await EmitTelemetryAsync(
+                request,
+                stopwatch,
+                stage,
+                winner.Eval.SuggestedStrategyKey,
+                DecisionConfidenceMapper.FromScore(winner.Eval.DeterministicScore),
+                usedMemory,
+                memoryItemCount,
+                considered.Count,
+                policy.PolicyKey,
+                null,
+                fallbackApplied: false,
+                succeeded: true,
+                failureCategory: null,
+                cancellationToken).ConfigureAwait(false);
+
             var options = BuildPolicyFilteredOptions(evaluated, policy);
+            var fallbackApplied = false;
+            stage = DecisionExecutionObservability.Stage.PolicyFiltered;
+            await EmitTelemetryAsync(
+                request,
+                stopwatch,
+                stage,
+                winner.Eval.SuggestedStrategyKey,
+                DecisionConfidenceMapper.FromScore(winner.Eval.DeterministicScore),
+                usedMemory,
+                memoryItemCount,
+                considered.Count,
+                policy.PolicyKey,
+                null,
+                fallbackApplied: false,
+                succeeded: true,
+                failureCategory: null,
+                cancellationToken).ConfigureAwait(false);
             if (options.Count == 0)
+            {
                 options = BuildWinnerFallbackOptionsList(winner);
+                fallbackApplied = true;
+                stage = DecisionExecutionObservability.Stage.FallbackApplied;
+                await EmitTelemetryAsync(
+                    request,
+                    stopwatch,
+                    stage,
+                    winner.Eval.SuggestedStrategyKey,
+                    DecisionConfidenceMapper.FromScore(winner.Eval.DeterministicScore),
+                    usedMemory,
+                    memoryItemCount,
+                    considered.Count,
+                    policy.PolicyKey,
+                    null,
+                    fallbackApplied: true,
+                    succeeded: true,
+                    failureCategory: null,
+                    cancellationToken).ConfigureAwait(false);
+            }
 
             var memoryInfluenceSummary = MemoryInfluenceSummaryResolver.Resolve(
                 usedMemory,
@@ -133,19 +219,20 @@ internal sealed class DecisionService : IDecisionService
                 Metadata: request.Metadata);
 
             stopwatch.Stop();
-            await _telemetry.TrackAsync(
-                new DecisionTelemetry(
-                    TenantId: request.TenantId,
-                    DecisionType: request.DecisionType,
-                    SelectedStrategyKey: winner.Eval.SuggestedStrategyKey,
-                    UsedMemory: usedMemory,
-                    MemoryItemCount: memoryItemCount,
-                    CandidateStrategyCount: request.CandidateStrategies?.Count ?? 0,
-                    ConsideredStrategyCount: considered.Count,
-                    DurationMs: stopwatch.ElapsedMilliseconds,
-                    Succeeded: true,
-                    PolicyKey: policy.PolicyKey,
-                    MemoryInfluenceSummary: memoryInfluenceSummary),
+            await EmitTelemetryAsync(
+                request,
+                stopwatch,
+                DecisionExecutionObservability.Stage.Completed,
+                winner.Eval.SuggestedStrategyKey,
+                DecisionConfidenceMapper.FromScore(winner.Eval.DeterministicScore),
+                usedMemory,
+                memoryItemCount,
+                considered.Count,
+                policy.PolicyKey,
+                memoryInfluenceSummary,
+                fallbackApplied,
+                succeeded: true,
+                failureCategory: null,
                 cancellationToken).ConfigureAwait(false);
 
             return result;
@@ -153,11 +240,13 @@ internal sealed class DecisionService : IDecisionService
         catch (Exception ex)
         {
             stopwatch.Stop();
+            var failureCategory = ClassifyFailureCategory(ex, stage);
             await _telemetry.TrackAsync(
                 new DecisionTelemetry(
                     TenantId: request?.TenantId ?? Guid.Empty,
                     DecisionType: request?.DecisionType ?? string.Empty,
                     SelectedStrategyKey: "none",
+                    ExecutionStage: DecisionExecutionObservability.ToLabel(DecisionExecutionObservability.Stage.Failed),
                     UsedMemory: request?.IncludeMemory ?? false,
                     MemoryItemCount: 0,
                     CandidateStrategyCount: request?.CandidateStrategies?.Count ?? 0,
@@ -165,7 +254,8 @@ internal sealed class DecisionService : IDecisionService
                     DurationMs: stopwatch.ElapsedMilliseconds,
                     Succeeded: false,
                     PolicyKey: policyKey,
-                    ErrorMessage: ex.Message),
+                    FailureCategory: DecisionExecutionObservability.ToLabel(failureCategory),
+                    ErrorMessage: null),
                 cancellationToken).ConfigureAwait(false);
 
             throw;
@@ -260,5 +350,62 @@ internal sealed class DecisionService : IDecisionService
 
         if (request.IncludeMemory && request.MemoryQuery is null)
             throw new ArgumentException("MemoryQuery is required when IncludeMemory is true.", nameof(request));
+    }
+
+    private Task EmitTelemetryAsync(
+        DecisionRequest request,
+        Stopwatch stopwatch,
+        DecisionExecutionObservability.Stage stage,
+        string selectedStrategyKey,
+        DecisionConfidence? confidence,
+        bool usedMemory,
+        int memoryItemCount,
+        int consideredStrategyCount,
+        string? policyKey,
+        string? memoryInfluenceSummary,
+        bool fallbackApplied,
+        bool succeeded,
+        DecisionExecutionObservability.FailureCategory? failureCategory,
+        CancellationToken cancellationToken) =>
+        _telemetry.TrackAsync(
+            new DecisionTelemetry(
+                TenantId: request.TenantId,
+                DecisionType: request.DecisionType,
+                SelectedStrategyKey: selectedStrategyKey,
+                ExecutionStage: DecisionExecutionObservability.ToLabel(stage),
+                UsedMemory: usedMemory,
+                MemoryItemCount: memoryItemCount,
+                CandidateStrategyCount: request.CandidateStrategies?.Count ?? 0,
+                ConsideredStrategyCount: consideredStrategyCount,
+                DurationMs: stopwatch.ElapsedMilliseconds,
+                Succeeded: succeeded,
+                PolicyKey: policyKey,
+                ConfidenceTier: confidence?.ToString(),
+                FallbackApplied: fallbackApplied,
+                FailureCategory: failureCategory is null ? null : DecisionExecutionObservability.ToLabel(failureCategory.Value),
+                ErrorMessage: null,
+                MemoryInfluenceSummary: memoryInfluenceSummary),
+            cancellationToken);
+
+    private static DecisionExecutionObservability.FailureCategory ClassifyFailureCategory(
+        Exception ex,
+        DecisionExecutionObservability.Stage stage)
+    {
+        if (ex is OperationCanceledException)
+            return DecisionExecutionObservability.FailureCategory.Canceled;
+
+        if (ex is ArgumentException or ArgumentNullException or ArgumentOutOfRangeException)
+            return DecisionExecutionObservability.FailureCategory.Validation;
+
+        if (stage == DecisionExecutionObservability.Stage.EvaluationStarted)
+            return DecisionExecutionObservability.FailureCategory.PolicyResolution;
+
+        if (stage is DecisionExecutionObservability.Stage.StrategiesEvaluated
+            or DecisionExecutionObservability.Stage.WinnerSelected
+            or DecisionExecutionObservability.Stage.PolicyFiltered
+            or DecisionExecutionObservability.Stage.FallbackApplied)
+            return DecisionExecutionObservability.FailureCategory.StrategyEvaluation;
+
+        return DecisionExecutionObservability.FailureCategory.Unexpected;
     }
 }
