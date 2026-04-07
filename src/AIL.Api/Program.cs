@@ -148,12 +148,23 @@ app.MapGet("/decisions/history", (
     if (fromUtc is DateTime f && toUtc is DateTime t && f > t)
         return Results.BadRequest(new { error = "fromUtc must not be after toUtc." });
 
+    if (!DecisionEndpointMapping.TryNormalizeDecisionHistoryListPaging(page, pageSize, out var p, out var ps, out var pagingError))
+        return Results.BadRequest(new { error = pagingError });
+
+    var decisionTypeFilter = string.IsNullOrWhiteSpace(decisionType) ? null : decisionType.Trim();
+    var selectedStrategyFilter = string.IsNullOrWhiteSpace(selectedStrategyKey) ? null : selectedStrategyKey.Trim();
+    var policyKeyFilter = string.IsNullOrWhiteSpace(policyKey) ? null : policyKey.Trim();
+    var memorySummaryFilter = string.IsNullOrWhiteSpace(memoryInfluenceSummary) ? null : memoryInfluenceSummary.Trim();
+
     try
     {
         DecisionEndpointMapping.ValidateDecisionHistoryListFilters(
             correlationGroupId,
-            memoryInfluenceSummary,
-            executionInstanceId);
+            memorySummaryFilter,
+            executionInstanceId,
+            decisionTypeFilter,
+            selectedStrategyFilter,
+            policyKeyFilter);
     }
     catch (ArgumentException ex)
     {
@@ -172,19 +183,17 @@ app.MapGet("/decisions/history", (
         return Results.BadRequest(new { error = ex.Message });
     }
 
-    var p = page is >= 1 ? page.Value : 1;
-    var ps = pageSize is >= 1 && pageSize <= 100 ? pageSize.Value : 50;
     var query = DecisionEndpointMapping.CreateDecisionHistoryListQuery(
         tenantId,
         p,
         ps,
-        string.IsNullOrWhiteSpace(decisionType) ? null : decisionType,
-        string.IsNullOrWhiteSpace(selectedStrategyKey) ? null : selectedStrategyKey,
-        string.IsNullOrWhiteSpace(policyKey) ? null : policyKey,
+        decisionTypeFilter,
+        selectedStrategyFilter,
+        policyKeyFilter,
         fromUtc,
         toUtc,
         correlationGroupId,
-        string.IsNullOrWhiteSpace(memoryInfluenceSummary) ? null : memoryInfluenceSummary.Trim(),
+        memorySummaryFilter,
         executionInstanceId,
         sortByEnum,
         sortDirEnum);

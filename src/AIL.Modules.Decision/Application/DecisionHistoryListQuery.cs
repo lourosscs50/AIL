@@ -7,6 +7,7 @@ namespace AIL.Modules.Decision.Application;
 /// Filters combine conjunctively (AND). <see cref="CreatedFromUtc"/> / <see cref="CreatedToUtc"/> are inclusive range bounds on <c>CreatedAtUtc</c>.
 /// String filters use ordinal case-sensitive equality unless noted otherwise at the API boundary.
 /// Sorting is bounded to <see cref="SortBy"/> with stable tie-break on record <c>Id</c> ascending.
+/// At the HTTP boundary, <see cref="Page"/> and <see cref="PageSize"/> are validated (defaults when omitted; explicit out-of-range values are rejected).
 /// </summary>
 public sealed record DecisionHistoryListQuery(
     Guid TenantId,

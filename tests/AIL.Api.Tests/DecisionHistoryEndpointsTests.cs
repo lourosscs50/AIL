@@ -377,6 +377,99 @@ public sealed class DecisionHistoryEndpointsTests : IClassFixture<WebApplication
     }
 
     [Fact]
+    public async Task Get_DecisionHistory_List_OmittedPageAndPageSize_DefaultsTo1And50()
+    {
+        var client = _factory.CreateClient();
+        var tenant = Guid.NewGuid();
+        await client.PostAsJsonAsync("/decisions", new DecideRequest(
+            tenant,
+            "alpha_route",
+            "s",
+            "p0",
+            null,
+            null,
+            false,
+            null,
+            null,
+            null,
+            null));
+
+        var res = await client.GetAsync($"/decisions/history?tenantId={tenant:D}");
+        res.EnsureSuccessStatusCode();
+        var page = await res.Content.ReadFromJsonAsync<PagedDecisionHistoryResponse>();
+        Assert.NotNull(page);
+        Assert.Equal(1, page!.Page);
+        Assert.Equal(DecisionEndpointMapping.DefaultDecisionHistoryListPageSize, page.PageSize);
+        Assert.Single(page.Items);
+    }
+
+    [Fact]
+    public async Task Get_DecisionHistory_List_PageZero_Returns400()
+    {
+        var client = _factory.CreateClient();
+        var tenant = Guid.NewGuid();
+        var res = await client.GetAsync($"/decisions/history?tenantId={tenant:D}&page=0");
+        Assert.Equal(HttpStatusCode.BadRequest, res.StatusCode);
+    }
+
+    [Fact]
+    public async Task Get_DecisionHistory_List_PageSizeAboveMax_Returns400()
+    {
+        var client = _factory.CreateClient();
+        var tenant = Guid.NewGuid();
+        var res = await client.GetAsync(
+            $"/decisions/history?tenantId={tenant:D}&pageSize={DecisionEndpointMapping.MaxDecisionHistoryListPageSize + 1}");
+        Assert.Equal(HttpStatusCode.BadRequest, res.StatusCode);
+    }
+
+    [Fact]
+    public async Task Get_DecisionHistory_List_PageSizeAtMax_IsAccepted()
+    {
+        var client = _factory.CreateClient();
+        var tenant = Guid.NewGuid();
+        await client.PostAsJsonAsync("/decisions", new DecideRequest(
+            tenant,
+            "alpha_route",
+            "s",
+            "pm",
+            null,
+            null,
+            false,
+            null,
+            null,
+            null,
+            null));
+
+        var res = await client.GetAsync(
+            $"/decisions/history?tenantId={tenant:D}&page=1&pageSize={DecisionEndpointMapping.MaxDecisionHistoryListPageSize}");
+        res.EnsureSuccessStatusCode();
+        var page = await res.Content.ReadFromJsonAsync<PagedDecisionHistoryResponse>();
+        Assert.NotNull(page);
+        Assert.Equal(DecisionEndpointMapping.MaxDecisionHistoryListPageSize, page!.PageSize);
+    }
+
+    [Fact]
+    public async Task Get_DecisionHistory_List_DecisionTypeFilterTooLong_Returns400()
+    {
+        var client = _factory.CreateClient();
+        var tenant = Guid.NewGuid();
+        var tooLong = new string('z', DecisionEndpointMapping.MaxDecisionHistoryDecisionTypeFilterLength + 1);
+        var url =
+            $"/decisions/history?tenantId={tenant:D}&decisionType={Uri.EscapeDataString(tooLong)}";
+        var res = await client.GetAsync(url);
+        Assert.Equal(HttpStatusCode.BadRequest, res.StatusCode);
+    }
+
+    [Fact]
+    public async Task Get_DecisionHistory_List_MalformedCorrelationGroupId_Returns400()
+    {
+        var client = _factory.CreateClient();
+        var tenant = Guid.NewGuid();
+        var res = await client.GetAsync($"/decisions/history?tenantId={tenant:D}&correlationGroupId=not-a-guid");
+        Assert.Equal(HttpStatusCode.BadRequest, res.StatusCode);
+    }
+
+    [Fact]
     public async Task Get_DecisionHistory_List_SortDirectionAsc_IsAccepted_AndEchoed()
     {
         var client = _factory.CreateClient();

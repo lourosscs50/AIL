@@ -60,6 +60,7 @@ public sealed record DecisionHistoryItemResponse(
 
 /// <summary>
 /// Paged list of compact history rows. <see cref="SortBy"/> and <see cref="SortDirection"/> echo the applied bounded sort (default: <c>createdAtUtc</c> descending).
+/// Paging: omitted query parameters default to page <c>1</c> and pageSize <c>50</c>; explicit <c>page</c> must be ≥ <c>1</c>, explicit <c>pageSize</c> must be between <c>1</c> and <c>100</c> (see <see cref="AIL.Api.DecisionEndpointMapping"/> constants).
 /// </summary>
 public sealed record PagedDecisionHistoryResponse(
     IReadOnlyList<DecisionHistoryListItemResponse> Items,

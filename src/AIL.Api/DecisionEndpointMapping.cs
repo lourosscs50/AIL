@@ -27,6 +27,24 @@ public static class DecisionEndpointMapping
     public const int MaxMemoryTakeRecent = 500;
     public const int MaxMemoryInfluenceSummaryFilterLength = 64;
 
+    /// <summary>Maximum <c>pageSize</c> for <c>GET /decisions/history</c> (matches store defensive cap).</summary>
+    public const int MaxDecisionHistoryListPageSize = 100;
+
+    /// <summary>Default <c>pageSize</c> when the query parameter is omitted.</summary>
+    public const int DefaultDecisionHistoryListPageSize = 50;
+
+    /// <summary>Maximum <c>page</c> for <c>GET /decisions/history</c> to keep skip offsets bounded.</summary>
+    public const int MaxDecisionHistoryListPage = 1_000_000;
+
+    /// <summary>Maximum length of <c>decisionType</c> filter (matches durable column bound).</summary>
+    public const int MaxDecisionHistoryDecisionTypeFilterLength = 512;
+
+    /// <summary>Maximum length of <c>selectedStrategyKey</c> filter (matches durable column bound).</summary>
+    public const int MaxDecisionHistorySelectedStrategyKeyFilterLength = 512;
+
+    /// <summary>Maximum length of <c>policyKey</c> filter (matches durable column bound).</summary>
+    public const int MaxDecisionHistoryPolicyKeyFilterLength = 512;
+
     /// <summary>API value for <see cref="DecisionHistorySortBy.CreatedAtUtc"/> (bounded list sort).</summary>
     public const string DecisionHistorySortByCreatedAtUtc = "createdAtUtc";
 
@@ -67,6 +85,59 @@ public static class DecisionEndpointMapping
         direction == DecisionHistorySortDirection.Ascending
             ? DecisionHistorySortDirectionAsc
             : DecisionHistorySortDirectionDesc;
+
+    /// <summary>
+    /// Normalizes omitted paging to defaults; rejects explicit out-of-range <paramref name="page"/> or <paramref name="pageSize"/>.
+    /// Omitted parameters use page <c>1</c> and pageSize <see cref="DefaultDecisionHistoryListPageSize"/>.
+    /// </summary>
+    /// <returns><c>true</c> when paging is valid; otherwise <paramref name="error"/> describes the failure.</returns>
+    public static bool TryNormalizeDecisionHistoryListPaging(
+        int? page,
+        int? pageSize,
+        out int normalizedPage,
+        out int normalizedPageSize,
+        out string? error)
+    {
+        normalizedPage = 1;
+        normalizedPageSize = DefaultDecisionHistoryListPageSize;
+        error = null;
+
+        if (page is int p)
+        {
+            if (p < 1)
+            {
+                error = "page must be at least 1.";
+                return false;
+            }
+
+            if (p > MaxDecisionHistoryListPage)
+            {
+                error = $"page must not exceed {MaxDecisionHistoryListPage}.";
+                return false;
+            }
+
+            normalizedPage = p;
+        }
+
+        if (pageSize is int ps)
+        {
+            if (ps < 1)
+            {
+                error = "pageSize must be at least 1.";
+                return false;
+            }
+
+            if (ps > MaxDecisionHistoryListPageSize)
+            {
+                error = $"pageSize must not exceed {MaxDecisionHistoryListPageSize}.";
+                return false;
+            }
+
+            normalizedPageSize = ps;
+        }
+
+        return true;
+    }
 
     /// <summary>
     /// Builds a tenant-scoped list query with normalized filter strings (caller trims text filters as needed).
@@ -176,12 +247,16 @@ public static class DecisionEndpointMapping
 
     /// <summary>
     /// Validates optional history list filters (throws <see cref="ArgumentException"/> for bad combinations).
-    /// Empty GUIDs are rejected for correlation/execution filters; <paramref name="memoryInfluenceSummary"/> length is capped.
+    /// Empty GUIDs are rejected for correlation/execution filters; string filters are length-bounded to match durable columns and operator-safe retrieval.
+    /// Pass non-null strings only for filters the caller will apply (already trimmed; omit or pass null for absent filters).
     /// </summary>
     public static void ValidateDecisionHistoryListFilters(
         Guid? correlationGroupId,
         string? memoryInfluenceSummary,
-        Guid? executionInstanceId = null)
+        Guid? executionInstanceId = null,
+        string? decisionType = null,
+        string? selectedStrategyKey = null,
+        string? policyKey = null)
     {
         if (correlationGroupId is Guid g && g == Guid.Empty)
             throw new ArgumentException("correlationGroupId must not be empty when provided.", nameof(correlationGroupId));
@@ -193,6 +268,21 @@ public static class DecisionEndpointMapping
             throw new ArgumentException(
                 $"memoryInfluenceSummary filter must not exceed {MaxMemoryInfluenceSummaryFilterLength} characters.",
                 nameof(memoryInfluenceSummary));
+
+        if (decisionType is { Length: > MaxDecisionHistoryDecisionTypeFilterLength })
+            throw new ArgumentException(
+                $"decisionType filter must not exceed {MaxDecisionHistoryDecisionTypeFilterLength} characters.",
+                nameof(decisionType));
+
+        if (selectedStrategyKey is { Length: > MaxDecisionHistorySelectedStrategyKeyFilterLength })
+            throw new ArgumentException(
+                $"selectedStrategyKey filter must not exceed {MaxDecisionHistorySelectedStrategyKeyFilterLength} characters.",
+                nameof(selectedStrategyKey));
+
+        if (policyKey is { Length: > MaxDecisionHistoryPolicyKeyFilterLength })
+            throw new ArgumentException(
+                $"policyKey filter must not exceed {MaxDecisionHistoryPolicyKeyFilterLength} characters.",
+                nameof(policyKey));
     }
 
     public static void ValidateDecideRequest(DecideRequest req)
