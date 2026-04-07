@@ -9,6 +9,7 @@ namespace AIL.Modules.Decision.Infrastructure;
 /// Default <see cref="IDecisionHistoryStore"/> implementation: bounded in-process operator decision history
 /// (same deployment profile as execution visibility snapshots). Retention is count-based; see <see cref="DecisionHistoryRetentionOptions"/>.
 /// Eviction removes the oldest-inserted record first (FIFO). Replaced rows (same <see cref="DecisionHistoryRecord.Id"/>) do not trigger eviction.
+/// Data is process-local and is not durable across process restarts.
 /// </summary>
 internal sealed class InMemoryDecisionHistoryStore : IDecisionHistoryStore
 {

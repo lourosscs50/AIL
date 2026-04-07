@@ -9,6 +9,7 @@ namespace AIL.Modules.Decision.Infrastructure;
 
 /// <summary>
 /// Shared SQLite schema lifecycle for durable decision history (<see cref="EfDecisionHistoryStore"/>).
+/// "Ready" means EF migrations are applied (or already current) for the configured database.
 /// </summary>
 internal static class DecisionHistoryDatabaseInitializer
 {
@@ -24,6 +25,7 @@ internal static class DecisionHistoryDatabaseInitializer
     /// If the SQLite file was created with legacy <see cref="Microsoft.EntityFrameworkCore.Infrastructure.DatabaseFacade.EnsureCreated"/> (decision history table present, no migration history),
     /// records the initial migration without re-running DDL so migration application can succeed honestly.
     /// Invoked from <see cref="DecisionHistoryStoreReadinessHostedService"/> at API host startup, and from <see cref="EfDecisionHistoryStore"/> when hosted services do not run.
+    /// Exceptions are not swallowed; callers observe failures directly and can fail startup or operation honestly.
     /// </summary>
     public static void EnsureReady(IDbContextFactory<DecisionHistoryDbContext> factory)
     {

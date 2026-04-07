@@ -5,7 +5,9 @@ namespace AIL.Modules.Decision.Application;
 
 /// <summary>
 /// Storage-agnostic persistence boundary for operator decision history snapshots (not audit, not raw telemetry).
-/// Implementations may enforce bounded retention; <see cref="List"/> totals and <see cref="TryGet"/> reflect only retained rows.
+/// This abstraction intentionally permits different lifecycle profiles:
+/// durable implementations can survive process restarts, while in-memory implementations are process-scoped and retention-bounded.
+/// <see cref="List"/> totals and <see cref="TryGet"/> always reflect only rows currently retained by the concrete store.
 /// </summary>
 public interface IDecisionHistoryStore
 {

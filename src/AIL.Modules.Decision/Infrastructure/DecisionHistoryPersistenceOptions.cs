@@ -3,6 +3,7 @@ namespace AIL.Modules.Decision.Infrastructure;
 /// <summary>
 /// Connection settings for SQLite decision history persistence (bounded to connection string only).
 /// Values are validated at registration time; invalid SQLite connection strings prevent service registration from succeeding.
+/// This options type only describes infrastructure configuration and is not part of public API contracts.
 /// </summary>
 /// <remarks>
 /// <para>

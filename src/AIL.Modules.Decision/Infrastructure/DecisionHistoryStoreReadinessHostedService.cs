@@ -10,6 +10,7 @@ namespace AIL.Modules.Decision.Infrastructure;
 /// <summary>
 /// Eagerly applies pending decision history migrations during host startup. If the database file cannot be opened or migrations fail,
 /// <see cref="IHostedService.StartAsync"/> fails and the host does not complete startup (no silent durability). This runs before the server accepts requests.
+/// This service does not provide an alternative store path; failure means decision-history durable readiness is not satisfied.
 /// </summary>
 internal sealed class DecisionHistoryStoreReadinessHostedService : IHostedService
 {

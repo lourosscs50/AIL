@@ -17,6 +17,7 @@ public static class DependencyInjection
     /// When running inside a generic host (for example the AIL API), <see cref="DecisionHistoryStoreReadinessHostedService"/> runs at startup and applies pending EF Core migrations for <see cref="Persistence.DecisionHistoryDbContext"/> before the server accepts traffic.
     /// Consumers that only build an <see cref="IServiceProvider"/> without running hosted services still get deterministic initialization on the first store operation via <see cref="EfDecisionHistoryStore"/>.
     /// Pass <paramref name="hostEnvironment"/> from the host so non-development environments require an explicit <c>DecisionHistory:SqliteConnectionString</c> in configuration (see <see cref="DecisionHistoryPersistenceOptions"/>).
+    /// This method does not register any in-memory fallback when durable configuration is invalid.
     /// </summary>
     public static IServiceCollection AddDecisionHistoryStore(
         this IServiceCollection services,
@@ -91,6 +92,8 @@ public static class DependencyInjection
         services.TryAddSingleton<IDecisionPolicyService, DefaultDecisionPolicyService>();
         services.AddSingleton<DecisionService>();
         services.AddSingleton<IDecisionService>(sp => sp.GetRequiredService<DecisionService>());
+        // Decision history is always wired as the durable store for the API host profile.
+        // Misconfiguration fails registration/startup rather than silently switching storage mode.
         services.AddDecisionHistoryStore(configuration, hostEnvironment);
         services.TryAddSingleton<IDecisionHistoryRecorder, DecisionHistoryRecorder>();
         return services;

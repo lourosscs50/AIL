@@ -11,7 +11,9 @@ namespace AIL.Modules.Decision.Infrastructure;
 /// SQLite-backed <see cref="IDecisionHistoryStore"/>. Persists only fields on <see cref="DecisionHistoryRecord"/> (operator-safe snapshot).
 /// Unlike <see cref="InMemoryDecisionHistoryStore"/>, this implementation does <b>not</b> apply <see cref="DecisionHistoryRetentionOptions.MaxRetainedRecords"/>;
 /// retention is unbounded at the store layer (use external lifecycle policies if needed).
-/// Pending migrations are applied eagerly when the API host runs (<see cref="DecisionHistoryStoreReadinessHostedService"/>); otherwise the first call to this store triggers the same migration path (for example in tests that do not start hosted services).
+/// Pending migrations are applied eagerly when the API host runs (<see cref="DecisionHistoryStoreReadinessHostedService"/>); otherwise the first call to this store
+/// triggers the same migration path (for example in tests that do not start hosted services).
+/// There is no fallback to <see cref="InMemoryDecisionHistoryStore"/> inside this implementation: if SQLite configuration or initialization is invalid, operations fail.
 /// </summary>
 internal sealed class EfDecisionHistoryStore : IDecisionHistoryStore
 {
