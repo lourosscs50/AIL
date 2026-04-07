@@ -90,7 +90,7 @@ public class ArchitectureRulesTests
     [Fact]
     public void Decision_Application_ShouldNotDependOn_MemoryCore_Infrastructure()
     {
-        var result = Types.InAssembly(typeof(AIL.Modules.Decision.Application.AssemblyMarker).Assembly)
+        var result = Types.InAssembly(typeof(IDecisionService).Assembly)
             .ShouldNot()
             .HaveDependencyOn("AIL.Modules.MemoryCore.Infrastructure")
             .GetResult();
@@ -101,7 +101,7 @@ public class ArchitectureRulesTests
     [Fact]
     public void Decision_Application_ShouldNotDependOn_Decision_Infrastructure()
     {
-        var result = Types.InAssembly(typeof(AIL.Modules.Decision.Application.AssemblyMarker).Assembly)
+        var result = Types.InAssembly(typeof(IDecisionService).Assembly)
             .ShouldNot()
             .HaveDependencyOn("AIL.Modules.Decision.Infrastructure")
             .GetResult();
@@ -112,7 +112,7 @@ public class ArchitectureRulesTests
     [Fact]
     public void Decision_Infrastructure_ShouldNotDependOn_MemoryCore_Infrastructure()
     {
-        var result = Types.InAssembly(typeof(AIL.Modules.Decision.Infrastructure.AssemblyMarker).Assembly)
+        var result = Types.InAssembly(typeof(AIL.Modules.Decision.Infrastructure.DependencyInjection).Assembly)
             .ShouldNot()
             .HaveDependencyOn("AIL.Modules.MemoryCore.Infrastructure")
             .GetResult();

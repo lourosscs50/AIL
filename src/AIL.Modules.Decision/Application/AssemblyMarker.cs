@@ -1,3 +1,3 @@
 namespace AIL.Modules.Decision.Application;
 
-public static class AssemblyMarker { }
+internal static class AssemblyMarker { }

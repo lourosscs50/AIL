@@ -44,7 +44,7 @@ public sealed class DecisionModuleArchitectureRulesTests
     [Fact]
     public void Decision_Infrastructure_ShouldNotDependOn_Api()
     {
-        var result = Types.InAssembly(typeof(AIL.Modules.Decision.Infrastructure.AssemblyMarker).Assembly)
+        var result = Types.InAssembly(typeof(AIL.Modules.Decision.Infrastructure.DependencyInjection).Assembly)
             .ShouldNot()
             .HaveDependencyOn("AIL.Api")
             .GetResult();
@@ -55,7 +55,7 @@ public sealed class DecisionModuleArchitectureRulesTests
     [Fact]
     public void Decision_Infrastructure_ShouldDependInward_On_DecisionApplication_And_DecisionDomain()
     {
-        var dependsOnApplication = Types.InAssembly(typeof(AIL.Modules.Decision.Infrastructure.AssemblyMarker).Assembly)
+        var dependsOnApplication = Types.InAssembly(typeof(AIL.Modules.Decision.Infrastructure.DependencyInjection).Assembly)
             .That()
             .HaveName("DecisionService")
             .Should()
@@ -63,7 +63,7 @@ public sealed class DecisionModuleArchitectureRulesTests
             .GetResult();
         Assert.True(dependsOnApplication.IsSuccessful, FormatFailures(dependsOnApplication));
 
-        var dependsOnDomain = Types.InAssembly(typeof(AIL.Modules.Decision.Infrastructure.AssemblyMarker).Assembly)
+        var dependsOnDomain = Types.InAssembly(typeof(AIL.Modules.Decision.Infrastructure.DependencyInjection).Assembly)
             .That()
             .HaveName("DecisionService")
             .Should()

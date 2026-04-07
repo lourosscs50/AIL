@@ -6,7 +6,7 @@ namespace AIL.Modules.Decision.Infrastructure;
 /// When the limit is exceeded on a <b>new</b> insert, the oldest-inserted row is removed first (FIFO by insert order).
 /// Totals and list queries reflect only rows that remain in the store after eviction.
 /// </summary>
-public sealed class DecisionHistoryRetentionOptions
+internal sealed class DecisionHistoryRetentionOptions
 {
     /// <summary>Default cap aligned with the previous fixed store limit.</summary>
     public const int DefaultMaxRetainedRecords = 512;

@@ -16,7 +16,7 @@ namespace AIL.Modules.Decision.Infrastructure;
 /// Relying on an implicit default file path without an explicit setting is not allowed—registration fails with an honest error.
 /// </para>
 /// </remarks>
-public sealed class DecisionHistoryPersistenceOptions
+internal sealed class DecisionHistoryPersistenceOptions
 {
     public const string SectionName = "DecisionHistory";
 
